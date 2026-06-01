@@ -52,7 +52,6 @@ body, html {
     background-color: #ffffff;
     margin-top: -10px;
     margin-bottom: -10px;
-    position: relative;
 }
 .nav-link{
     font-family: 'IBM Plex Mono', monospace;
