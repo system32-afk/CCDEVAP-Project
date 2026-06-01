@@ -48,11 +48,6 @@ body, html {
     box-shadow: 2px 21px 34px -20px rgba(0, 0, 0, 1.00);
     
 }
-.search-container form{
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
 .container-fluid{
     background-color: #ffffff;
     margin-top: -10px;
@@ -78,6 +73,11 @@ body, html {
     display: inline-flex;
     gap: 10px;
     
+}
+.search-container form{
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 .search-container label{
     font-size: 15px;
@@ -167,9 +167,10 @@ body, html {
 
 .stat-container{
     display:flex;
-    padding: 5px;
-    height: 300px;
+    padding: 10px;
+    height: auto;
     justify-content: space-evenly;
+    
 }
 
 .stat-card{
@@ -182,11 +183,26 @@ body, html {
     font-family: 'IBM Plex Mono', monospace;
     background-color: #2E5EAA;
     color: #FFFFFF;
+}
+.stat-card:hover{
+    transform: scale(1.05);
+}
+#stat-icon{
+    font-size: 60px;
+}
+.stat-card-title h3{
+    font-weight: 700;
+    
+}
+.stat-card-text{
+    font-size: 25px;
+    font-family: 'Istok Web', sans-serif;
     
 }
 
 @media (max-width: 783px) {
     .hero-banner { padding: 50px 20px; }
     .search-container form { flex-direction: column; }
+    .stat-container{ flex-direction: column; }
     select, input { width: 100%; }
 }
