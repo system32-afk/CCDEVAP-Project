@@ -180,19 +180,17 @@ body, html {
     max-width: 100%; 
     padding: 10px;
     
-    
 }
-
+ 
 .suggested-card{
     border-radius: 12px;
     border: 1px solid #000000;
-    width: 550px;
-    height: auto;
-    
+    box-shadow: 2px 5px 15px 8px rgba(0, 0, 0, 0.23);
 }
 
 .suggested-card:hover{
-    transform: scale(1.05);
+    transition: transform 0.3s;
+    transform: scale(1.03);
     box-shadow: 2px 5px 15px 8px rgba(0, 0, 0, 0.23);
 }
 
@@ -212,9 +210,9 @@ body, html {
     margin-top: 5px;
 }
 
-.card-body{
+ .card-body{
     padding: 20px;
-}
+} 
 
 
 .stat-container{
@@ -237,7 +235,8 @@ body, html {
     color: #FFFFFF;
 }
 .stat-card:hover{
-    transform: scale(1.05);
+    transition: transform 0.3s;
+    transform: scale(1.03);
     box-shadow: 2px 5px 15px 8px rgba(0, 0, 0, 0.23);
 }
 #stat-icon{
