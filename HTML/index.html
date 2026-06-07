@@ -17,8 +17,16 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined"> 
     
     <!-- JQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="/dependencies/jquery-4.0.0.js"></script>
 
+    <!-- JS bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- booking info object-->
+    <script src="/scripts/sessionStorage.js" defer></script>
+
+    <!-- JS script for quick search button-->
+    <script src = "/scripts/index_searchFlight.js" defer></script>
     
     <title>Home</title>
 </head>
@@ -45,14 +53,14 @@
     <div class="form-group">
         <label class="departure">Departure:</label>
         <select id="departure-airports">
-            <option value="naia">NAIA (Manila)</option>
-            <option value="bia">BIA (Albay)</option>
-            <option value="mcia">MCIA (Cebu)</option>
-            <option value="cia">CIA (Clark)</option>
-            <option value="bsa">BSA (Bacolod)</option>
-            <option value="iia">IIA (Iloilo)</option>
-            <option value="sa">SA (Siargao)</option>
-            <option value="gpra">GPRA (Caticlan)</option>
+            <option value="NAIA (Manila)">NAIA (Manila)</option>
+            <option value="IA (Albay)">BIA (Albay)</option>
+            <option value="MCIA (Cebu)">MCIA (Cebu)</option>
+            <option value="CIA (Clark)">CIA (Clark)</option>
+            <option value="BSA (Bacolod)">BSA (Bacolod)</option>
+            <option value="IIA (Iloilo)">IIA (Iloilo)</option>
+            <option value="SA (Siargao)">SA (Siargao)</option>
+            <option value="GPRA (Caticlan)">GPRA (Caticlan)</option>
         </select>
     </div>  
 
@@ -63,30 +71,30 @@
     <div class="form-group">
         <label class="destination">Destination:</label>
         <select id="destination-airports">
-            <option value="naia">NAIA (Manila)</option>
-            <option value="bia">BIA (Albay)</option>
-            <option value="mcia">MCIA (Cebu)</option>
-            <option value="cia">CIA (Clark)</option>
-            <option value="bsa">BSA (Bacolod)</option>
-            <option value="iia">IIA (Iloilo)</option>
-            <option value="sa">SA (Siargao)</option>
-            <option value="gpra">GPRA (Caticlan)</option>
+            <option value="NAIA (Manila)">NAIA (Manila)</option>
+            <option value="IA (Albay)">BIA (Albay)</option>
+            <option value="MCIA (Cebu)">MCIA (Cebu)</option>
+            <option value="CIA (Clark)">CIA (Clark)</option>
+            <option value="BSA (Bacolod)">BSA (Bacolod)</option>
+            <option value="IIA (Iloilo)">IIA (Iloilo)</option>
+            <option value="SA (Siargao)">SA (Siargao)</option>
+            <option value="GPRA (Caticlan)">GPRA (Caticlan)</option>
         </select>
     </div>
     <div class="form-group">
         <label class="departure-date">Departure Date:</label>
-            <input id="departure-date" type="date">
+            <input id="departureDate" type="date">
     </div>
 
     <div class="form-group">
         <label class="return-date">Return Date:</label>
-            <input  id="return-date" type="date">
+            <input id="returnDate" type="date">
     </div>
     </form>
 
 </div>
     <div class="search-flight">
-        <a href="search.html" class="btn btn-primary" onclick=" return noInvalidDates()">Search Flights</a>
+        <button class="btn btn-primary" id="searchBtn">Search Flights</a>
     </div><br>
 
 <!-- end of search bar -->
