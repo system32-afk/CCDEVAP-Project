@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/CSS/Search_Styles.css">
+    <link rel="stylesheet" href="/CSS/FlightOptions_Style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="/scripts/sessionStorage.js" defer></script>
+    <script src="/scripts/search_script.js" defer></script>
+    <!-- <script src ="/dependencies/jquery-4.0.0.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+    <script src="/scripts/PassengerTypes_script.js" defer></script>
+    <script src="/scripts/dropdowns_Script.js" defer></script>
+    <script src="/scripts/advanceSearch_scripts.js" defer></script>
+    <script src="/scripts/getFlights_script.js" defer></script>
+    <title>Book flight</title>
+</head>
+<body>
+    <div id = "top-bar">
+        <img id = "logo"src="/Assets/LogoWHITE.png" alt="logo">
+    </div>
+
+    <div id = "search-container">
+        <form id = "search-form">
+
+            <div id = "trip-type-toggle">
+                <div class="trip-option">   
+                    <input type="radio" class = "trip-type" id = "one-way" name="trip-type-group" value="one-way" checked>
+                <label for="one-way">One Way</label>
+                </div>
+                
+                <div class="trip-option">
+                    <input type="radio" class = "trip-type" id = "round-trip" name="trip-type-group" value="round-trip">
+                    <label for="round-trip">Round Trip</label>
+                </div>
+            </div>
+
+            <div id="row1">
+                <div class = "input-fields"> 
+                    <!-- Origin Input -->
+                    <label>Origin</label>
+                    
+
+                    <input type="text" class="city-search" id="origin-city-search" placeholder="Input Origin city" autocomplete="off">
+
+                    <div class="dropdown-list" id="origin-cities"></div>
+                </div>
+
+
+                <div class = "input-fields">
+                    <!-- Destination Input -->
+                    <label>Destination</label>
+                    
+
+                    <input type="text" class="city-search" id="destination-city-search" placeholder="Input Destination city" autocomplete="off">
+
+                    <div class="dropdown-list" id="destination-cities"></div>
+                </div>
+
+                <div class = "input-fields">
+                    <!-- Date Input -->
+                    <label for="departure-date">Departure Date</label>
+                    
+
+                    <input type="date" id="departure-date" name="departure-date">
+
+                </div>
+
+                <div class = "input-fields">
+                    <!-- Date Input -->
+                    <label for="return-date">Return Date</label>
+                   
+
+                    <input type="date" id="return-date" name="return-date">
+
+                </div>
+                
+            </div>
+
+            <div id = 'row2'>
+                <div class = "input-fields">
+                    <label for="passengers">Passengers</label>
+                    
+                    <button class="btn btn-secondary" type="button" id="passenger-select" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Select passengers
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="passenger-select">
+                        <div id = "passenger-dropdown" class="dropdown-passengers">
+                            <div class="passenger-row">
+                                <!-- Adult -->
+                                <label for="adults">Adults</label>
+                                <button type = "button" class="btn btn-primary" id="adult-decrease" onclick="subtractPassenger('adults')">-</button>
+                                <span id="adults-count">value</span>
+                                <button type = "button" class="btn btn-primary" id="adult-increase" onclick="addPassenger('adults')">+</button>
+                            </div>
+
+                            <div class="passenger-row">
+                                <!-- Children -->
+                                <label for="children">Children</label>
+                                <button type = "button" class="btn btn-primary" id="child-decrease" onclick="subtractPassenger('children')">-</button>
+                                <span id="children-count">value</span>
+                                <button type = "button" class="btn btn-primary" id="child-increase" onclick="addPassenger('children')">+</button>
+                            </div>
+
+                            <div class="passenger-row">
+                                <!-- Infant -->
+                                <label for="infants">Infants</label>
+                                <button type = "button" class="btn btn-primary" id="infant-decrease" onclick="subtractPassenger('infants')">-</button>
+                                <span id="infants-count">value</span>
+                                <button type = "button" class="btn btn-primary" id="infant-increase" onclick="addPassenger('infants')">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class = "input-fields">
+                    <label for="cabinType">Cabin</label>
+                    
+                    <button class="btn btn-secondary" type="button" id="cabin-select" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Select Cabin type
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="cabin-select">
+                        <div id = "cabin-dropdown" class="dropdown-cabin">
+                            <div class="cabin-row" data-cabin ="Economy">
+                                Economy
+                            </div>
+
+                            <div class="cabin-row" data-cabin ="Premium economy">
+                                Premium economy
+                            </div>
+
+                            <div class="cabin-row" data-cabin ="Business">
+                                Business
+                            </div>
+
+                            <div class="cabin-row" data-cabin ="First class">
+                                First class
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class = "button-fields">
+                    <br>
+                    <button type="button" class="btn btn-primary" id = "search-flight-button">Search Flights</button>
+
+                </div>
+
+                <div class = "button-fields">
+                    <br>
+                    <button type="button" class="btn btn-outline-secondary " id = "advance-search-button" data-toggle="collapse" data-target="#Advance-search-panel">Advance Search</button>
+
+                </div>
+                
+            </div>
+        </form>
+    </div>
+
+    <div class="collapse" id="Advance-search-panel">
+        <div class="advance-content">
+
+        
+            <div class = "input-fields airline-preference">
+                <button class="btn btn-secondary" type="button" id="airline-select" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Preferred Airline
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="airline-select">
+                        <div id = "airline-dropdown" class="dropdown-airline">
+
+                            <div class="airline-row" data-airline = "Any">
+                                Any
+                            </div>
+
+                            <div class="airline-row" data-airline = "Philippine Airline">
+                                Philippine Airline
+                            </div>
+
+                            <div class="airline-row" data-airline = "AirAsia">
+                                AirAsia
+                            </div>
+
+                            <div class="airline-row" data-airline = "Cebu Pacific">
+                                Cebu Pacific
+                            </div>
+
+                            <div class="airline-row" data-airline = "Cathay Pacific">
+                                Cathay Pacific
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+
+            <div class="toggle-group">
+                <div class = "input-fields direct-flights-only">
+                    <label>Direct Flights only</label>
+                    <input type="checkbox" id ="direct-flight-checkbox">
+                </div>
+            
+                <div class = "input-fields flexible-dates">
+                    <div class = "toggle-row">
+                        <label>Flexible Dates</label>
+                        <label class = "switch">
+                            <input type="checkbox" id = "flexible-dates-checkbox">
+                            <span class = "slider round"></span>
+                        </label>
+                    </div>
+                    <small id="flexible-hint" class="text-muted">Searches flights a week before or after selected date</small>
+                </div>
+            </div>
+
+            <div class = "input-fields price-filter">
+                <label>Price range</label>
+                <div class = "range-slider">
+                    <label>Min</label>
+                    <input type = "number" class = "min-price" value="1" min="1">
+                    <input type = "number" class = "max-price" value="0" min="1">
+                    <label>Max</label>
+
+                    <div class="range">
+                        <input type="range" class="min-input" value="1" min="1" max = "10">
+                        <input type="range" class="max-input" value="0" min="1" max = "10">
+
+
+                        <div class="price-slider">
+                            <div class="slider-progress"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class = "button-fields">
+                    <br>
+                    <button type="button" class="btn btn-primary" id = "apply-filter">Apply</button>
+
+                </div>
+
+        </div>
+    </div>
+
+    <!--Flights-->
+
+    <h1 id = "prompt-message">Pick your departure flight</h1>
+    
+    <div class="flight-option-container">
+        
+    </div>
+
+</body>
+</html>
