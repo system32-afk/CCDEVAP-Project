@@ -47,27 +47,6 @@
     margin-top: 1rem;
     gap: 1rem;
 }
-
-
-.dropdown-list{
-    position: absolute;
-    width: 100%;
-    display:none;
-    top:100%;
-    left:0;
-    border: 1px solid black;
-    border-radius: 0px 0px 10px 10px;
-    text-align: center;
-    background-color: white;
-    z-index: 1000;
-}
-
-.city-item:hover{
-    background-color: #8dc4fc;
-    cursor: pointer;
-    border-radius: 0px 0px 6px 6px;
-}
-
 .input-fields {
     display: flex;
     flex-direction: column;
