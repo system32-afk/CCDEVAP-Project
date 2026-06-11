@@ -14,13 +14,3 @@ function getBookingInfo() {
     };
 }
 
-function getFilterOptions(){
-    return JSON.parse(sessionStorage.getItem("filter_options")) ||{
-    airline: "any",
-    isDirectFlight: false,
-    isFlexible: false,
-    minPrice: 1,
-    maxPrice: 0,
-    };
-}
-
