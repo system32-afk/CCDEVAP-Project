@@ -1,6 +1,5 @@
 //ANG HIRAP NAMAN NETO
 
-$(document).ready(function(){
 const cityInput = $('.city-search');
 const results = $('.dropdown-list');
 const departDate = $("#departure-date");
@@ -87,7 +86,6 @@ sessionStorage.setItem(
     getFlights(getFilterOptions(),getBookingInfo());
     renderFlightsUI();
 })
-});
 
 
 
