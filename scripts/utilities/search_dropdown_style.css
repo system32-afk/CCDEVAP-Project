@@ -16,3 +16,9 @@
     cursor: pointer;
     border-radius: 0px 0px 6px 6px;
 }
+
+.input-fields {
+    display: flex;
+    flex-direction: column;
+    position:relative
+}
