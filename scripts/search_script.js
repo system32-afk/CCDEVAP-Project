@@ -1,10 +1,10 @@
 //ANG HIRAP NAMAN NETO
-
+const booking_info = getBookingInfo();
 const cityInput = $('.city-search');
 const results = $('.dropdown-list');
 const departDate = $("#departure-date");
 const returnDate = $("#return-date");
-const booking_info = getBookingInfo();
+
 const searchFlightButton = $("#search-flight-button");
 const advanceSearchButton = $("#advance-search-button");
 
