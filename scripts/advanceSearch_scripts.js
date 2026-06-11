@@ -97,12 +97,10 @@ const applyFilter = $("#apply-filter");
 
 applyFilter.on("click", () =>{
 
-    sessionStorage.setItem(
-        "filter_options",
-        JSON.stringify(filter_options)
-    );
+   
 
     
 
     getFlights(getFilterOptions(),getBookingInfo());
+    renderFlightsUI();
 }); 

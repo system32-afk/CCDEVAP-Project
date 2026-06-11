@@ -27,6 +27,10 @@ const filter_options = JSON.parse(sessionStorage.getItem("filter_options")) || {
     maxPrice: 0,
 };
 
+function getFilterOptions(){
+    return filter_options;
+}
+
 
 //debugging. show booking_info data
 console.log(JSON.stringify(booking_info, null, 2));
@@ -72,7 +76,7 @@ $(document).on('click', function(event) {
 });
 
 //makes the input field into a searchable dropbox
-//this took me ages to learn.
+
 cityInput.on('input', function() {
     var currentSearchField = $(this);
     var currentResults = currentSearchField.siblings('.dropdown-list');
@@ -129,13 +133,10 @@ sessionStorage.setItem(
         JSON.stringify(booking_info)
     );
 
-sessionStorage.setItem(
-        "filter_options",
-        JSON.stringify(filter_options)
-    );
 
-getFlights(getFilterOptions(),getBookingInfo());
 
+    getFlights(getFilterOptions(),getBookingInfo());
+    renderFlightsUI();
 })
 
 
