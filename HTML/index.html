@@ -13,6 +13,7 @@
     <!--IBM-Plex Mono and Istok Web Font -->
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="/scripts\utilities\search_dropdown_style.css">
     <!-- Google Symbols Outlined -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined"> 
     
@@ -27,6 +28,8 @@
 
     <!-- JS script for quick search button-->
     <script src = "/scripts/index_searchFlight.js" defer></script>
+
+    <script src="/scripts\utilities\search_dropdown_script.js"></script>
     
     <title>Home</title>
 </head>
@@ -50,21 +53,26 @@
 <!-- search bar -->
 <div class="search-container">
     <form>
+    
     <div class="form-group">
+      <div class="input-fields">
         <label class="departure">Departure:</label>
         <input type="text" id="origin-city-search" class="city-search">
         <div class="dropdown-list"></div>
     </div>  
+  </div>
     
 
         <button type="button" id="swapBtn" onclick="swapValues()">
             <img src="../images\swap-icon.avif">
         </button>
-
+ 
     <div class="form-group">
+       <div class="input-fields">
         <label class="destination">Destination:</label>
         <input type="text" id="destination-city-search" class="city-search">
         <div class="dropdown-list"></div>
+    </div>
     </div>
     <div class="form-group">
         <label class="departure-date">Departure Date:</label>
@@ -76,6 +84,7 @@
             <input id="returnDate" type="date">
     </div>
     </form>
+    
 
 </div>
     <div class="search-flight">
