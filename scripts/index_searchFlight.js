@@ -1,5 +1,4 @@
-const originAirport = $("#departure-airports");
-const destinationAirport = $("#destination-airports");
+const citySearch = $(".city-search");
 const departDate = $("#departureDate");
 const returnDate = $("#returnDate");
 
@@ -55,15 +54,9 @@ function noSameAirports(){
 
 
 
-originAirport.on("change", function () {
-    var value = $(this).val();
-    booking_info.originCity = value;
-});
-
-destinationAirport.on("change", function () {
-    var value = $(this).val();
-
-    booking_info.destinationCity = value;
+citySearch.on('input', function() {
+    var inputField = $(this);
+    searchDropdown(inputField,inputField.siblings('.dropdown-list'),inputField.attr('id'))
 });
 
 
