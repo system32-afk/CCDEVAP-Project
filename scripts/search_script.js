@@ -1,5 +1,6 @@
 //ANG HIRAP NAMAN NETO
 
+$(document).ready(function(){
 const cityInput = $('.city-search');
 const results = $('.dropdown-list');
 const departDate = $("#departure-date");
@@ -9,6 +10,7 @@ const searchFlightButton = $("#search-flight-button");
 const advanceSearchButton = $("#advance-search-button");
 
 const tripType = $(".trip-type");
+
 
 tripType.on("click", function(){
     var type = $(this).val();
@@ -85,7 +87,7 @@ sessionStorage.setItem(
     getFlights(getFilterOptions(),getBookingInfo());
     renderFlightsUI();
 })
-
+});
 
 
 
