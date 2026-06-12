@@ -111,7 +111,7 @@
 
     position:relative
 }
-#flight-price{
+.flight-price{
     color:rgb(2, 120, 41);
     font-size: 1.5rem;
     font-weight: 700;
@@ -201,3 +201,14 @@
     color: #4a5568;
 }
 
+
+
+#sidebar-logo{
+    max-height: 45px;
+}
+
+.booking-info-cities{
+    font-size: 1.4rem;
+    font-weight: 700;
+    display: block;
+}

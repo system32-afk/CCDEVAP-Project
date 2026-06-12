@@ -1,67 +1,16 @@
 
-//operating dates: 0 - sunday, 1 - monday, 2-tuesday,
-//3-wednesday,4-thursday 5 - friday, 6 - saturday
-const flightsDatabase = [
-    {id: 1, airline:"Philippine Airline",
-        flightNum:6767, Departure:"07:00",
-        arrival:"09:30", numOfLayovers: 0,
-        ticketPrice:5565, remainingSeats: 8,
-        departDate: [0,2,3,5], logoName: "PAL"
-    },
-    {id: 2, airline:"AirAsia",
-        flightNum:1234, Departure:"06:00",
-        arrival:"08:30", numOfLayovers: 0,
-        ticketPrice:7000, remainingSeats: 1,
-        departDate: [0,1,4,6], logoName: "AirAsia"
-    },
-    {id: 3, airline:"AirAsia",
-        flightNum:1123, Departure:"13:00",
-        arrival:"14:35", numOfLayovers: 0,
-        ticketPrice:12344, remainingSeats: 6,
-        departDate: [0,2,5,6], logoName: "AirAsia"
-    },
-    {id: 4, airline:"Cebu Pacific",
-        flightNum:1212, Departure:"12:00",
-        arrival:"14:30", numOfLayovers: 1,
-        ticketPrice:1650, remainingSeats: 2,
-        departDate: [1,4,5,6], logoName: "CebuPac"
-    },
-    {id: 5, airline:"Cathay Pacific",
-        flightNum:5565, Departure:"14:30",
-        arrival:"18:00", numOfLayovers: 1,
-        ticketPrice:6778, remainingSeats: 7,
-        departDate: [2,4,5,6], logoName: "CathPac"
-    },
-    {id: 6, airline:"Cebu Pacific",
-        flightNum:1124, Departure:"07:00",
-        arrival:"09:30", numOfLayovers: 0,
-        ticketPrice:5678, remainingSeats: 10,
-        departDate: [1,2,3,6], logoName: "CebuPac"
-    },
-    {id: 7, airline:"Cathay Pacific",
-        flightNum:7767, Departure:"03:00",
-        arrival:"09:30", numOfLayovers: 2,
-        ticketPrice:9567, remainingSeats: 7,
-        departDate: [0,2,5,6], logoName: "CathPac"
-    },
-    {id: 8, airline:"Cebu Pacific",
-        flightNum:8989, Departure:"07:00",
-        arrival:"09:30", numOfLayovers: 0,
-        ticketPrice:3452, remainingSeats: 4,
-        departDate: [1,2,3,5], logoName: "CebuPac"
-    },
-    {id: 9, airline:"Philippine Airlines",
-        flightNum:9524, Departure:"06:00",
-        arrival:"12:30", numOfLayovers: 2,
-        ticketPrice:15523, remainingSeats: 3,
-        departDate: [0,2,3,5], logoName: "PAL"
-    },
+var flightsDB = null;
+$(document).ready(function() {
+//flight database
+ flightsDB = getFlightsDatabase();
+});
 
-]
 //utilities
 const promptMessage = $("#prompt-message");
 const flightsContainer = $(".flight-option-container");
 const bookFlightBtn = $(".select-flight-btn");
+const sidebar = $("#offcanvasRight")
+const sidebarBody = $("#offcanvasRight .offcanvas-body");
 
 
 //state tracking
@@ -78,6 +27,7 @@ function renderFlightsUI(){
     if (currentBookingPhase === "departure"){
         promptMessage.text(`Select your departure flight: ${booking_info.originCity} -> ${booking_info.destinationCity}`);
         flightsToRender = getFlights(filter_options, booking_info);
+
     }else if (currentBookingPhase === "return" && booking_info.tripType === "round-trip"){
         promptMessage.text(`Select your departure flight: ${booking_info.destinationCity} -> ${booking_info.originCity}`);
 
@@ -86,6 +36,8 @@ function renderFlightsUI(){
             originCity: booking_info.destinationCity,
             destinationCity: booking_info.originCity
         };
+
+        console.log("return info "+returnInfo);
 
         flightsToRender = getFlights(filter_options, returnInfo);
     }
@@ -120,7 +72,7 @@ console.log("data passed to get flights: " + JSON.stringify(booking_info, null, 
 
     
 
-    var filtered = flightsDatabase.filter (flights =>{
+    var filtered = flightsDB.filter (flights =>{
 
         //if flexible dates is NOT checked, then only give flights on specific date
         if (dayOfWeek !== null && !isFlexible){
@@ -193,7 +145,7 @@ function renderFlights(flightsArray){
 
     flightsArray.forEach(flight => {
         var layover = "";
-        console.log(flight.destination);
+        
         if(flight.numOfLayovers > 0){
             layover = "layovers: "+ flight.numOfLayovers;
         }else{
@@ -233,16 +185,23 @@ function renderFlights(flightsArray){
                        
                     </div>
                 </div>
+
+                <div class = "view-details-btn-container">
+                <button class="btn btn-outline-info view-details" data-flight-id="${flight.id}">
+                    View Details
+                </button>
+            </div>
             </div>
 
             <div class = "FC-Col2">
-                <p id = "flight-price">PHP ${flight.ticketPrice}</p>
+                <p class = "flight-price">PHP ${flight.ticketPrice}</p>
                 <p id = "seats-remaining">${flight.remainingSeats} seats remaining</p>
 
                 <button class="btn btn-primary select-flight-btn" data-flight-id="${flight.id}">
                     Select Flight
                 </button>
             </div>
+            
         </div>
         `;
     });
@@ -251,23 +210,91 @@ function renderFlights(flightsArray){
 
 }
 
-bookFlightBtn.on("click", function(){
-    var flightId = $(this).data("flight-id");
+flightsContainer.on("click",".select-flight-btn", function(){
+    
+    var flightID = $(this).data("flight-id");
 
-    var chosenFlight = flightsDatabase.find(flight => flight.id === flightId);
+    lockInFlight(flightID);
+
+})
+
+
+flightsContainer.on("click",".view-details", function(){
+    
+    var flightID = $(this).data("flight-id");
+
+    sideBarInfo(flightID);
+
+});
+
+function lockInFlight(flightID){
+    var chosenFlight = getFlightData(flightID);
 
     if (currentBookingPhase === "departure"){
         selectedDepartureFlight = chosenFlight;
 
         currentBookingPhase = "return";
-        console.log("Outbound locked:", selectedDepartureFlight);
+        console.log("Departure locked:", selectedDepartureFlight);
         renderFlightsUI();
     }else if (currentBookingPhase === "return"){
         selectedReturnFlight = chosenFlight;
 
-        console.log("Outbound locked:", selectedReturnFlight);
+        console.log("Return locked:", selectedReturnFlight);
     }
-})
+}
+function sideBarInfo(flightID){
+    
+    if(!flightID){
+        console.error("Could not find flight matching ID: "+ flightID);
+        return;
+    }
+
+    var flight = getFlightData(flightID);
+
+    var layover = "";
+
+    if(flight.numOfLayovers > 0){
+        layover = "layover(s): "+ flight.numOfLayovers;
+    }else{
+        layover = "direct flight";
+    }
 
 
+    var detailsHTML = `
+        <div class="text-center">
+            <img src="/images/${flight.logoName}.png" alt="Logo" id = "sidebar-logo" class="mb-2">
+            <h4>${flight.airline}</h4>
+            <p>Flight #${flight.flightNum}</p>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col cities-and-time">
+                <strong>From:</strong> <span class="booking-info-cities">${booking_info.originCity}</span>
+                <span>${flight.Departure}</span>
+            </div>
+            <div class="col text-end cities-and-time">
+                <strong>To:</strong> <span class="booking-info-cities">${booking_info.destinationCity}</span>
+                <span>${flight.arrival}</span>
+            </div>
+        </div>
+        
+            <strong>Stops:</strong>
+            <p>${layover}</p>
+
+        <strong>Fare Rate:</strong>
+        <h3 class = "flight-price">PHP ${flight.ticketPrice.toLocaleString()}</h3>
+        
+    `;
+
+    sidebarBody.html(detailsHTML);
+
+   
+    var offCanvas = new bootstrap.Offcanvas(sidebar[0]);
+
+    offCanvas.show();
+}
+
+function getFlightData(flightID){
+    return flightsDatabase.find(flight => flight.id === flightID)
+}
 
