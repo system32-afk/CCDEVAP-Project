@@ -4,7 +4,7 @@ function getBookingInfo() {
         destinationCity: "",
         departureDate: "",
         returnDate: "",
-        cabinType: "Economy",
+        cabinType: "economy",
         tripType: "one-way",
         passengers: {
             adults: 1,

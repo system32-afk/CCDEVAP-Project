@@ -1,9 +1,14 @@
 #prompt-message{
-    margin-left: 10rem;
+    margin-top: 3rem;
+    margin-left: 7rem;
     font-size: 2rem;
     
 }
-
+body,html {
+    font-family: 'IBM Plex Mono', monospace,;
+    font-weight: 1000;
+   
+}
 
 .flight-option-container{
     padding-top: 1rem;
@@ -211,4 +216,110 @@
     font-size: 1.4rem;
     font-weight: 700;
     display: block;
+}
+
+
+.btn.btn-light.dropdown-toggle{
+    width: 15rem;
+    min-width: 1rem;
+    border-radius: 7px;
+    border: 1px solid black;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.25);
+}
+
+.dropdown-menu{
+    width: 100%;
+    min-width: 5rem;
+}
+
+.sort-option{
+    width: 100%;
+}
+.sort-option:hover{
+    background-color: #aad5ff;
+}
+
+
+@media (max-width: 768px) {
+    
+    
+    .flight-option-container {
+        width: 95%;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+   
+    #prompt-message {
+        margin-top: 1.5rem;
+        margin-left: 1rem; 
+        font-size: 1rem;
+        font-weight: 1000;
+        text-align: center;
+    }
+
+   
+    .flight-card {
+        flex-direction: column;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-bottom: 1.5rem;
+    }
+
+  
+    .FC-Col1 {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .FC-Col2 {
+        width: 100%;
+        padding-top: 1rem;
+        border-top: 5px dashed #e2e8f0;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    
+    .FC-Row1 > p {
+        margin-left: 0;
+        width: 100%;
+        font-weight: 500;
+        text-align: left;
+    }
+
+    
+    .times {
+        font-size: 1rem;
+        padding: 0 0.25rem;
+    }
+
+    .route-node {
+        min-width: 45px;
+    }
+
+    .route-node h3 {
+        font-size: 0.9rem;
+    }
+
+    .route-node p {
+        font-size: 0.75rem;
+    }
+
+    .container { /* Replace with your actual parent class or ID if different */
+        display: flex;
+        align-items: center;
+        align-content: center;
+        flex-direction: column; /* Stacks the label and dropdown vertically */
+        align-items: flex-start; /* Aligns them cleanly to the left edge */
+        gap: 0.5rem;            /* Adds a nice small breathing space between them */
+        width: 100%;
+    }
+
+    .container p{
+        margin-left: 0;
+        text-align: left !important;
+    }
+
 }

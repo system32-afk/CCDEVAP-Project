@@ -81,10 +81,8 @@ sessionStorage.setItem(
         JSON.stringify(booking_info)
     );
 
-
-
-    getFlights(getFilterOptions(),getBookingInfo());
-    renderFlightsUI();
+    SearchFlight()
+    hasSearched = true;
 })
 
 

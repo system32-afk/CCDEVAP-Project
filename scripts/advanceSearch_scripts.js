@@ -60,7 +60,7 @@ minInput.on("input", function () {
     }
     minPriceInput.val(minInput.val());
     minPriceInput.val(minInput.val());
-    filter_options.minPrice = minInput.val();
+    filter_options.minPrice = Number(minInput.val());
     updateProgress();
 });
 
@@ -71,7 +71,7 @@ maxInput.on("input", function () {
         minPriceInput.val(maxInput.val());
     }
     maxPriceInput.val(maxInput.val());
-    filter_options.maxPrice = maxInput.val();
+    filter_options.maxPrice = Number(maxInput.val());
     updateProgress();
 });
 
@@ -84,7 +84,8 @@ minPriceInput.on("change", function(){
 maxPriceInput.on("change", function(){
     var inputVal = Number($(this).val());
 
-    maxInput.val($(this).val()); //changes the max value of max input slider
+    maxInput.val(inputVal);
+    maxInput.trigger('input');
     minInput.attr("max", inputVal); //changes the max value of min input text field
     maxInput.attr("max", inputVal);//changes the max value of max input text field
     updateProgress();
@@ -96,11 +97,7 @@ maxPriceInput.on("change", function(){
 const applyFilter = $("#apply-filter");
 
 applyFilter.on("click", () =>{
+    SearchFlight()
 
-   
-
-    
-
-    getFlights(getFilterOptions(),getBookingInfo());
-    renderFlightsUI();
+    hasSearched = true;
 }); 
