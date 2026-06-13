@@ -1,0 +1,330 @@
+body {
+    overflow-y: scroll;
+}
+
+/* Navigation Bar */
+.nav-link, .dropdown-item, .navbar {
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+.container-fluid {
+    background-color: #ffffff;
+    margin-top: -10px;
+    margin-bottom: -10px;
+}
+
+.navbar-brand img {
+    width: 130px;
+    height: auto;
+}
+
+.nav-link {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #646464;
+}
+
+.nav-item {
+    display: inline-flex;
+}
+
+.nav-item:hover {
+    color: #000000;
+}
+
+.dropdown-item {
+    font-family: 'IBM Plex Mono', monospace;
+    display: inline-flex;
+    gap: 10px;
+}
+
+/* Hero */
+.hero-banner {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../images/hero-banner.jpg");
+    background-position: center;
+    padding: 3%;
+    color: white;
+}
+
+.hero-banner h1 {
+    font-weight: 700;
+    font-size: 250%;
+    font-family: 'Istok Web', sans-serif;
+    margin: 0;
+}
+
+/* Progress Indicator */
+.progress-container {
+    max-width: 50%;
+}
+
+.progress {
+    background-color: lightgray;
+}
+
+.progress-bar {
+    background-color: #2E5EAA;
+}
+
+/* Passenger Cards */
+.card {
+    box-shadow: 2px 5px 15px rgba(0, 0, 0, 0.050);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.03);
+}
+
+.card-title {
+    font-family: 'Istok Web', sans-serif;
+    font-weight: 700;
+    color: #2E5EAA;
+}
+
+.btn-primary {
+    background-color: #2E5EAA;
+    border-color: #2E5EAA;
+}
+
+.btn-primary:hover {
+    background-color: #24498a;
+    border-color: #24498a;
+}
+
+.btn-add-details {
+    color: #2E5EAA;
+    border-color: #2E5EAA;
+    background-color: transparent;
+}
+
+.btn-add-details:hover {
+    background-color: #2E5EAA;
+    border-color: #2E5EAA;
+    color: white;
+}
+
+/* Passenger Details */
+#passenger-form {
+    display: none;
+}
+
+.form-card:hover {
+    transform: none;
+}
+
+.form-control, .form-select {
+    font-size: 90%;
+    color: gray;
+}
+
+label {
+    font-weight: 700;
+    color: rgb(80, 80, 80);
+}
+
+.inline-validation {
+    display: none;
+    font-size: 80%;
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+
+/* Meal Selection */
+.meal-option {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.meal-option:hover {
+    transform: scale(1.05);
+}
+
+.meal-option.selected {
+    border-color: #2E5EAA;
+    background: #e8effe;
+}
+
+/* Seat Selection */
+.seat {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px 6px 1px 1px;
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+.seat.available { 
+    background-color: #d4e3ff; 
+    border: 2px solid #a0bcee; 
+}
+
+.seat.available:hover { 
+    transform: scale(1.15); 
+    background-color: #b0caff; 
+}
+
+.seat.premium { 
+    background-color: #fff3cd; 
+    border: 2px solid #f0b400; 
+}
+
+.seat.premium:hover { 
+    transform: scale(1.15); 
+    background-color: #ffe08a; 
+}
+
+.seat.occupied { 
+    background-color: #e0e0e0; 
+    border: 2px solid #aaa; 
+    cursor: not-allowed; 
+}
+
+.seat.occupied:hover { 
+    transform: none; 
+}
+
+.seat.premium.occupied { 
+    background-color: #e0e0e0; 
+    border: 2px solid #aaa; 
+    cursor: not-allowed; 
+}
+
+.seat.premium.occupied:hover { 
+    transform: none; 
+}
+
+.seat.selected { 
+    background-color: #2E5EAA; 
+    border: 2px solid #1a3d7a; 
+}
+
+.seat.selected:hover { 
+    background-color: #2E5EAA; 
+    border: 2px solid #1a3d7a; 
+}
+
+.seat.premium.selected { 
+    background-color: #d4a000; 
+    border: 2px solid #a07800; 
+}
+
+.seat.premium.selected:hover { 
+    background-color: #d4a000; 
+    border: 2px solid #a07800; 
+}
+
+.seat-cell {
+    width: 36px;
+    text-align: center;
+}
+
+.seat-row-label {
+    width: 24px;
+    text-align: center;
+}
+
+.seat-aisle {
+    width: 20px;
+}
+
+.seat-legend {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+}
+
+.option-desc.seat-select {
+    font-size: 80%;
+    letter-spacing: 6px;
+}
+
+.seat-legend.available { 
+    background-color: #d4e3ff; 
+    border: 2px solid #a0bcee; 
+}
+
+.seat-legend.occupied { 
+    background-color: #e0e0e0; 
+    border: 2px solid #aaa; 
+}
+
+.seat-legend.selected { 
+    background-color: #2E5EAA; 
+    border: 2px solid #1a3d7a; 
+}
+
+.seat-legend.premium { 
+    background-color: #fff3cd; 
+    border: 2px solid #f0b400; 
+}
+
+#seat-tooltip {
+    position: fixed;
+    background: #333;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 80%;
+}
+
+/* Extra Services */
+.extra-service-card .form-check-input {
+    width: 45px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.extra-service-card .form-check-input:checked {
+    background-color: #2E5EAA;
+    border-color: #2E5EAA;
+}
+
+/* Texts */
+.option-name {
+    font-weight: 700;
+    color: rgb(80, 80, 80);
+    font-family: 'Istok Web', sans-serif;
+}
+
+.option-desc {
+    font-size: 90%;
+    color: #888;
+}
+
+.option-cost {
+    font-size: 90%;
+    font-weight: 700;
+    color: #2E5EAA;
+}
+
+/* Booking Summary Sidebar */
+.summary-card {
+    top: 20px;
+}
+
+.summary-section-label {
+    font-family: 'Istok Web', sans-serif;
+    font-weight: 700;
+    color: #2E5EAA;
+    margin-bottom: 8px;
+    font-size: 90%;
+}
+
+.summary-total-label {
+    font-family: 'Istok Web', sans-serif;
+    font-weight: 700;
+    color: rgb(80, 80, 80);
+}
+
+.summary-total-value {
+    font-family: 'Istok Web', sans-serif;
+    font-weight: 700;
+    color: #2E5EAA;
+}
+
+.summary-toggle {
+    cursor: pointer;
+    color: #2E5EAA;
+    font-size: 90%;
+    user-select: none;
+}
