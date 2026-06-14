@@ -7,7 +7,7 @@ const booking_info = JSON.parse(sessionStorage.getItem("booking_info")) || {
     destinationCity: "none",
     departureDate: "none",
     returnDate: "none",
-    cabinType: "Economy", 
+    cabinType: "economy", 
     tripType: "one-way",
     passengers:{
         adults: 1,

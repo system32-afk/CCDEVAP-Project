@@ -13,7 +13,7 @@ const tripType = $(".trip-type");
 
 tripType.on("click", function(){
     var type = $(this).val();
-    console.log(type);
+    booking_info.tripType = type;
 })
 
 const filter_options = JSON.parse(sessionStorage.getItem("filter_options")) || {
@@ -81,10 +81,8 @@ sessionStorage.setItem(
         JSON.stringify(booking_info)
     );
 
-
-
-    getFlights(getFilterOptions(),getBookingInfo());
-    renderFlightsUI();
+    SearchFlight()
+    hasSearched = true;
 })
 
 
