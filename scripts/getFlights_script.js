@@ -305,8 +305,7 @@ function lockInFlight(flightID){
     var totalPassengers = getTotalPassengers(booking_info);
     var tripType = booking_info.tripType;
 
-    var {outboundTrip, returnTrip} = trips
-
+    //var {outboundTrip, returnTrip} = trips
 
     console.log(totalPassengers)
     
@@ -324,11 +323,22 @@ function lockInFlight(flightID){
         if(tripType === "round-trip"){
             currentBookingPhase = "return";
             renderFlightsUI();
-        }else{
+        }else{ 
+            sessionStorage.setItem("selected_flight", JSON.stringify({
+                id: chosenFlight.id,
+                flightNum: chosenFlight.flightNum,
+                airline: chosenFlight.airline,
+                departure: chosenFlight.Departure,
+                arrival: chosenFlight.arrival,
+                duration: calculateFlightDuration(chosenFlight.Departure, chosenFlight.arrival).display,
+                cabinType: booking_info.cabinType,
+                ticketPrice: chosenFlight.cabins[booking_info.cabinType].price,
+                origin: booking_info.originCity,
+                destination: booking_info.destinationCity,
+                departureDate: booking_info.departureDate
+            }));
 
-            //PASS INFORMATION FROM BOOKING INFO TO RESERVATION OBJECT HERE.
-
-            window.location.href = "search.html";
+            window.location.href = "booking.html";
         }
         
         

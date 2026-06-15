@@ -17,40 +17,59 @@ const booking_info = JSON.parse(sessionStorage.getItem("booking_info")) || {
 };
 
 function noInvalidDates(){
-    var departureDate = document.getElementById("departureDate");
-    var returnDate = document.getElementById("returnDate");
+    var departureStr = $("#departureDate").val();
+    var returnStr = $("#returnDate").val();
+
+    if(!departureStr || !returnStr){
+        alert("Please choose a date.");
+        return false;
+    }
+
+    var returnDate = new Date(returnStr);
+    var departureDate = new Date(departureStr);
     
 
         // same dates are invalid
-        if(departureDate.value === returnDate.value){
+        if(departureDate === returnDate){
             alert("Please choose or enter a valid date.");
             return false;
         }
         //return date is before departure date invalid, departure and return dates are empty invalid,
-        if(departureDate.value > returnDate.value ||  departureDate.value === "" || returnDate.value === ""){
+        if(departureDate.getTime() >= returnDate.getTime()){
             alert("Please choose or enter a valid date.");
             return false;
-
 
         }
         return true;
 }
 
 function noSameAirports(){
-    var departure = document.getElementById("origin-city-search");
-    var destination = document.getElementById("destination-city-search");
+    var departure = $("#origin-city-search").val();
+    var destination = $("#destination-city-search").val();
 
-    if(departure.value === destination.value){
+    if(departure === destination){
         alert("Please choose a different airport.");
         return false;
     }
 
-    if(destination.value === "" || departure.value === ""){
+    if(destination === "" || departure === ""){
         alert("Please choose an airport.");
         return false;
     }
     return true;
 }
+
+function swapValues(){
+    var departure = $("#origin-city-search");
+    var destination = $("#destination-city-search");
+
+    //.val()is a property that gets or sets a value inside an html input element
+    var temp =  departure.val(); 
+    departure.val(destination.val());
+    departure.val(destination.val());
+    destination.val(temp);
+}
+
 
 
 
@@ -73,6 +92,7 @@ returnDate.on("change", function(){
 
 });
 
+$("#swapBtn").on("click", swapValues);
 
 $("#searchBtn").on("click", function () {
 

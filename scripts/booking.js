@@ -1,11 +1,18 @@
 $(document).ready(function() {
 
     let currentPassenger = null;
-    let passengersData = {};
+    let passengersData = JSON.parse(sessionStorage.getItem("passengers_data")) || {};
+
+    const selectedFlight = JSON.parse(sessionStorage.getItem("selected_flight"));
+    const baseTicketPrice = selectedFlight ? selectedFlight.ticketPrice : 0;
 
     // pricing constants
     const PRICES = {
-        baseFare: { adult: 5000, child: 3500, infant: 500 },
+        baseFare: {
+            adult: baseTicketPrice,
+            child: Math.round(baseTicketPrice * 0.75),
+            infant: Math.round(baseTicketPrice * 0.10)
+        },
         meal: { standard: 0, vegetarian: 150, vegan: 200, halal: 100, kosher: 350, "gluten-free": 300 },
         seat: 500,
         baggage: 300,
@@ -134,7 +141,7 @@ $(document).ready(function() {
     let passengerData = newPassengerData();
 
     // show form when clicking add details
-    $(".btn-add-details").click(function() {
+    $(document).on("click", ".btn-add-details", function() {
         currentPassenger = $(this).data("passenger");
 
         // load existing data or fresh form
@@ -286,6 +293,7 @@ $(document).ready(function() {
             // infants dont get to choose meal and seat
             if (currentPassenger.startsWith("infant")) {
                 passengersData[currentPassenger] = { ...passengerData };
+                sessionStorage.setItem("passengers_data", JSON.stringify(passengersData));
                 $("#display-name-" + currentPassenger).text(passengerData.fullName);
                 updateSummary();
                 $("#passenger-form").hide();
@@ -403,7 +411,7 @@ $(document).ready(function() {
     // save and back to passenger list
     $("#btn-done").click(function() {
         passengersData[currentPassenger] = { ...passengerData };
-        console.log(passengersData);
+        sessionStorage.setItem("passengers_data", JSON.stringify(passengersData));
 
         // update card display
         $("#display-name-" + currentPassenger).text(passengerData.fullName);
@@ -423,6 +431,7 @@ $(document).ready(function() {
 
     // go back to search flights
     $("#btn-back-5").click(function() {
+        sessionStorage.removeItem("passengers_data");
         window.location.href = "search.html";
     });
 
@@ -432,6 +441,17 @@ $(document).ready(function() {
     });
 
     updateSummary();
+
+    // restore card displays from saved data
+    $.each(passengersData, function(key, p) {
+        $("#display-name-" + key).text(p.fullName || "—");
+        $("#display-seat-" + key).text(p.seat || "—");
+        $("#display-meal-" + key).text(p.mealPackage || "—");
+        $("#display-baggage-" + key).text(p.extraServices.additionalBaggage);
+        $("#display-priority-" + key).text(p.extraServices.priorityBoarding ? "Yes" : "No");
+        $("#display-insurance-" + key).text(p.extraServices.travelInsurance ? "Yes" : "No");
+        $("#display-lounge-" + key).text(p.extraServices.loungeAccess ? "Yes" : "No");
+    });
 });
 
 // expandable / collapsible price breakdown
