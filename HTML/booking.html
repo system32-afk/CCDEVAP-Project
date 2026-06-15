@@ -37,62 +37,10 @@
         <div class="col-lg-9">
 
             <!-- Passenger Cards List -->
-            <div id="passenger-list">
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Adult 1</h5>
-                                <button class="btn btn-outline-primary w-100 btn-add-details" data-passenger="adult-1">Add this traveler's details</button>
-                                <hr>
-                                <p class="mb-1"><small>Name: <span id="display-name-adult-1">—</span></small></p>
-                                <p class="mb-1"><small>Seat: <span id="display-seat-adult-1">—</span></small></p>
-                                <p class="mb-1"><small>Meal: <span id="display-meal-adult-1">—</span></small></p>
-                                <hr>
-                                <p class="mb-1"><small>Additional Baggage: <span id="display-baggage-adult-1">—</span></small></p>
-                                <p class="mb-1"><small>Priority Boarding: <span id="display-priority-adult-1">—</span></small></p>
-                                <p class="mb-1"><small>Travel Insurance: <span id="display-insurance-adult-1">—</span></small></p>
-                                <p class="mb-1"><small>Lounge Access: <span id="display-lounge-adult-1">—</span></small></p>
-                            </div>
-                        </div>
-                    </div>
+            <div id="passenger-list" class="row row-cols-1 row-cols-md-3 g-3">
+                
+                <!-- dynamically generated cards-->
 
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Child 1</h5>
-                                <button class="btn btn-outline-primary w-100 btn-add-details" data-passenger="child-1">Add this traveler's details</button>
-                                <hr>
-                                <p class="mb-1"><small>Name: <span id="display-name-child-1">—</span></small></p>
-                                <p class="mb-1"><small>Seat: <span id="display-seat-child-1">—</span></small></p>
-                                <p class="mb-1"><small>Meal: <span id="display-meal-child-1">—</span></small></p>
-                                <hr>
-                                <p class="mb-1"><small>Additional Baggage: <span id="display-baggage-child-1">—</span></small></p>
-                                <p class="mb-1"><small>Priority Boarding: <span id="display-priority-child-1">—</span></small></p>
-                                <p class="mb-1"><small>Travel Insurance: <span id="display-insurance-child-1">—</span></small></p>
-                                <p class="mb-1"><small>Lounge Access: <span id="display-lounge-child-1">—</span></small></p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Infant 1</h5>
-                                <button class="btn btn-outline-primary w-100 btn-add-details" data-passenger="infant-1">Add this traveler's details</button>
-                                <hr>
-                                <p class="mb-1"><small>Name: <span id="display-name-infant-1">—</span></small></p>
-                                <p class="mb-1"><small>Seat: <span id="display-seat-infant-1">—</span></small></p>
-                                <p class="mb-1"><small>Meal: <span id="display-meal-infant-1">—</span></small></p>
-                                <hr>
-                                <p class="mb-1"><small>Additional Baggage: <span id="display-baggage-infant-1">—</span></small></p>
-                                <p class="mb-1"><small>Priority Boarding: <span id="display-priority-infant-1">—</span></small></p>
-                                <p class="mb-1"><small>Travel Insurance: <span id="display-insurance-infant-1">—</span></small></p>
-                                <p class="mb-1"><small>Lounge Access: <span id="display-lounge-infant-1">—</span></small></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Passenger Form -->
@@ -670,7 +618,10 @@
     $("#navbar").load("navigation.html");
 </script>
 
-<!-- Booking JS -->
+<script src="../scripts/utilities/flights_database_script.js"></script>
+<script src="../scripts/helper_algorithms.js"></script>
+<script src="../scripts/sessionStorage.js"></script>
+<script src="../scripts/booking_setup.js"></script>
 <script src="../scripts/booking.js"></script>
 </body>
 </html>
