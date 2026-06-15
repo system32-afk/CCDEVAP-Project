@@ -1,0 +1,222 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--IBM-Plex Mono and Istok Web Font -->
+        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="/CSS/profile.css">
+        <title>Document</title>
+
+        <!--Dependencies-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script> 
+    
+        <!--Scripts-->
+         <script src="/scripts/utilities/saved_passengers.js" defer></script>
+         <script src="/scripts/utilities/user_travel_history.js" defer></script>
+
+
+        <script src="../scripts/utilities/load_navbar_script.js" defer></script>
+        <script src="../scripts/helper_algorithms.js" defer></script>
+    </head>
+    <body>
+      <div id="navbar"></div>
+    <div class="hero-banner">
+        <h1>User Profile</h1>
+    </div>
+
+    <section>
+
+    
+        <div class="container detais-container" >
+
+            
+            <div class="row">
+                
+
+
+                <!---SIDE TABS-->
+                <div class="col">
+                    
+                    <div class="tabs">
+
+                    <div class="nav flex-column nav-pills text-start" id="panes" role="tablist" aria-orientation="vertical">
+                            <button class="nav-link active" id="pane-personal-tab" data-bs-toggle="pill" data-bs-target="#pane-personal">Personal Info</button>
+                            <button class="nav-link" id="pane-passengers-tab" data-bs-toggle="pill" data-bs-target="#pane-passengers" type="button" role="tab">Saved Passengers</button>
+                            <button class="nav-link" id="pane-payment-tab" data-bs-toggle="pill" data-bs-target="#pane-payment" type="button" role="tab">Payment Methods</button>
+                            <button class="nav-link" id="pane-history-tab" data-bs-toggle="pill" data-bs-target="#pane-history" type="button" role="tab">Travel History</button>
+                            <button class="nav-link" id="pane-notifications-tab" data-bs-toggle="pill" data-bs-target="#pane-notifications" type="button" role="tab">Notifications</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                
+                <div class="col-sm-6 col-md-10" >
+
+                    <!--panels container-->
+                   <div class="tab-content card p-4 shadow-sm border-0 bg-white" id="panes">
+
+                        <div class="tab-pane fade show active" id = "pane-personal">
+                            
+                            <div class ="panel-header d-flex justify-content-between align-items-center mb-4">
+                                <h4 class="title d-flex">Personal Information</h4>
+                                <button type="button" class="btn btn-outline-primary" id = "edit-details-btn">Edit Details</button>
+                            </div>
+
+                            <div class="profile-picture-container position-relative d-flex flex-column flex-md-row align-items-center gap-3 gap-md-5 mb-5 text-center text-md-start">
+                                <div class=>
+                                    <img src="/images/profile-picture.png" id="avatar-preview" class="profile-picture" alt="User Avatar">
+                                    <input type="file" id="image-file-input" accept="image/*" class="d-none">    
+                                </div>
+                                <h1 class="full-name fs-2">Juan Dela Cruz</h1>
+                            </div>
+
+                            <div id="personal-info-details">
+                                <div class="row g-3">
+                                    
+                                    <div class="col-md-6">
+                                        <label for="Fname-field" class="form-label">First Name</label>
+                                        <input type="text" id="Fname-field" name="Fname-field" class="form-control py-2" value="Juan" disabled required>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="Lname-field" class="form-label">Last Name</label>
+                                        <input type="text" id="Lname-field" name="Lname-field" class="form-control py-2" value="Dela Cruz" disabled required>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="email-field" class="form-label">Email Address</label>
+                                        <input type="email" id="email-field" name="email-field" class="form-control py-2" value="juandelacruz@gmail.com" disabled required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="mobile-number-field" class="form-label">Mobile Number</label>
+                                        <input type="text" id="mobile-number-field" name="mobile-number-field" class="form-control py-2" value="09123456789" disabled required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="DOB-field" class="form-label">Date of Birth</label>
+                                        <input type="text" id="DOB-field" name="DOB-field" class="form-control py-2" value="10/24/2005" disabled required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="Nationality-field" class="form-label">Nationality</label>
+                                        <input type="text" id="Nationality-field" name="Nat-field" class="form-control py-2" value="Filipino" disabled required>
+                                    </div>
+
+                                    <!-- Hidden buttons -->
+                                    <div class="col-12 mt-4 d-none" id="edit-actions-container">
+                                        <button type="button" id="save-changes" class="btn btn-success btn-sm px-3 me-2">Save Changes</button>
+                                        <button type="button" class="btn btn-light btn-sm px-3" id="cancel-edit">Cancel</button>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+
+
+
+                        <!--Saved Passengers-->
+                        <div class="tab-pane fade" id="pane-passengers">
+                            <div class ="panel-header d-flex justify-content-between align-items-center mb-4">
+                                <h4 class="title">Saved Passengers</h4>
+                                <button type="button" class="btn btn-outline-primary" id = "edit-details-btn">Add</button>
+                            </div>
+                            
+                            <div class="list-group list-group-flush mt-2" id = "saved-passengers-list">
+                            
+                            </div>
+                        </div>
+
+
+                        <!--Payment Method-->
+                        <div class = "tab-pane fade " id = "pane-payment">
+                            <div class ="panel-header d-flex justify-content-between align-items-center mb-4">
+                                <h4 class="title">Payment Methods</h4>
+                            </div>
+
+                            <div class="row g-3">
+
+                                <div class="col-md-3 card-container">
+                                    
+
+                                    <!--add card button-->
+                                    <div class="card p-3 rounded-3  d-flex flex-column justify-content-between">
+                                            <button type="button" class="btn w-100 h-100">
+                                            <p class="fw-bold">Add Alternate Credit Card</p>
+                                        </button>
+                                        
+                                    </div>
+                                    
+                                </div>
+
+                            </div>
+   
+                        </div>
+
+                        
+                        <!--Travel History-->
+                        <div class="tab-pane fade" id ="pane-history">
+                            <div class ="panel-header d-flex justify-content-between align-items-center mb-4">
+                                <h4 class="title">Travel History</h4>
+                            </div>
+
+                            <div class="accordion accordion-flush" id="travelHistory">
+                                <!--load dynamically-->
+                            </div>
+
+                        </div>
+
+
+                        <div class="tab-pane fade" id="pane-notifications" >
+                            <div class ="panel-header d-flex justify-content-between align-items-center mb-4">
+                                <h4 class="title">Notifications</h4>
+                            </div>
+
+
+
+                            <div class="list-group">
+                            
+                                <div class="list-group-item d-flex justify-content-between align-items-center py-3 border-bottom" id="notifications-list">
+                                    <div class="p-3">
+                                        <h6 class="notification-title">Flight status alerts</h6>
+                                        <p class="notification-description">Receive instant push logs regarding delays, gate gate shifts or boarding updates changes.</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" value="FlightStatusAlert">
+                                    </div>
+                                </div>
+                                <div class="list-group-item d-flex justify-content-between align-items-center py-3 border-bottom">
+                                    <div class="p-3">
+                                        <h6 class="notification-title">Promotions and Marketing Newsletters</h6>
+                                        <p class="notification-description">Stay informed about seasonal vouchers and other promotions from us!</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" value="PromosAndMarketing">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </section>
+
+    </body>
+    </html>

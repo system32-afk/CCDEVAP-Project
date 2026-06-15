@@ -1,0 +1,66 @@
+/* Hero */
+.hero-banner {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../images/hero-banner.jpg");
+    background-position: center;
+    padding: 3%;
+    color: white;
+}
+
+.tabs{
+
+    border: 1px solid rgb(50, 50, 50);
+    border-radius: 10px 10px 20px 20px;
+}
+
+.panels{
+    padding: 4rem;
+    box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.2);
+    border: 1px solid gray;
+    border-radius: 10px;
+}
+
+.title{
+    font-weight:bold;
+    margin-bottom: 0;
+    font-family: 'Istok Web', sans-serif;
+}
+
+.profile-picture{
+   
+    border-radius: 50%;
+    height: 8rem;
+
+}
+
+.full-name{
+    font-family: 'Istok Web', sans-serif;
+    font-size: 2rem;
+}
+
+
+.form-label{
+    
+
+    font-weight: bold;
+    color:gray;
+    font-family: 'Istok Web',sans-serif;
+}
+
+.passenger-name{
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+
+.notification-title{
+    margin-bottom: 1rem;
+    font-weight: bold;
+
+}
+
+.notification-description{
+    /* text-secondary small mb-0 */
+    font-size: small;
+    color:gray
+    
+}

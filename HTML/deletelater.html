@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Trippings</title>
+    
+    <!-- 📄 Framework Fonts & Icons External CDN Connections -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Istok+Web:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    
+    <!-- 🎨 Bootstrap 5 Framework Layout CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        /* Global Font Theme Engine Styling Override Rules */
+        *, html, body, .nav-link, .accordion-button, input, button, .dropdown-item {
+            font-family: 'Istok Web', sans-serif !important;
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        /* Profile Photo Frame & Upload Icon Badge UI Styles */
+        .avatar-wrapper {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+        }
+
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 3px solid #fff;
+        }
+
+        .upload-badge {
+            width: 34px;
+            height: 34px;
+            background-color: #0d6efd;
+            border: 2px solid #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .upload-badge:hover {
+            background-color: #0b5ed7;
+            transform: scale(1.1);
+        }
+
+        /* Sidebar Component Styling Controls */
+        .sidebar-card .nav-link {
+            color: #495057;
+            font-weight: 700;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            transition: all 0.15s ease;
+        }
+
+        .sidebar-card .nav-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .sidebar-card .nav-link.active {
+            background-color: #0d6efd !important;
+            color: #fff !important;
+        }
+
+        /* Stylized Visual Payment Card Component Module */
+        .mock-credit-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #fff;
+            min-height: 170px;
+            border: none;
+        }
+
+        .dash-border-btn {
+            border: 2px dashed #dee2e6 !important;
+            color: #6c757d;
+            transition: all 0.2s;
+        }
+
+        .dash-border-btn:hover {
+            background-color: #f1f3f5;
+            border-color: #adb5bd !important;
+        }
+        
+        .material-symbols-outlined {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🧭 Your Custom Navbar Layout (Cleaned & Corrected) -->
+    <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <!-- Switched backward slash to standard web forward slash route formatting -->
+                <img src="../images/Trippings-UI.png" width="120" height="75" alt="Trippings Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a id="nav-home" class="nav-link" aria-current="page" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="nav-search" class="nav-link" href="search.html">Search Flights</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="nav-reservations" class="nav-link" href="reservations.html">My Reservations</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" role="button" data-bs-toggle="dropdown" aria-expanded="false">User Profile</a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item d-flex align-items-center gap-2" href="profile.html">
+                                <i class="material-symbols-outlined fs-5">account_box</i>Profile</a></li>
+                            
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li><a class="dropdown-item d-flex align-items-center gap-2" href="settings.html">
+                                <i class="material-symbols-outlined fs-5">settings</i>Settings</a></li>
+
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item d-flex align-items-center gap-2" href="#">
+                                <i class="material-symbols-outlined fs-5">logout</i>Logout</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin-dashboard.html">Admin Panel</a>
+                    </li>            
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 🎛️ Profile Management Interface Layout Frame Container -->
+    <div class="container my-5">
+        <div class="row g-4">
+            
+            <!-- 📁 LEFT SIDEBAR ELEMENT BLOCK: Profile Image Upload & Tab Switch List -->
+            <div class="col-md-4 col-lg-3">
+                <div class="card p-3 shadow-sm border-0 sidebar-card text-center">
+                    
+                    <!-- 🖼️ Requirement: Profile Image Placeholder Upload UI -->
+                    <div class="avatar-wrapper position-relative">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80" id="avatar-preview" class="rounded-circle avatar-image shadow-sm" alt="User Avatar">
+                        <label for="image-file-input" class="upload-badge position-absolute bottom-0 end-0 rounded-circle text-white shadow-sm">
+                            <i class="material-symbols-outlined fs-6">photo_camera</i>
+                        </label>
+                        <input type="file" id="image-file-input" accept="image/*" class="d-none">
+                    </div>
+
+                    <h5 class="mb-0 fw-bold">Juan Dela Cruz</h5>
+                    <p class="text-muted small mb-3">Frequent Flyer #TR-88219</p>
+                    <hr class="text-muted opacity-25">
+
+                    <!-- 🎚️ Requirement: Interactive Component Tabs Controller Menu Group List -->
+                    <div class="nav flex-column nav-pills text-start" id="panes" role="tablist" aria-orientation="vertical">
+                        <button class="nav-link active" id="pane-personal-tab" data-bs-toggle="pill" data-bs-target="#pane-personal" type="button" role="tab">Personal Info</button>
+                        <button class="nav-link" id="pane-passengers-tab" data-bs-toggle="pill" data-bs-target="#pane-passengers" type="button" role="tab">Saved Passengers</button>
+                        <button class="nav-link" id="pane-payment-tab" data-bs-toggle="pill" data-bs-target="#pane-payment" type="button" role="tab">Payment Methods</button>
+                        <button class="nav-link" id="pane-history-tab" data-bs-toggle="pill" data-bs-target="#pane-history" type="button" role="tab">Travel History</button>
+                        <button class="nav-link" id="pane-notifications-tab" data-bs-toggle="pill" data-bs-target="#pane-notifications" type="button" role="tab">Notifications</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 📄 RIGHT WINDOW DISPLAY PANEL CONTENT MODULE CONTAINER AREA -->
+            <div class="col-md-8 col-lg-9">
+                <div class="tab-content card p-4 shadow-sm border-0 bg-white" id="panes">
+                    
+                    <!-- 🏢 Panel Section 1: Personal Information (Editable Form Markup Requirement) -->
+                    <div class="tab-pane fade show active" id="pane-personal" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="mb-0 fw-bold text-dark">Personal Information</h4>
+                            <button type="button" class="btn btn-outline-primary btn-sm px-3 d-flex align-items-center gap-1" id="btn-toggle-edit">
+                                <i class="material-symbols-outlined fs-6">edit</i> Edit Details
+                            </button>
+                        </div>
+                        
+                        <form id="form-personal-details">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label text-secondary small fw-bold">First Name</label>
+                                    <input type="text" class="form-control py-2" value="Juan" disabled required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-secondary small fw-bold">Last Name</label>
+                                    <input type="text" class="form-control py-2" value="Dela Cruz" disabled required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-secondary small fw-bold">Email Address</label>
+                                    <input type="email" class="form-control py-2" value="juan.delacruz@trippings.com" disabled required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-secondary small fw-bold">Mobile Phone</label>
+                                    <input type="text" class="form-control py-2" value="+63 917 123 4567" disabled required>
+                                </div>
+                            </div>
+                            <!-- Hidden Save Actions Target Group Block -->
+                            <div class="mt-4 d-none" id="edit-actions-container">
+                                <button type="submit" class="btn btn-success btn-sm px-3 me-2">Save Framework Changes</button>
+                                <button type="button" class="btn btn-light btn-sm px-3" id="btn-cancel-edit">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- 👥 Panel Section 2: Saved Passengers Section Requirement Layout -->
+                    <div class="tab-pane fade" id="pane-passengers" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="mb-0 fw-bold text-dark">Saved Passengers</h4>
+                            <button class="btn btn-primary btn-sm px-3 d-flex align-items-center gap-1">
+                                <i class="material-symbols-outlined fs-6">add</i> Add Companion
+                            </button>
+                        </div>
+                        <p class="text-muted small">Manage companion traveler details to attach records quickly onto flight booking fields.</p>
+                        
+                        <div class="list-group list-group-flush mt-2">
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom">
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-dark">Maria Clara Dela Cruz</h6>
+                                    <small class="text-secondary">Adult | Female | Passport: P99214A</small>
+                                </div>
+                                <button class="btn btn-link link-danger text-decoration-none btn-sm fw-bold">Remove</button>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom">
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-dark">Crisostomo Dela Cruz</h6>
+                                    <small class="text-secondary">Child | Male | Passport: P11248B</small>
+                                </div>
+                                <button class="btn btn-link link-danger text-decoration-none btn-sm fw-bold">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 💳 Panel Section 3: Payment Method UI Mockup Requirement -->
+                    <div class="tab-pane fade" id="pane-payment" role="tabpanel">
+                        <h4 class="fw-bold text-dark mb-4">Saved Payment Methods</h4>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <!-- Visual Stylized Mock Credit Card Output -->
+                                <div class="card p-3 rounded-3 shadow-sm mock-credit-card d-flex flex-column justify-content-between">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="small tracking-wider opacity-75">SKYPASS PREMIER</span>
+                                        <span class="fw-bold fs-5 italic">VISA</span>
+                                    </div>
+                                    <div class="fs-5 my-3 text-center tracking-widest">•••• &nbsp; •••• &nbsp; •••• &nbsp; 8842</div>
+                                    <div class="d-flex justify-content-between align-items-center small opacity-90">
+                                        <div>
+                                            <div class="text-uppercase" style="font-size: 0.65rem;">Cardholder</div>
+                                            <div class="fw-bold">JUAN DELA CRUZ</div>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="text-uppercase" style="font-size: 0.65rem;">Expires</div>
+                                            <div class="fw-bold">08 / 30</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="button" class="btn w-100 h-100 d-flex flex-column align-items-center justify-content-center p-4 dash-border-btn rounded-3">
+                                    <i class="material-symbols-outlined fs-2 mb-2">add_card</i>
+                                    <span class="fw-bold small">Add Alternate Credit Card</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ✈️ Panel Section 4: Travel History (Tabs/Accordion Sections Requirement) -->
+                    <div class="tab-pane fade" id="pane-history" role="tabpanel">
+                        <h4 class="fw-bold text-dark mb-3">Travel History</h4>
+                        <p class="text-muted small mb-4">Review tracking statistics data metrics logs details for archived flight booking records paths.</p>
+                        
+                        <!-- Accordion Wrapper Module -->
+                        <div class="accordion accordion-flush" id="historyAccordionsSystem">
+                            
+                            <div class="accordion-item border-bottom">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button fw-bold text-dark px-0" type="button" data-bs-toggle="collapse" data-bs-target="#itemCollapseOne" aria-expanded="true">
+                                        🛫 Manila (MNL) to Tokyo Haneda (HND) — March 14, 2026
+                                    </button>
+                                </h2>
+                                <div id="itemCollapseOne" class="accordion-collapse collapse show" data-bs-parent="#historyAccordionsSystem">
+                                    <div class="accordion-body px-0 text-secondary">
+                                        <div class="row g-2 mb-2 small">
+                                            <div class="col-6 col-sm-4"><strong>Flight ID:</strong> TR-902</div>
+                                            <div class="col-6 col-sm-4"><strong>Cabin Seat:</strong> 14A (Economy)</div>
+                                            <div class="col-12 col-sm-4"><strong>Booking Reference:</strong> #T7X9WZ</div>
+                                        </div>
+                                        <div class="bg-light p-2 rounded small text-muted">
+                                            Status: Completed Successfully | Ticket Invoice Total: ₱24,150.00
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item border-bottom">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed fw-bold text-dark px-0" type="button" data-bs-toggle="collapse" data-bs-target="#itemCollapseTwo" aria-expanded="false">
+                                        🛫 Cebu (CEB) to Manila (MNL) — December 22, 2025
+                                    </button>
+                                </h2>
+                                <div id="itemCollapseTwo" class="accordion-collapse collapse" data-bs-parent="#historyAccordionsSystem">
+                                    <div class="accordion-body px-0 text-secondary">
+                                        <div class="row g-2 mb-2 small">
+                                            <div class="col-6 col-sm-4"><strong>Flight ID:</strong> TR-114</div>
+                                            <div class="col-6 col-sm-4"><strong>Cabin Seat:</strong> 03D (Premium)</div>
+                                            <div class="col-12 col-sm-4"><strong>Booking Reference:</strong> #C3K1QY</div>
+                                        </div>
+                                        <div class="bg-light p-2 rounded small text-muted">
+                                            Status: Completed Successfully | Ticket Invoice Total: ₱5,820.00
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ⚙️ Panel Section 5: Notification Preferences (Toggle Switches Requirement) -->
+                    <div class="tab-pane fade" id="pane-notifications" role="tabpanel">
+                        <h4 class="fw-bold text-dark mb-3">Notification Preferences</h4>
+                        <p class="text-muted small mb-4">Choose exactly how Trippings broadcasts status itinerary tracking updates directly onto your screens.</p>
+                        
+                        <div class="list-group list-group-flush">
+                            <!-- Toggle Item Row 1 -->
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom">
+                                <div class="pe-3">
+                                    <h6 class="mb-1 fw-bold text-dark">Flight Status Changes Alerts</h6>
+                                    <p class="text-secondary small mb-0">Receive instant push logs regarding delays, gate gate shifts or boarding updates changes.</p>
+                                </div>
+                                <div class="form-check form-switch fs-5">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="switch-alerts" checked>
+                                </div>
+                            </div>
+                            
+                            <!-- Toggle Item Row 2 -->
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom">
+                                <div class="pe-3">
+                                    <h6 class="mb-1 fw-bold text-dark">Promotions and Marketing Newsletters</h6>
+                                    <p class="text-secondary small mb-0">Stay informed about seasonal voucher voucher code key discount distributions notifications.</p>
+                                </div>
+                                <div class="form-check form-switch fs-5">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="switch-marketing">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 🔮 JavaScript Controller Behaviors Logic Engine Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            // 🖼️ 1. PROFILE PICTURE LIVE FILE READER UPLOADER HANDLER
+            const fileInput = document.getElementById('image-file-input');
+            const avatarPreview = document.getElementById('avatar-preview');
+
+            fileInput.addEventListener('change', function(e) {
+                const targetedFile = e.target.files[0];
+                if (targetedFile) {
+                    const objReader = new FileReader();
+                    objReader.onload = function(event) {
+                        avatarPreview.src = event.target.result;
+                    };
+                    objReader.readAsDataURL(targetedFile);
+                }
+            });
+
+            // 📝 2. FORM EDITABLE FIELDS INTERACTIVITY LOCK SYSTEM TOGGLES
+            const btnEditToggle = document.getElementById('btn-toggle-edit');
+            const btnCancelEdit = document.getElementById('btn-cancel-edit');
+            const actionsBlockRow = document.getElementById('edit-actions-container');
+            const formElements = document.querySelectorAll('#form-personal-details input');
+            const mainTargetForm = document.getElementById('form-personal-details');
+
+            btnEditToggle.addEventListener('click', function() {
+                // Remove disabled state attribute keys across text components input tracks
+                formElements.forEach(inputItem => inputItem.removeAttribute('disabled'));
+                actionsBlockRow.classList.remove('d-none');
+                btnEditToggle.classList.add('d-none');
+            });
+
+            function lockFormFieldsClose() {
+                formElements.forEach(inputItem => inputItem.setAttribute('disabled', 'true'));
+                actionsBlockRow.classList.add('d-none');
+                btnEditToggle.classList.remove('d-none');
+            }
+
+            btnCancelEdit.addEventListener('click', lockFormFieldsClose);
+            mainTargetForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Stop raw reload cycles simulation tracking parameters
+                alert("Profile changes updated successfully!");
+                lockFormFieldsClose();
+            });
+        });
+    </script>
+</body>
+</html>

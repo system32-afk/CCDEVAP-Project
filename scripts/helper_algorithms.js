@@ -1,4 +1,4 @@
-var flights = null;
+var flightsDB = null;
 
 $(document).ready(function() {
 //flight database
@@ -99,4 +99,23 @@ function showAlert(message, type) {
     setTimeout(() => {
         $('.alert').alert('close');
     }, 5000);
+}
+
+
+
+function convertDateToWords(date) {
+  // split the dd/mm/yyyy string into individual day, month, and year parts
+  const [day, month, year] = date.split('/');
+  
+  // construct a native Date object (months is 0 index so -1 to align properly w months)
+  const dateObj = new Date(year, month - 1, day);
+  
+  //use formatter
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  
+  return formatter.format(dateObj);
 }
