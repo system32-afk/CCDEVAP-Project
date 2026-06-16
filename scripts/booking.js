@@ -512,6 +512,17 @@ $(document).ready(function() {
 
     // go to reservations
     $("#btn-next-6").click(function() {
+        // check if all passengers have complete details
+        const totalPassengers = $(".btn-add-details").length;
+        const completedPassengers = Object.keys(passengersData).length;
+
+        if (completedPassengers < totalPassengers) {
+            alert("Please complete all passenger details before proceeding.");S
+            return;
+        }
+        
+        // BUILD RESERVATION OBJECT HERE
+
         window.location.href = "reservations.html";
     });
 
