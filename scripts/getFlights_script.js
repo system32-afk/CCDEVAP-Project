@@ -305,7 +305,7 @@ function lockInFlight(flightID){
     var totalPassengers = getTotalPassengers(booking_info);
     var tripType = booking_info.tripType;
 
-    //var {outboundTrip, returnTrip} = trips
+    // var {outboundTrip, returnTrip} = trips
 
     console.log(totalPassengers)
     
@@ -321,9 +321,26 @@ function lockInFlight(flightID){
 
         //if trip is a round trip, set for return flight.
         if(tripType === "round-trip"){
+            
+            // save departure flight and show return flights
+            sessionStorage.setItem("selected_departure", JSON.stringify({
+                id: chosenFlight.id,
+                flightNum: chosenFlight.flightNum,
+                airline: chosenFlight.airline,
+                departure: chosenFlight.Departure,
+                arrival: chosenFlight.arrival,
+                duration: calculateFlightDuration(chosenFlight.Departure, chosenFlight.arrival).display,
+                cabinType: booking_info.cabinType,
+                ticketPrice: chosenFlight.cabins[booking_info.cabinType].price,
+                origin: booking_info.originCity,
+                destination: booking_info.destinationCity,
+                departureDate: booking_info.departureDate
+            }));
+
             currentBookingPhase = "return";
             renderFlightsUI();
         }else{ 
+            // one way flight
             sessionStorage.setItem("selected_flight", JSON.stringify({
                 id: chosenFlight.id,
                 flightNum: chosenFlight.flightNum,
@@ -345,7 +362,22 @@ function lockInFlight(flightID){
     }else if (currentBookingPhase === "return"){
         selectedReturnFlight = chosenFlight;
 
-        //PASS INFORMATION FROM BOOKING INFO TO RESERVATION OBJECT HERE.
+        // save return flight
+        sessionStorage.setItem("selected_return", JSON.stringify({
+            id: chosenFlight.id,
+            flightNum: chosenFlight.flightNum,
+            airline: chosenFlight.airline,
+            departure: chosenFlight.Departure,
+            arrival: chosenFlight.arrival,
+            duration: calculateFlightDuration(chosenFlight.Departure, chosenFlight.arrival).display,
+            cabinType: booking_info.cabinType,
+            ticketPrice: chosenFlight.cabins[booking_info.cabinType].price,
+            origin: booking_info.destinationCity,
+            destination: booking_info.originCity,
+            departureDate: booking_info.returnDate
+        }));
+
+        window.location.href = "booking.html";
     }
 }
 

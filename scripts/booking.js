@@ -3,15 +3,19 @@ $(document).ready(function() {
     let currentPassenger = null;
     let passengersData = JSON.parse(sessionStorage.getItem("passengers_data")) || {};
 
-    const selectedFlight = JSON.parse(sessionStorage.getItem("selected_flight"));
-    const baseTicketPrice = selectedFlight ? selectedFlight.ticketPrice : 0;
+    const selectedDeparture = JSON.parse(sessionStorage.getItem("selected_departure"));
+    const selectedReturn = JSON.parse(sessionStorage.getItem("selected_return"));
+    const baseTicketPrice = selectedDeparture ? selectedDeparture.ticketPrice : 0;
+
+    const isRoundTrip = getBookingInfo().tripType === "round-trip";
+    const returnTicketPrice = isRoundTrip && selectedReturn ? selectedReturn.ticketPrice : 0;
 
     // pricing constants
     const PRICES = {
         baseFare: {
-            adult: baseTicketPrice,
-            child: Math.round(baseTicketPrice * 0.75),
-            infant: Math.round(baseTicketPrice * 0.10)
+            adult: baseTicketPrice + Math.round(returnTicketPrice),
+            child: Math.round((baseTicketPrice + returnTicketPrice) * 0.75),
+            infant: Math.round((baseTicketPrice + returnTicketPrice) * 0.10)
         },
         meal: { standard: 0, vegetarian: 150, vegan: 200, halal: 100, kosher: 350, "gluten-free": 300 },
         seat: 500,
@@ -48,6 +52,7 @@ $(document).ready(function() {
 
         // selections
         let seats = [];
+        let returnSeats = [];
         let mealCounts = {};
         let totalBaggage = 0;
         let totalPriority = 0;
@@ -59,6 +64,11 @@ $(document).ready(function() {
 
             // seats
             if (p.seat) seats.push(p.seat);
+
+            if (p.returnSeat) returnSeats.push(p.returnSeat);
+
+            const returnSeatEl = $(`.return-seat[data-seat="${p.returnSeat}"]`);
+            if (returnSeatEl.hasClass("premium")) totalSeat += PRICES.seat;
 
             // meals
             if (p.mealPackage) {
@@ -90,6 +100,12 @@ $(document).ready(function() {
             return rowA !== rowB ? rowA - rowB : colA.localeCompare(colB);
         });
 
+        returnSeats.sort(function(a, b) {
+            const rowA = parseInt(a), rowB = parseInt(b);
+            const colA = a.replace(/[0-9]/g, ""), colB = b.replace(/[0-9]/g, "");
+            return rowA !== rowB ? rowA - rowB : colA.localeCompare(colB);
+        });
+
         // format meals
         const mealDisplay = Object.keys(mealCounts).length > 0
             ? Object.entries(mealCounts).map(([meal, count]) => count + "x " + meal.charAt(0).toUpperCase() + meal.slice(1)).join(", ")
@@ -97,6 +113,9 @@ $(document).ready(function() {
 
         // update selections
         $("#summary-seat").text(seats.length > 0 ? seats.join(", ") : "—");
+        if (isRoundTrip) {
+            $("#summary-return-seat").text(returnSeats.length > 0 ? returnSeats.join(", ") : "—");
+        }
         $("#summary-meal").text(mealDisplay);
         $("#summary-baggage").text(totalBaggage);
         $("#summary-priority").text(totalPriority);
@@ -129,6 +148,7 @@ $(document).ready(function() {
             emergencyContact: null,
             mealPackage: null,
             seat: null,
+            returnSeat: null, // add this
             extraServices: {
                 additionalBaggage: 0,
                 priorityBoarding: false,
@@ -160,6 +180,9 @@ $(document).ready(function() {
             $(".seat").not(".occupied").removeClass("selected");
             $(`.seat[data-seat="${passengerData.seat}"]`).addClass("selected");
             $("#selected-seat-display").text(passengerData.seat || "None");
+            $(".return-seat").not(".occupied").removeClass("selected");
+            $(`.return-seat[data-seat="${passengerData.returnSeat}"]`).addClass("selected");
+            $("#return-seat-display").text(passengerData.returnSeat || "None");
             $("#baggage-count").text(passengerData.extraServices.additionalBaggage);
             $("#priority-toggle").prop("checked", passengerData.extraServices.priorityBoarding);
             $("#insurance-toggle").prop("checked", passengerData.extraServices.travelInsurance);
@@ -177,6 +200,8 @@ $(document).ready(function() {
             $(".meal-option").removeClass("selected");
             $(".seat").not(".occupied").removeClass("selected");
             $("#selected-seat-display").text("None");
+            $(".return-seat").not(".occupied").removeClass("selected");
+            $("#return-seat-display").text("None");
             $("#baggage-count").text(0);
             $("#priority-toggle").prop("checked", false);
             $("#insurance-toggle").prop("checked", false);
@@ -187,14 +212,12 @@ $(document).ready(function() {
         $("#outside-buttons").hide();
         $("#passenger-form").show();
         goToStep(1);
-        updateSummary();
 
         // different progress bar for infants
         if (currentPassenger.startsWith("infant")) {
             $(".progress-bar").css("width", "100%");
             $("#btn-next-1").text("Done");
         } else {
-            $(".progress-bar").css("width", "25%");
             $("#btn-next-1").text("Next");
         }
     });
@@ -203,7 +226,7 @@ $(document).ready(function() {
     function goToStep(n) {
         $(".passenger-step").hide();
         $("#passenger-step-" + n).show();
-        $(".progress-bar").css("width", (n / 4 * 100) + "%");
+        $(".progress-bar").css("width", (n / 5 * 100) + "%");
     }
 
     // inline validations for next button
@@ -324,7 +347,7 @@ $(document).ready(function() {
         }
     });
 
-    // clickable seats
+    // departure clickable seats
     $(".seat").click(function() {
         if ($(this).hasClass("occupied")) return;
         $(".seat").not(".occupied").removeClass("selected");
@@ -336,18 +359,45 @@ $(document).ready(function() {
         updateSummary();
     });
 
-    // seat selection validation
+    // return clickable seats
+    $(".return-seat").click(function() {
+        if ($(this).hasClass("occupied")) return;
+        $(".return-seat").not(".occupied").removeClass("selected");
+        $(this).addClass("selected");
+
+        const seat = $(this).data("seat");
+        passengerData.returnSeat = seat;
+        $("#return-seat-display").text(seat);
+        updateSummary();
+    });
+
+    // departure seat validation
     $("#btn-next-3").click(function() {
         if ($(".seat.selected").length === 0) {
             $("#err-seat").show();
         } else {
             $("#err-seat").hide();
             passengerData.seat = $(".seat.selected").data("seat");
-            goToStep(4);
+            if (isRoundTrip) {
+                goToStep(4);
+            } else {
+                goToStep(5);
+            }
         }
     });
 
-    // seat tooltip
+    // return seat validation
+    $("#btn-next-4").click(function() {
+        if ($(".return-seat.selected").length === 0) {
+            $("#err-return-seat").show();
+        } else {
+            $("#err-return-seat").hide();
+            passengerData.returnSeat = $(".return-seat.selected").data("seat");
+            goToStep(5);
+        }
+    });
+
+    // departure seat tooltip
     $(".seat").on("mouseenter", function(e) {
         const seat = $(this).data("seat");
         const isPremium = $(this).hasClass("premium");
@@ -358,6 +408,19 @@ $(document).ready(function() {
         $("#seat-tooltip").css({ top: e.clientY + 12, left: e.clientX + 12 });
     }).on("mouseleave", function() {
         $("#seat-tooltip").hide();
+    });
+
+    // return seat tooltip
+    $(".return-seat").on("mouseenter", function(e) {
+        const seat = $(this).data("seat");
+        const isPremium = $(this).hasClass("premium");
+        const isOccupied = $(this).hasClass("occupied");
+        const status = isOccupied ? "Occupied" : isPremium ? "Premium (+₱500)" : "Available";
+        $("#return-seat-tooltip").text("Seat " + seat + " - " + status).show();
+    }).on("mousemove", function(e) {
+        $("#return-seat-tooltip").css({ top: e.clientY + 12, left: e.clientX + 12 });
+    }).on("mouseleave", function() {
+        $("#return-seat-tooltip").hide();
     });
 
     // extra services
@@ -400,9 +463,18 @@ $(document).ready(function() {
     $("#btn-back-2").click(function() { goToStep(1); });
     $("#btn-back-3").click(function() { goToStep(2); });
     $("#btn-back-4").click(function() { goToStep(3); });
+    $("#btn-back-5").click(function() { 
+        if (isRoundTrip) {
+            goToStep(4);
+        } else {
+            goToStep(3);
+        }
+    });
 
     // back to passenger list
     $("#btn-back-1").click(function() {
+        currentPassenger = null;
+        updateSummary();
         $("#passenger-form").hide();
         $("#passenger-list").show();
         $("#outside-buttons").show();
@@ -416,6 +488,7 @@ $(document).ready(function() {
         // update card display
         $("#display-name-" + currentPassenger).text(passengerData.fullName);
         $("#display-seat-" + currentPassenger).text(passengerData.seat);
+        $("#display-return-seat-" + currentPassenger).text(passengerData.returnSeat || "—");
         $("#display-meal-" + currentPassenger).text(passengerData.mealPackage);
         $("#display-baggage-" + currentPassenger).text(passengerData.extraServices.additionalBaggage);
         $("#display-priority-" + currentPassenger).text(passengerData.extraServices.priorityBoarding ? "Yes" : "No");
@@ -430,13 +503,15 @@ $(document).ready(function() {
     });
 
     // go back to search flights
-    $("#btn-back-5").click(function() {
+    $("#btn-back-6").click(function() {
         sessionStorage.removeItem("passengers_data");
+        sessionStorage.removeItem("selected_departure");
+        sessionStorage.removeItem("selected_return");
         window.location.href = "search.html";
     });
 
     // go to reservations
-    $("#btn-next-5").click(function() {
+    $("#btn-next-6").click(function() {
         window.location.href = "reservations.html";
     });
 
@@ -446,6 +521,7 @@ $(document).ready(function() {
     $.each(passengersData, function(key, p) {
         $("#display-name-" + key).text(p.fullName || "—");
         $("#display-seat-" + key).text(p.seat || "—");
+        $("#display-return-seat-" + key).text(p.returnSeat || "—");
         $("#display-meal-" + key).text(p.mealPackage || "—");
         $("#display-baggage-" + key).text(p.extraServices.additionalBaggage);
         $("#display-priority-" + key).text(p.extraServices.priorityBoarding ? "Yes" : "No");

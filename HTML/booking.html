@@ -216,11 +216,11 @@
 
                 </div>
 
-                <!-- Seat Selection -->
+                <!-- Departure Seat Selection -->
                 <div class="passenger-step" id="passenger-step-3">
                     <div class="card form-card">
                         <div class="card-body">
-                            <h5 class="card-title">Seat Selection</h5>
+                            <h5 class="card-title">Departure Seat Selection</h5>
                             <hr>
                             <div class="d-flex gap-3 flex-wrap mb-3 justify-content-center">
                                 <div class="d-flex align-items-center gap-1">
@@ -389,8 +389,181 @@
 
                 </div>
 
-                <!-- Extra Services -->
+                <!-- Return Seat Selection -->
                 <div class="passenger-step" id="passenger-step-4">
+                    <div class="card form-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Return Seat Selection</h5>
+                            <hr>
+                            <div class="d-flex gap-3 flex-wrap mb-3 justify-content-center">
+                                <div class="d-flex align-items-center gap-1">
+                                    <span class="seat-legend available"></span>
+                                    <small>Available</small>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-1">
+                                    <span class="seat-legend occupied"></span>
+                                    <small>Occupied</small>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-1">
+                                    <span class="seat-legend selected"></span>
+                                    <small>Selected</small>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-1">
+                                    <span class="seat-legend premium"></span>
+                                    <small>Premium (+₱500)</small>
+                                </div>
+                            </div>
+
+                            <p class="option-desc text-center">Selected Seat: <span class="option-name" id="return-seat-display">None</span></p>
+                            
+                            <div class="d-flex justify-content-center">
+                                <div class="seat-map">
+
+                                    <p class="option-desc seat-select text-center">FRONT OF THE PLANE</p>
+                                    <hr>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label"></div>
+                                        <div class="seat-cell text-muted small fw-bold">A</div>
+                                        <div class="seat-cell text-muted small fw-bold">B</div>
+                                        <div class="seat-cell text-muted small fw-bold">C</div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell text-muted small fw-bold">D</div>
+                                        <div class="seat-cell text-muted small fw-bold">E</div>
+                                        <div class="seat-cell text-muted small fw-bold">F</div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">1</div>
+                                        <div class="seat-cell"><div class="return-seat premium" data-seat="1A" data-premium="true"></div></div>
+                                        <div class="seat-cell"><div class="return-seat premium" data-seat="1B" data-premium="true"></div></div>
+                                        <div class="seat-cell"><div class="return-seat premium occupied" data-seat="1C" data-premium="true"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="return-seat premium" data-seat="1D" data-premium="true"></div></div>
+                                        <div class="seat-cell"><div class="return-seat premium" data-seat="1E" data-premium="true"></div></div>
+                                        <div class="seat-cell"><div class="return-seat premium" data-seat="1F" data-premium="true"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">2</div>
+                                        <div class="seat-cell"><div class="return-seat premium" data-seat="2A" data-premium="true"></div></div>
+                                        <div class="seat-cell"><div class="return-seat premium" data-seat="2B" data-premium="true"></div></div>
+                                        <div class="seat-cell"><div class="return-seat premium" data-seat="2C" data-premium="true"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="return-seat premium occupied" data-seat="2D" data-premium="true"></div></div>
+                                        <div class="seat-cell"><div class="return-seat premium" data-seat="2E" data-premium="true"></div></div>
+                                        <div class="seat-cell"><div class="return-seat premium" data-seat="2F" data-premium="true"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1 mt-2">
+                                        <div class="seat-row-label text-muted small fw-bold">3</div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="3A"></div></div>
+                                        <div class="seat-cell"><div class="return-seat occupied" data-seat="3B"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="3C"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="3D"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="3E"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="3F"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">4</div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="4A"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="4B"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="4C"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="return-seat occupied" data-seat="4D"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="4E"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="4F"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">5</div>
+                                        <div class="seat-cell"><div class="return-seat occupied" data-seat="5A"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="5B"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="5C"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="5D"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="5E"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="5F"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">6</div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="6A"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="6B"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="6C"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="6D"></div></div>
+                                        <div class="seat-cell"><div class="return-seat occupied" data-seat="6E"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="6F"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">7</div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="7A"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="7B"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="7C"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="7D"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="7E"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="7F"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">8</div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="8A"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="8B"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="8C"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="8D"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="8E"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="8F"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">9</div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="9A"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="9B"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="9C"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="9D"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="9E"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="9F"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">10</div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="10A"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="10B"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="10C"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="10D"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="10E"></div></div>
+                                        <div class="seat-cell"><div class="return-seat available" data-seat="10F"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="text-danger inline-validation text-center" id="err-return-seat">Please select a seat.</p>
+                            
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <button id="btn-back-4" class="btn btn-outline-secondary">Back</button>
+                        <button id="btn-next-4" class="btn btn-primary">Next</button>
+                    </div>
+
+                    <div id="return-seat-tooltip"></div>
+
+                </div>
+
+                <!-- Extra Services -->
+                <div class="passenger-step" id="passenger-step-5">
                     <div class="card form-card">
                         <div class="card-body">
                             <h5 class="card-title">Extra Services</h5>
@@ -466,7 +639,7 @@
                     </div>
 
                     <div class="mt-3">
-                        <button id="btn-back-4" class="btn btn-outline-secondary">Back</button>
+                        <button id="btn-back-5" class="btn btn-outline-secondary">Back</button>
                         <button id="btn-done" class="btn btn-primary">Done</button>
                     </div>
 
@@ -475,8 +648,8 @@
 
             <div id="outside-buttons">
                 <div class="mt-3">
-                    <button id="btn-back-5" class="btn btn-outline-secondary">Search Flights</button>
-                    <button id="btn-next-5" class="btn btn-primary">Confirm</button>
+                    <button id="btn-back-6" class="btn btn-outline-secondary">Search Flights</button>
+                    <button id="btn-next-6" class="btn btn-primary">Confirm</button>
                 </div>
             </div>
 
@@ -491,36 +664,72 @@
 
                     <!-- Flight Details -->
                     <p class="summary-section-label">Flight Details</p>
+
+                    <!-- Departure Flight -->
+                    <p class="summary-sub-label">Departure</p>
                     <div class="d-flex justify-content-between mb-1">
                         <small class="text-muted">Flight</small>
-                        <small id="summary-flight">—</small>
+                        <small id="summary-dep-flight">—</small>
                     </div>
 
                     <div class="d-flex justify-content-between mb-1">
                         <small class="text-muted">Route</small>
-                        <small id="summary-route">—</small>
+                        <small id="summary-dep-route">—</small>
                     </div>
 
                     <div class="d-flex justify-content-between mb-1">
                         <small class="text-muted">Departure</small>
-                        <small id="summary-departure">—</small>
+                        <small id="summary-dep-departure">—</small>
                     </div>
 
                     <div class="d-flex justify-content-between mb-1">
                         <small class="text-muted">Arrival</small>
-                        <small id="summary-arrival">—</small>
+                        <small id="summary-dep-arrival">—</small>
                     </div>
 
                     <div class="d-flex justify-content-between mb-1">
                         <small class="text-muted">Duration</small>
-                        <small id="summary-duration">—</small>
+                        <small id="summary-dep-duration">—</small>
                     </div>
 
+                    <!-- Return Flight -->
+                    <div id="summary-return-section">
+                        <hr>
+                        <p class="summary-sub-label">Return</p>
+                        <div class="d-flex justify-content-between mb-1">
+                            <small class="text-muted">Flight</small>
+                            <small id="summary-ret-flight">—</small>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mb-1">
+                            <small class="text-muted">Route</small>
+                            <small id="summary-ret-route">—</small>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-1">
+                            <small class="text-muted">Departure</small>
+                            <small id="summary-ret-departure">—</small>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-1">
+                            <small class="text-muted">Arrival</small>
+                            <small id="summary-ret-arrival">—</small>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-1">
+                            <small class="text-muted">Duration</small>
+                            <small id="summary-ret-duration">—</small>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Cabin and Passengers (shared) -->
                     <div class="d-flex justify-content-between mb-1">
                         <small class="text-muted">Cabin Class</small>
                         <small id="summary-cabin">—</small>
                     </div>
-
+                    
                     <div class="d-flex justify-content-between mb-1">
                         <small class="text-muted">Passengers</small>
                         <small id="summary-passengers">—</small>
@@ -536,8 +745,13 @@
 
                     <div id="summary-selections">
                         <div class="d-flex justify-content-between mb-1">
-                            <small class="text-muted">Seat</small>
+                            <small class="text-muted">Departure Seat</small>
                             <small id="summary-seat">—</small>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-1" id="return-seat-row">
+                            <small class="text-muted">Return Seat</small>
+                            <small id="summary-return-seat">—</small>
                         </div>
 
                         <div class="d-flex justify-content-between mb-1">
