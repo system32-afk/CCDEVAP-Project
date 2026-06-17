@@ -53,10 +53,6 @@ body {
 }
 
 /* Progress Indicator */
-.progress-container {
-    max-width: 50%;
-}
-
 .progress {
     background-color: lightgray;
 }
@@ -103,6 +99,11 @@ body {
     color: white;
 }
 
+.passenger-detail {
+    font-size: 90%;
+    margin-bottom: 1%;
+}
+
 /* Passenger Details */
 #passenger-form {
     display: none;
@@ -145,7 +146,7 @@ label {
 }
 
 /* Seat Selection */
-.seat, .return-seat {
+.seat {
     width: 32px;
     height: 32px;
     border-radius: 6px 6px 1px 1px;
@@ -153,62 +154,62 @@ label {
     transition: transform 0.15s;
 }
 
-.seat.available, .return-seat.available { 
+.seat.available { 
     background-color: #d4e3ff; 
     border: 2px solid #a0bcee; 
 }
 
-.seat.available:hover, .return-seat.available:hover { 
+.seat.available:hover { 
     transform: scale(1.15); 
     background-color: #b0caff; 
 }
 
-.seat.premium, .return-seat.premium { 
+.seat.premium { 
     background-color: #fff3cd; 
     border: 2px solid #f0b400; 
 }
 
-.seat.premium:hover, .return-seat.premium:hover { 
+.seat.premium:hover { 
     transform: scale(1.15); 
     background-color: #ffe08a; 
 }
 
-.seat.occupied, .return-seat.occupied { 
+.seat.occupied { 
     background-color: #e0e0e0; 
     border: 2px solid #aaa; 
     cursor: not-allowed; 
 }
 
-.seat.occupied:hover, .return-seat.occupied:hover { 
+.seat.occupied:hover { 
     transform: none; 
 }
 
-.seat.premium.occupied, .return-seat.premium.occupied { 
+.seat.premium.occupied { 
     background-color: #e0e0e0; 
     border: 2px solid #aaa; 
     cursor: not-allowed; 
 }
 
-.seat.premium.occupied:hover, .return-seat.premium.occupied:hover { 
+.seat.premium.occupied:hover { 
     transform: none; 
 }
 
-.seat.selected, .return-seat.selected { 
+.seat.selected { 
     background-color: #2E5EAA; 
     border: 2px solid #1a3d7a; 
 }
 
-.seat.selected:hover, .return-seat.selected:hover { 
+.seat.selected:hover { 
     background-color: #2E5EAA; 
     border: 2px solid #1a3d7a; 
 }
 
-.seat.premium.selected, .return-seat.premium.selected { 
+.seat.premium.selected { 
     background-color: #d4a000; 
     border: 2px solid #a07800; 
 }
 
-.seat.premium.selected:hover, .return-seat.premium.selected:hover { 
+.seat.premium.selected:hover { 
     background-color: #d4a000; 
     border: 2px solid #a07800; 
 }
@@ -233,11 +234,6 @@ label {
     border-radius: 4px;
 }
 
-.option-desc.seat-select {
-    font-size: 80%;
-    letter-spacing: 6px;
-}
-
 .seat-legend.available { 
     background-color: #d4e3ff; 
     border: 2px solid #a0bcee; 
@@ -256,16 +252,6 @@ label {
 .seat-legend.premium { 
     background-color: #fff3cd; 
     border: 2px solid #f0b400; 
-}
-
-#seat-tooltip, #return-seat-tooltip {
-    position: fixed;
-    background: #333;
-    color: #fff;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 80%;
-    display: none;
 }
 
 /* Extra Services */
@@ -311,17 +297,9 @@ label {
     font-size: 90%;
 }
 
-#summary-return-section {
-    display: none;
-}
-
-#return-seat-row {
-    display: none;
-}
-
-.summary-sub-label {
-    font-size: 80%;
-    color: gray;
+.summary-section-detail {
+    font-size: 90%;
+    margin-bottom: 1%;
 }
 
 .summary-total-label {
