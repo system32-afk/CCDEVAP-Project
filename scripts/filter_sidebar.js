@@ -54,14 +54,13 @@ $(document).ready(function() {
 
 
 sidebarFilterBody.on("change input", function() {
-    // 1️⃣ Run extraction loops first to sync your global checkbox arrays
-    modifyAirlineFilters();   
+   
     modifyScheduleFilters();   
 
-    // 2️⃣ Filter once and save the results
+    
     const filteredResults = filterFlights(searchResults); 
     
-    // 3️⃣ Send to UI and log
+   
     renderFlights(filteredResults);
     console.log("Filtered Flights Array:", filteredResults);
 
