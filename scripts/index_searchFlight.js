@@ -66,7 +66,6 @@ function swapValues(){
     //.val()is a property that gets or sets a value inside an html input element
     var temp =  departure.val(); 
     departure.val(destination.val());
-    departure.val(destination.val());
     destination.val(temp);
 }
 
