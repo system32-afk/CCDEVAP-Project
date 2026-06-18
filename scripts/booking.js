@@ -219,7 +219,6 @@ $(document).ready(function () {
             $("#err-meal").show(); 
         } else {
             $("#err-meal").hide();
-            $(".meal-option").removeClass("selected");
             updateSummary();
             goToStep(3);
         }
@@ -240,8 +239,6 @@ $(document).ready(function () {
             $("#err-seat").show();
         } else {
             $("#err-seat").hide();
-            $(".seat").removeClass("selected");
-            $("#selected-seat-display").text("None");
             updateSummary();
             goToStep(4);
         }
@@ -281,20 +278,41 @@ $(document).ready(function () {
     });
 
     $("#btn-back-3").click(function() {
-        $(".meal-option").removeClass("selected"); 
         updateSummary(); 
         goToStep(2);
     });
 
     $("#btn-back-4").click(function() {
-        $(".seat").removeClass("selected"); 
         updateSummary(); 
         goToStep(3);
     });
 
-    // done button in passenger forms
-    $("#btn-done").click(function() { 
-        backToList(); 
+    // done button displays text in passenger card
+    $("#btn-done").click(function() {
+        $("#display-name-" + currentPassenger).text($("#full-name").val().trim());
+        $("#display-seat-" + currentPassenger).text($("#selected-seat-display").text());
+        $("#display-meal-" + currentPassenger).text($("#summary-meal").text());
+        $("#display-baggage-" + currentPassenger).text($("#baggage-count").text());
+
+        if ($("#priority-toggle").is(":checked")) {
+            $("#display-priority-" + currentPassenger).text("Yes");
+        } else {
+            $("#display-priority-" + currentPassenger).text("No");
+        }
+
+        if ($("#insurance-toggle").is(":checked")) {
+            $("#display-insurance-" + currentPassenger).text("Yes");
+        } else {
+            $("#display-insurance-" + currentPassenger).text("No");
+        }
+
+        if ($("#lounge-toggle").is(":checked")) {
+            $("#display-lounge-" + currentPassenger).text("Yes");
+        } else {
+            $("#display-lounge-" + currentPassenger).text("No");
+        }
+
+        backToList();
     });
 
     // back button from passenger list
