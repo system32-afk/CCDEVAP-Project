@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../CSS/reservations.css" media="all">
+    <link rel="stylesheet" href="../CSS/admin.css" media="all">
+
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined"> 
+
+    <script src="/dependencies/jquery-4.0.0.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/scripts/reservations.js" defer></script>
+    <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+</head>
+<body class="bg-light">
+
+<div id="navbar"></div>
+
+<div class="container-fluid content-section">
+    <div class="row">
+        <aside class="admin-sidebar">
+            <ul class="nav flex-column admin-sidebar-nav gap-1">
+                <li class="nav-item">
+                    <a href="admin-dashboard.html" class="nav-link rounded">
+                        <img src="/images/dashboard-icon.png">
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="admin-flights.html" class="nav-link rounded">
+                        <img src="/images/flight-management-icon.png">
+                        Flight Management
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="admin-users.html" class="nav-link active rounded">
+                        <img src="/images/user-management-icon.png">
+                        User Management
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="admin-reservations.html" class="nav-link rounded">
+                        <img src="/images/reservation-management-icon.png">
+                        Reservations Management
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="admin-content">
+                <h1 class="admin-title"><strong>USER MANAGEMENT</strong></h1>
+
+            <!-- search bar -->
+            <div class="search-container">
+                <form id="searchAndSortForm">
+
+                <div class="form-group">
+                    <label class="departure-date">User ID:</label>
+                    <input id="departureDate" type="number" placeholder="47">
+                </div>
+
+                <div class="form-group">
+                    <label class="departure-date">First Name:</label>
+                    <input id="departureDate" type="text" placeholder="John">
+                </div>
+
+                <div class="form-group">
+                    <label class="departure-date">Last Name:</label>
+                    <input id="departureDate" type="text" placeholder="Doe">
+                </div>
+
+                <div class="form-group">
+                    <label>Date of Birth:</label>
+                    <input id="returnDate" type="date">
+                </div>
+
+                <div class="form-group">
+                    <label>Sort By:</label>
+                    <select id="sortBy" style="width: 180px;">
+                        <option value="">None</option>
+                        <option value="dateAsc">Ascending: A-Z</option>
+                        <option value="dateDesc">Descending: Z-A</option>
+                        <option value="priceAsc">Ascending: ID</option>
+                        <option value="priceAsc">Descending: ID</option>
+                        <option value="priceAsc">Status</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Status:</label>
+                    <select id="statusFilter">
+                        <option value="">All</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+
+                </form>
+            </div>
+
+
+            <div class="search-flight">
+                <button class="btn btn-primary" id="sortReservations">Search Users</a>
+            </div><br>
+
+                
+            <div class="analytics-table-card">
+                <div class="table-responsive">
+                    <table class="table table-hover admin-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">User ID</th>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Email Address</th>
+                                <th scope="col">Mobile Number</th>
+                                <th scope="col">Date of Birth</th>
+                                <th scope="col">Nationality</th>
+                                <th scope="col">Activity Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="table-code-highlight">1</td>
+                                <td class="table-code-highlight">Juan</td>
+                                <td class="table-code-highlight">Dela Santos</td>
+                                <td>juan.delasantos@gmail.com</td>
+                                <td>+63 917 123 4567</td>
+                                <td>12-05-1992</td>
+                                <td>Filipino</td>
+                                <td class="text-center">
+                                    <span class="status-badge confirmed">Active</span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="table-code-highlight">2</td>
+                                <td class="table-code-highlight">Maria</td>
+                                <td class="table-code-highlight">Buenaventura</td>
+                                <td>maria.buenaventura@yahoo.com</td>
+                                <td>+63 918 987 6543</td>
+                                <td>22-10-1998</td>
+                                <td>Filipino</td>
+                                <td class="text-center">
+                                    <span class="status-badge pending">Inactive</span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="table-code-highlight">3</td>
+                                <td class="table-code-highlight">David</td>
+                                <td class="table-code-highlight">Miller</td>
+                                <td>david.miller@outlook.com</td>
+                                <td>+1 202 555 0143</td>
+                                <td>15-01-1990</td>
+                                <td>American</td>
+                                <td class="text-center">
+                                    <span class="status-badge confirmed">Active</span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="table-code-highlight">4</td>
+                                <td class="table-code-highlight">Janella</td>
+                                <td class="table-code-highlight">Tan</td>
+                                <td>janella.tan@hotmail.com</td>
+                                <td>+65 8123 4567</td>
+                                <td>04-07-2004</td>
+                                <td>Singaporean</td>
+                                <td class="text-center">
+                                    <span class="status-badge cancelled">Suspended</span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="table-code-highlight">5</td>
+                                <td class="table-code-highlight">Gian</td>
+                                <td class="table-code-highlight">Luna</td>
+                                <td>gian.luna@gmail.com</td>
+                                <td>+63 922 456 7890</td>
+                                <td>30-12-2001</td>
+                                <td>Filipino</td>
+                                <td class="text-center">
+                                    <span class="status-badge confirmed">Active</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#navbar").load("navigation.html", function() {
+            $("#nav-home").addClass("active");
+        });
+    });
+</script>
+</body>
+</html>
