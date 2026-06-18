@@ -1,0 +1,471 @@
+body, html {
+    margin: 0;
+    height: 100%;
+    font-family: 'Istok Web', sans-serif;
+}
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content-box, .modal-content-box-small {
+    background: rgb(250, 249, 244);
+    border-radius: 16px;
+    width: 70%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modal-content-box-small {
+    width: 600px;
+    text-align: center;
+}
+
+.modal-content-box-small h2 {
+    text-align: center;
+    font-weight: bold;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: -5px;
+    right: 10px;
+    font-size: 35px;
+    font-weight: bold;
+    color: #646464;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.modal-close-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.modal-close-btn:hover {
+    color: #ad0000;
+}
+
+.modal-content-box .reservation-card {
+    width: 100%;
+    margin: 0;
+    box-shadow: none;
+    border: none;
+}
+
+.options-group {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.edit-button {
+    background-color:#FBB13C;
+    border-radius: 20px;
+    padding: 10px;
+    width: 100px;
+}
+
+.view-button {
+    background-color:#2E5EAA;
+    color: white;
+    border-radius: 20px;
+    padding: 10px;
+    width: 150px;
+}
+
+.cancel-button {
+    background-color: #303236;
+    color: white;
+    border-radius: 20px;
+    padding: 10px;
+    width: 100px;
+    margin-right: 20px;
+}
+
+.cancellation-modal-no-btn {
+    background-color: #3f3939;
+    color: white;
+    border-radius: 20px;
+    padding: 10px;
+    width: 150px;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+.cancellation-modal-yes-btn {
+    background-color: #2E5EAA;
+    color: white;
+    border-radius: 20px;
+    padding: 10px;
+    width: 150px;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+.nav-link{
+    font-family: 'IBM Plex Mono', monospace;
+    color: #646464;
+}
+.navbar-brand img{
+    width: 130px;
+    height: auto;
+}
+.nav-item :hover{
+    color: #000000;
+}
+.nav-item{
+    display: inline-flex;
+}
+.dropdown-item{
+    font-family: 'IBM Plex Mono', monospace;
+    display: inline-flex;
+    gap: 10px;
+    
+}
+
+.search-container{
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    align-items: center;
+    margin: 0 auto;
+    margin-top: 30px;
+    position: relative;
+    top: -25px;
+    border: 1px solid #ddd;
+    box-shadow: 2px 21px 34px -20px rgba(0, 0, 0, 1.00);
+    width: fit-content;
+}
+
+.search-container form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center; 
+    justify-content: center; 
+    gap: 18px; 
+}
+
+.search-container label{
+    font-size: 15px;
+    font-weight: 600;
+    color: #2E5EAA;
+    font-family:  "Istok Web", sans-serif;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.search-container select {
+    width: 140px;
+    padding: 12px ;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 400;
+    border: 1px solid #000000;
+    border-radius: 12px;
+    background-color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.search-container input {
+    width: 180px;
+    padding: 12px ;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 400;
+    border: 1px solid #000000;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+.search-container select:hover {
+    border-color:rgb(33, 33, 255);
+}
+
+.search-container input[type="date"] {
+    width: 160px;
+    padding: 12px;
+    border: 1px solid #000000;
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    cursor: pointer;
+}
+.search-container input[type="date"]:hover {
+    border-color:rgb(33, 33, 255);
+}
+
+.right-arrow-img {
+    width:80px;
+    height:30px;
+    vertical-align:middle;
+}
+
+.dotted-line-arrow-down-img {
+    width:60px;
+    height:60px;
+    margin-left:180px;
+    margin-bottom:20px;
+}
+
+#swapBtn{
+    border: none;
+    display: flex;
+    margin-top: 20px;
+    background-color: #FFFFFF;
+}
+#swapBtn img{
+    width: 20px;
+    height: 20px;
+}
+
+.search-flight{
+    text-align: center;
+    margin-top: -40px;
+    position: relative;
+}
+.search-flight .btn-primary{
+    padding: 12px 32px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    border-radius: 12px;
+}
+
+.reservation-card {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    width: 50%;
+    margin: 40px auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: rgb(250, 249, 244);
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+.card-airline-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.75;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.full-card-airline-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.50;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.plane-img {
+    margin-right: 15px;
+    width: 50px;
+    height: 50px;
+}
+
+.flight-subheader {
+    display: flex;
+    justify-content: space-between;
+}
+
+.flight-duration {
+    flex: 2;
+    align-items: center;
+}
+
+.vertical-spacer {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.flight-price {
+    margin: 0;
+    align-items: center;
+    background-color: rgb(249, 252, 216);
+}
+
+.flight-header h2 {
+    color: #ad0000;
+    margin-bottom: 10px;
+}
+
+.flight-header p {
+    font-size: 20px;
+    width: 400px;
+}
+
+.flight-airline {
+    text-align: right;
+}
+
+.flight-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.flight-title {
+    color:#ad0000;
+}
+
+.flight-passenger {
+    color:#2E5EAA;
+}
+
+.timeline {
+    flex: 2;
+}
+
+.flight-info {
+    flex: 1;
+}
+
+.reservations-header {
+    font-weight: 700;
+    font-size: 60px;
+    color: #2E5EAA;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.card-body{
+    font-weight: 700;
+    font-family: 'Istok Web', sans-serif;
+    margin-top: 5px;
+}
+
+.card-body{
+    padding: 20px;
+} 
+
+.stat-container{
+    display:flex;
+    padding: 10px;
+    height: auto;
+    justify-content: space-evenly;
+    
+}
+
+.status-badge {
+    padding: 8px 14px;
+    border-radius: 800px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    width: 115px;
+    height: 40px;
+    text-align: center;
+}
+
+.confirmed {
+    background-color: #d1fae5;
+    color: #118363;
+}
+
+.pending {
+    background-color: #fef3c7;
+    color: #bd4800;
+}
+
+.cancelled {
+    background-color: #fee2e2;
+    color: #6e0c0c;
+}
+
+.edit-flight-title {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal-form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #2E5EAA;
+    margin-bottom: 6px;
+}
+
+.modal-form-grid input, .modal-form-grid select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #000000;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.grid-col-2 {
+    grid-column: span 2;
+}
+
+.save-button {
+    background-color: #2E5EAA;
+    color: white;
+    border-radius: 20px;
+    padding: 10px;
+    width: 150px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.save-button:hover {
+    background-color: #1a417a;
+}
+
+@media (max-width: 783px) {
+    .modal-form-grid {
+        grid-template-columns: 1fr;
+    }
+    .grid-col-2, .grid-col-3 {
+        grid-column: span 1;
+    }
+    .modal-content-box {
+        width: 90%;
+        padding: 20px;
+    }
+}

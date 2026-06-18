@@ -19,7 +19,6 @@ body {
 }
 
 .nav-link {
-    font-family: 'IBM Plex Mono', monospace;
     color: #646464;
 }
 
@@ -32,7 +31,6 @@ body {
 }
 
 .dropdown-item {
-    font-family: 'IBM Plex Mono', monospace;
     display: inline-flex;
     gap: 10px;
 }

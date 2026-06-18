@@ -35,32 +35,16 @@ body {
     box-shadow: 0px 10px 20px 2px rgba(0, 0, 0, 0.2);
 
 }
-#search-container form{
-    flex-direction: column;
-    row-gap: 10rem;
-    height: 100%;
-    margin-bottom: 1.5rem;
-}
 
 
-#row1, #row2{
-    margin-top: 1rem;   
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
-}
+
 #trip-type-toggle{
     display: flex;
     justify-content: center;
     margin-top: 1rem;
     gap: 1rem;
 }
-.input-fields {
-    display: flex;
-    flex-direction: column;
-    position:relative
-}
+
 
 
 
@@ -309,8 +293,10 @@ body {
 .slider-progress {
     position: absolute;
     height: 100%;
-    background-color: #FBB13C; /* No longer drowned out! */
+    background-color: #FBB13C;
     z-index: 2;
+    
+    border-radius: 2rem;
 }
 
 /*toggle switch stuff*/
