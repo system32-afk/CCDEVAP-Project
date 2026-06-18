@@ -239,57 +239,60 @@ function renderFlights(flightsArray){
             layover = "direct flight";
         }
         cards += `
-        <div class="flight-card">
-            <div class = "FC-Col1">
-                <div class = "FC-Row1">
-                    <div class = "top-flight-info">
-                        <img class ="airline-logo" src = "/images/${flight.logoName}.png"/>
-                        <h4 class="airline-name">${flight.airline} (${flight.flightNum})</h4>
-                        <span class="badge bg-secondary ms-2">${flight.cabinLabel}</span>
-                    </div>
-                </div>
-                
-                
-            
-                <div class = "FC-Row2">
-                <div class="route-node origin-node">
-                    <h3>${flight.origin}</h3>
-                    <span class = "times">${flight.Departure}</span>
-                </div>
-                    
-                   
+        <div class="card flight-card">
 
-                    <div class="flight-path-container">
-                        <span class="flight-duration">${flight.duration}</span>
-                        <div class="flight-line">
-                            <img class="airplane-icon" src="/images/plane.png">
+            <div class = "row ">
+                <div class = "col">
+                    <div class = "FC-Row1">
+                        <div class = "top-flight-info">
+                            <img class ="airline-logo" src = "/images/${flight.logoName}.png"/>
+                            <h4 class="airline-name">${flight.airline} (${flight.flightNum})</h4>
+                            <span class="badge bg-secondary ms-2">${flight.cabinLabel}</span>
                         </div>
-                    <span class="flight-type">${layover}</span>
                     </div>
-                     
-                     <div class="route-node destination-node">
-                         <h3>${flight.destination}</h3>
-                        <span class = "times">${flight.arrival}</span>
-                       
+                    
+                    
+                
+                    <div class = "FC-Row2">
+                    <div class="route-node origin-node">
+                        <h3>${flight.origin}</h3>
+                        <span class = "times">${flight.Departure}</span>
                     </div>
+                        
+                    
+
+                        <div class="flight-path-container">
+                            <span class="flight-duration">${flight.duration}</span>
+                            <div class="flight-line">
+                                <img class="airplane-icon" src="/images/plane.png">
+                            </div>
+                        <span class="flight-type">${layover}</span>
+                        </div>
+                        
+                        <div class="route-node destination-node">
+                            <h3>${flight.destination}</h3>
+                            <span class = "times">${flight.arrival}</span>
+                        
+                        </div>
+                    </div>
+
+                    <div class = "view-details-btn-container">
+                    <button class="btn btn-outline-info view-details" data-flight-id="${flight.id}">
+                        View Details
+                    </button>
+                </div>
                 </div>
 
-                <div class = "view-details-btn-container">
-                <button class="btn btn-outline-info view-details" data-flight-id="${flight.id}">
-                    View Details
-                </button>
-            </div>
-            </div>
+                <div class = "FC-Col2">
+                    <p class = "flight-price">PHP ${flight.ticketPrice.toLocaleString()}</p>
+                    <p id = "seats-remaining">${flight.remainingSeats} seats remaining</p>
 
-            <div class = "FC-Col2">
-                <p class = "flight-price">PHP ${flight.ticketPrice.toLocaleString()}</p>
-                <p id = "seats-remaining">${flight.remainingSeats} seats remaining</p>
-
-                <button class="btn btn-primary select-flight-btn" data-flight-id="${flight.id}">
-                    Select Flight
-                </button>
+                    <button class="btn btn-primary select-flight-btn" data-flight-id="${flight.id}">
+                        Select Flight
+                    </button>
+                </div>
+                
             </div>
-            
         </div>
         `;
     });

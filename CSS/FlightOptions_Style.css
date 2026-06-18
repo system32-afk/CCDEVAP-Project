@@ -307,13 +307,13 @@ body,html {
         font-size: 0.75rem;
     }
 
-    .container { /* Replace with your actual parent class or ID if different */
+    .container {
         display: flex;
         align-items: center;
         align-content: center;
-        flex-direction: column; /* Stacks the label and dropdown vertically */
-        align-items: flex-start; /* Aligns them cleanly to the left edge */
-        gap: 0.5rem;            /* Adds a nice small breathing space between them */
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 0.5rem;          
         width: 100%;
     }
 
@@ -322,4 +322,9 @@ body,html {
         text-align: left !important;
     }
 
+
+    .view-details-btn-container{
+        margin-top: 2rem;
+        
+    }
 }
