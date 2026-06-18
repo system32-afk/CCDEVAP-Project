@@ -53,10 +53,6 @@ body {
 }
 
 /* Progress Indicator */
-.progress-container {
-    max-width: 50%;
-}
-
 .progress {
     background-color: lightgray;
 }
@@ -101,6 +97,11 @@ body {
     background-color: #2E5EAA;
     border-color: #2E5EAA;
     color: white;
+}
+
+.passenger-detail {
+    font-size: 90%;
+    margin-bottom: 1%;
 }
 
 /* Passenger Details */
@@ -233,11 +234,6 @@ label {
     border-radius: 4px;
 }
 
-.option-desc.seat-select {
-    font-size: 80%;
-    letter-spacing: 6px;
-}
-
 .seat-legend.available { 
     background-color: #d4e3ff; 
     border: 2px solid #a0bcee; 
@@ -256,15 +252,6 @@ label {
 .seat-legend.premium { 
     background-color: #fff3cd; 
     border: 2px solid #f0b400; 
-}
-
-#seat-tooltip {
-    position: fixed;
-    background: #333;
-    color: #fff;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 80%;
 }
 
 /* Extra Services */
@@ -308,6 +295,11 @@ label {
     color: #2E5EAA;
     margin-bottom: 8px;
     font-size: 90%;
+}
+
+.summary-section-detail {
+    font-size: 90%;
+    margin-bottom: 1%;
 }
 
 .summary-total-label {
