@@ -26,10 +26,11 @@
 }
 
 .profile-picture{
-   
+    width: 8rem;
     border-radius: 50%;
     height: 8rem;
-
+    object-fit: cover;
+    border: 4px solid #2E5EAA;
 }
 
 .full-name{
@@ -63,4 +64,15 @@
     font-size: small;
     color:gray
     
+}
+
+
+.no-spinners::-webkit-outer-spin-button,
+.no-spinners::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.no-spinners[type=number] {
+    -moz-appearance: textfield;
 }
