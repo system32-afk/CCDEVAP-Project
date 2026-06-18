@@ -327,4 +327,13 @@ body,html {
         margin-top: 2rem;
         
     }
+
+    .dropdown{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap:1rem;
+    }
+
+    
 }

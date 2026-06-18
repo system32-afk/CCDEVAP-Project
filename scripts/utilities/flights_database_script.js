@@ -17,7 +17,7 @@ var flightsDatabase = [
     {id: 2, airline:"AirAsia",
         flightNum:1234, Departure:"06:00",
         arrival:"08:30",departDate: [0,1,4,6], 
-        logoName: "AirAsia",
+        logoName: "AirAsia", numOfLayovers: 0,
 
         cabins: {
             economy: { price: 5400, seats: 80, label: "Economy" },

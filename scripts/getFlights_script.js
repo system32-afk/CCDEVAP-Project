@@ -3,6 +3,7 @@ var flightsDB = null;
 $(document).ready(function() {
 //flight database
  flightsDB = getFlightsDatabase();
+ 
 });
 
 //utilities
@@ -14,14 +15,16 @@ const sidebarBody = $("#offcanvasRight .offcanvas-body");
 const sortBy = $(".sort");
 
 
-//state tracking
+//state tracking 
 var currentBookingPhase = "departure" //will be changed to retrun
-var hasSearched = false;
+var hasSearched = false; //global
+
 
 
 //flight choices (objects)
 var selectedDepartureFlight = null;
 var selectedReturnFlight = null;
+
 
 flightsContainer.on("click",".select-flight-btn", function(){
     
@@ -63,7 +66,7 @@ sortBy.on("click", function(){
 })
 
 
-function sortFlights(sortBy){
+function sortFlights(sortBy, shouldRender = false, mode = "ascending"){
     var filteredFlights = getFlights(getFilterOptions(), getBookingInfo());
     var sortedFlights = null;
 
@@ -73,10 +76,16 @@ function sortFlights(sortBy){
     }
     //sort by ticket price: lowest First (Ascending)
     if (sortBy === "ticketPrice") {
-    sortedFlights = sortArray(sortBy, "ascending", filteredFlights);
+        if(mode === "descending"){
+            sortedFlights = sortArray(sortBy, "descending", filteredFlights);
+        }else{
+            sortedFlights = sortArray(sortBy, "ascending", filteredFlights);
+        }
+        
+    }
 
     //sort by departure time: earliest first (Ascending)
-    }else if (sortBy === "departure"){
+    else if (sortBy === "departure"){
         sortedFlights = sortArray(sortBy, "ascending", filteredFlights);
     }
 
@@ -85,7 +94,16 @@ function sortFlights(sortBy){
         sortedFlights = sortArray(sortBy, "ascending", filteredFlights);
     }
 
-    renderFlights(sortedFlights);
+    //if the sorted flights are rendered, it will be the new search results.
+    if(shouldRender){
+        renderFlights(sortedFlights);
+        searchResults = sortedFlights;
+    }
+
+    return sortedFlights; //just for getting
+
+    
+
 }
 //handles flight options logic / UI
 function renderFlightsUI(){
@@ -195,10 +213,10 @@ function getFlights(filter_options, booking_info){
 
     })
 
-    console.log("flights matched: "+ filtered);
+   
 
     
-    return filtered.map(flight => {
+    var results = filtered.map(flight => {
         var flightDuration = calculateFlightDuration(flight.Departure, flight.arrival);
         var selectedCabin = flight.cabins[booking_info.cabinType];
         return{
@@ -207,6 +225,7 @@ function getFlights(filter_options, booking_info){
             destination: destinationCity,
             duration: flightDuration.display,
             durationMinutes: flightDuration.durationMinutes,
+            numOfLayovers: flight.numOfLayovers,
 
             //cabin info
             ticketPrice: selectedCabin.price,
@@ -215,6 +234,10 @@ function getFlights(filter_options, booking_info){
 
         }
     })
+
+    searchResults = results;
+    console.log("search results: ",searchResults);
+    return results  
     
 }
 
@@ -497,6 +520,10 @@ function SearchFlight(){
         return;
     }
 
+    hasSearched = true;
     getFlights(getFilterOptions(),getBookingInfo());
     renderFlightsUI();
+
+    showSidebarBtn()
 }
+

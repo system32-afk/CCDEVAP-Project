@@ -28,6 +28,7 @@
     <script src="../scripts/utilities/search_dropdown_script.js" defer></script>
     <script src="../scripts/utilities/flights_database_script.js" defer></script>
     <script src="../scripts/helper_algorithms.js" defer></script>
+    <script src="../scripts/filter_sidebar.js" defer></script>
 
     <script src="../scripts/utilities/load_navbar_script.js" defer></script>
 </head>
@@ -97,7 +98,7 @@
             </div>
 
             <div class = "row px-3 ps-5 mt-3 justify-content-center">
-                <div class = "col-3 input-fields">
+                <div class = "col-4 input-fields">
                     <label class="form-label">Passengers</label>
                     
                     <button class="btn btn-secondary" type="button" id="passenger-select" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -214,17 +215,20 @@
 
             <div class="col-4 toggle-group">
                 <div class = "col input-fields direct-flights-only">
-                    <label>Direct Flights only</label>
-                    <input type="checkbox" id ="direct-flight-checkbox">
+                    <label class="form-check-label">Direct Flights only</label>
+                    <input class="form-check-input" type="checkbox" id ="direct-flight-checkbox">
                 </div>
             
                 <div class = "col input-fields flexible-dates">
                     <div class = "toggle-row">
-                        <label>Flexible Dates</label>
-                        <label class = "switch">
-                            <input type="checkbox" id = "flexible-dates-checkbox">
-                            <span class = "slider round"></span>
-                        </label>
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Flexible Dates</label>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id = "flexible-dates-checkbox">
+                        </div>
+
+
+
                     </div>
                     <small id="flexible-hint" class="text-muted">Searches flights a week before or after selected date</small>
                 </div>
@@ -259,7 +263,7 @@
 
 
             <div class = "col button-fields">
-                    <br>
+                    
                     <button type="button" class="btn btn-primary" id = "apply-filter">Apply</button>
 
             </div>
@@ -271,16 +275,16 @@
 
     <!--Flights-->
     
-        <div class = "filters">
-            <div class="container d-flex align-items-center gap-2">
-                <div class="row">
-                    <p class="mb-0">sort by: </p>
-                </div>
-                <div class="row">
-                    <div class="dropdown">
-                    <a class="btn btn-light dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        
-                    </a>
+    <div class = "filters">
+        <div class="container d-flex align-items-center gap-2">
+            <div class="row">
+                <p class="mb-0">sort by: </p>
+                
+            </div>
+            <div class="row">
+                <div class="dropdown">
+                        <a class="btn btn-light dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        </a>
 
                     <ul class="dropdown-menu p-2">
                         <div class="container-fluid">
@@ -290,7 +294,7 @@
                             <input type="radio" class="sort" name="sort-group" id="sort-departure" value="departure">
                             <label for="sort-departure">Departure: Earliest first</label>
                         </div>
- 
+
 
                         <div class="sort-option d-flex align-items-center gap-2 mb-2">
                             <input type="radio" class="sort" name="sort-group" id="sort-flight-duration" value="duration">
@@ -303,10 +307,16 @@
                         </div>
                         </div>
                     </ul>
-                    </div>
+
+                    <button type="button" class="btn btn-outline-primary" id = "open-filter-sidebar-btn" data-bs-toggle="offcanvas" data-bs-target="#filter-sidebar" aria-controls="offcanvasWithBackdrop">Filter Options</button>
                 </div>
+
+
+        
             </div>
         </div>
+
+    </div>
         
         <div class="container d-flex align-items-left">
             <h1 id = "prompt-message">Pick your departure flight</h1>
@@ -316,7 +326,7 @@
             
         </div>
 
-        
+        <!--Flights additional Information-->
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
             <div class="offcanvas-header">
                 <h5 id="offcanvasRightLabel">Flight Details</h5>
@@ -325,6 +335,153 @@
                 <div class="offcanvas-body">
             </div>
         </div>
+
+
+
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="filter-sidebar" aria-labelledby="offcanvasWithBackdropLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel">Filter Options</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                
+                <!--AIRLINE FILTER-->
+                <div class="text-start">
+                    <h4>filter by airline</h4>
+                </div>
+
+                <div class="airlines">
+                    <button type="button" class="btn btn-outline-primary w-100 mb-3" id="select-all-airlines-btn">All airlines</button>
+                        <div class="airlines-filter-group">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input airline-filter" type="checkbox" value="Philippine Airline" id="filter-PAL" checked>
+                                <label class="form-check-label" for="filter-PAL">
+                                    Philippine Airlines
+                                </label>
+                            </div>
+
+                            <div class="form-check mb-2">
+                                <input class="form-check-input airline-filter" type="checkbox" value="AirAsia" id="filter-AirAsia"checked>
+                                <label class="form-check-label" for="filter-AirAsia">
+                                    AirAsia
+                                </label>
+                            </div>
+
+                            <div class="form-check mb-2">
+                                <input class="form-check-input airline-filter" type="checkbox" value="Cebu Pacific" id="filter-CebPac"checked>
+                                <label class="form-check-label" for="filter-CebPac">
+                                    Cebu Pacific
+                                </label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input airline-filter" type="checkbox" value="Cathay Pacific" id="filter-CathPac"checked>
+                                <label class="form-check-label" for="filter-CathPac">
+                                    Cathay Pacific
+                                </label>
+                            </div>
+
+                        </div>
+
+                </div>
+
+
+                    <hr>
+
+
+                <!--PRICE FILTER-->
+                <div class="text-start mt-3">
+                    <h4>filter by price</h4>
+                </div>
+
+                <div class="price-filter">
+                    <label for="customRange3" class="form-label">Max price range</label>
+                    <span id="price-limit-label" class="fw-bold text-primary">PHP 0</span>
+                    <input type="range" class="form-range" min="500" value="500" max="1000" step="1" id="sidebar-price-range">
+                    <div class="rounded">
+                        <span id="current-price" class="fw-bold text-primary">PHP 500</span>
+                    </div>
+
+                </div>
+
+
+                <hr>
+
+                <!--DEPARTURE FILTER-->
+                <div class="text-start">
+                    <h4>filter by departure schedules</h4>
+                </div>
+
+                <div class="departure">
+                    <button type="button" class="btn btn-outline-primary w-100 mb-3" id="reset-departure-filter">Reset</button>
+                        <div class="departure-filter-group">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input departure-filter" type="checkbox" value="morning" id="filter-dep-morning"checked>
+                                <label class="form-check-label" for="filter-dep-morning">
+                                   Morning: 6:00 - 12:00
+                                </label>
+                            </div>
+
+                            <div class="form-check mb-2">
+                                <input class="form-check-input departure-filter" type="checkbox" value="afternoon" id="filter-dep-afternoon"checked>
+                                <label class="form-check-label" for="filter-dep-afternoon">
+                                    Afternoon: 12:00  - 18:00 
+                                </label>
+                            </div>
+
+                            <div class="form-check mb-2">
+                                <input class="form-check-input departure-filter" type="checkbox" value="evening" id="filter-dep-evening"checked>
+                                <label class="form-check-label" for="filter-dep-evening">
+                                    Evening: 18:00 - 0:00 
+                                </label>
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input departure-filter" type="checkbox" value="night" id="filter-dep-night" checked>
+                                <label class="form-check-label" for="filter-dep-night">
+                                    Night: 00:00 AM - 6:00
+                                </label>
+                            </div>
+
+                        </div>
+
+                </div>
+
+
+                <hr>
+                <!--DEPARTURE FILTER-->
+                <div class="text-start">
+                    <h4 class="fw-bold">filter by stops</h4>
+                </div>
+
+                <div class="stops">
+
+                    
+                        <label class="form-label fw-semibold">Stops</label>
+                        
+                        <div class="form-check mb-2">
+                            <input class="form-check-input stop-filter" type="radio" value="0" name="stop-group" id="stop-0" checked>
+                            <label class="form-check-label" for="stop-0">Non-stop</label>
+                        </div>
+
+                        <div class="form-check mb-2">
+                            <input class="form-check-input stop-filter" type="radio" name="stop-group" value="1" id="stop-1">
+                            <label class="form-check-label" for="stop-1">1 Stop</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input stop-filter" type="radio" name="stop-group"value="2" id="stop-2">
+                            <label class="form-check-label" for="stop-2">2+ Stops</label>
+                        </div>
+                </div>
+
+
+
+                <button type="button" class="btn btn-outline-danger w-100 mb-3" id="reset-all-filter">Reset all filters</button>
+            </div>
+        </div>
+
+
     
 </body>
 

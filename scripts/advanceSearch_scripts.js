@@ -5,6 +5,7 @@ const directFlights = $("#direct-flight-checkbox");
 directFlights.on("change", function(){
     var value = this.checked;
     filter_options.isDirectFlight = value
+    console.log(value);
 });
 
 
@@ -15,6 +16,8 @@ flexibleDates.on("change", function(){
     
     var value = this.checked; 
     filter_options.isFlexible = value;
+
+    console.log(value);
 });
 
 //price range option section================================
@@ -98,6 +101,4 @@ const applyFilter = $("#apply-filter");
 
 applyFilter.on("click", () =>{
     SearchFlight()
-
-    hasSearched = true;
 }); 
