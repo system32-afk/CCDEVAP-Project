@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- CSS File -->
+    <link rel="stylesheet" href="../CSS/reservations.css" media="all">
+
+    <!--IBM-Plex Mono and Istok Web Font -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <!-- JQuery -->
+    <script src="/dependencies/jquery-4.0.0.js"></script>
+
+    <!-- JS bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/scripts/reservations.js" defer></script>
+    <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+    
+    <title>Your Reservations</title>
+</head>
+<body>
+
+    <div id="navbar"></div>
+
+    <main>
+        
+    <!-- search bar -->
+    <div class="search-container">
+        <form id="searchAndSortForm">
+        <div class="form-group">
+            <label>Departure:</label>
+            <select id="departure-airports">
+                <option value="None">None</option>
+                <option value="NAIA (Manila)">NAIA (Manila)</option>
+                <option value="IA (Albay)">BIA (Albay)</option>
+                <option value="MCIA (Cebu)">MCIA (Cebu)</option>
+                <option value="CIA (Clark)">CIA (Clark)</option>
+                <option value="BSA (Bacolod)">BSA (Bacolod)</option>
+                <option value="IIA (Iloilo)">IIA (Iloilo)</option>
+                <option value="SA (Siargao)">SA (Siargao)</option>
+                <option value="GPRA (Caticlan)">GPRA (Caticlan)</option>
+            </select>
+        </div> 
+
+        <button type="button" id="swapBtn" onclick="swapLocations()">
+            <img src="../images\swap-icon.avif">
+        </button>
+
+        <div class="form-group">
+            <label>Destination:</label>
+            <select id="destination-airports">
+                <option value="None">None</option>
+                <option value="NAIA (Manila)">NAIA (Manila)</option>
+                <option value="IA (Albay)">BIA (Albay)</option>
+                <option value="MCIA (Cebu)">MCIA (Cebu)</option>
+                <option value="CIA (Clark)">CIA (Clark)</option>
+                <option value="BSA (Bacolod)">BSA (Bacolod)</option>
+                <option value="IIA (Iloilo)">IIA (Iloilo)</option>
+                <option value="SA (Siargao)">SA (Siargao)</option>
+                <option value="GPRA (Caticlan)">GPRA (Caticlan)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="departure-date">Departure Date:</label>
+            <input id="departureDate" type="date">
+        </div>
+
+        <div class="form-group">
+            <label>Return Date:</label>
+            <input id="returnDate" type="date">
+        </div>
+
+        <div class="form-group">
+            <label>Sort By:</label>
+            <select id="sortBy">
+                <option value="">None</option>
+                <option value="dateAsc">Departure Date: Oldest First</option>
+                <option value="dateDesc">Departure Date: Newest First</option>
+                <option value="priceAsc">Price: Lowest First</option>
+                <option value="priceDesc">Price: Highest First</option>
+                <option value="flightAsc">Flight Duration: Lowest First</option>
+                <option value="flightDesc">Price: Highest First</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Status:</label>
+            <select id="statusFilter">
+                <option value="">All</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Pending">Pending</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>
+        </div>
+
+        </form>
+    </div>
+        
+
+    </div>
+        <div class="search-flight">
+            <button class="btn btn-primary" id="sortReservations">Search Reservations</a>
+        </div><br>
+
+
+
+    <!-- Reservation Cards -->
+
+
+
+    <h1 class="reservations-header">Your Reservations</h1>
+
+    <!-- Card 1 (MINIMIZED VERSION) -->
+    <div class="reservation-card" id="card-1">
+        <img src="/images/PAL.png" class="card-airline-logo" alt="Airline Logo">
+        <div class="flight-subheader">
+            <h2 class="flight-title">
+                NAIA (Manila)
+                <img src="/images/right-arrow-red.png" class="right-arrow-img">
+                MCIA (Cebu)
+            </h2>
+            <span class="status-badge confirmed">Confirmed</span>
+        </div>
+
+        <div class="flight-subheader">
+            <p><strong>Flight:</strong> PR-1845</p>
+            <p><strong>Provided by:<br></strong> Philippine Airlines</p>
+        </div>
+
+        <p><strong>Date:</strong> 12-07-2026</p>
+        <p><strong><br>Passenger:</strong> Juan Cruz</p>
+
+        <div class="options-group">
+            <button class="view-button" onclick="openModal('modal-1')">View Details</button>
+            <button class="edit-button" onclick="openModal('modal-edit')">Edit</button>
+            <button class="cancel-button" onclick="openModal('modal-cancel')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Card 2 (MINIMIZED VERSION) -->
+    <div class="reservation-card" id="card-2">
+        <img src="/images/CebuPac.png" class="card-airline-logo" alt="Airline Logo">
+        <div class="flight-subheader">
+            <h2 class="flight-title">
+                MCIA (Cebu)
+                <img src="/images/right-arrow-red.png" class="right-arrow-img">
+                DIA (Davao)
+            </h2>
+            <span class="status-badge pending">Pending</span>
+        </div>
+
+        <div class="flight-subheader">
+            <p><strong>Flight:</strong> 5J-597</p>
+            <p><strong>Provided by:<br></strong> Cebu Pacific</p>
+        </div>
+
+        <p><strong>Date:</strong> 05-08-2026</p>
+        <p><strong><br>Passenger:</strong> Alex Santos</p>
+
+        <div class="options-group">
+            <button class="view-button" onclick="openModal('modal-2')">View Details</button>
+            <button class="edit-button" onclick="openModal('modal-edit')">Edit</button>
+            <button class="cancel-button" onclick="openModal('modal-cancel')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Card 3 (MINIMIZED VERSION) -->
+    <div class="reservation-card" id="card-3">
+        <img src="/images/CathPac.png" class="card-airline-logo" alt="Airline Logo">
+        <div class="flight-subheader">
+            <h2 class="flight-title">
+                NAIA (Manila)
+                <img src="/images/right-arrow-red.png" class="right-arrow-img">
+                PPIA (Puerto Princesa)
+            </h2>
+            <span class="status-badge cancelled">Cancelled</span>
+        </div>
+
+        <div class="flight-subheader">
+            <p><strong>Flight:</strong> CX-118</p>
+            <p><strong>Provided by:<br></strong> Cathay Pacific</p>
+        </div>
+
+        <p><strong>Date:</strong> 20-05-2026</p>
+        <p><strong><br>Passenger:</strong> James de los Santos</p>
+
+        <div class="options-group">
+            <button class="view-button" onclick="openModal('modal-3')">View Details</button>
+            <button class="edit-button" onclick="openModal('modal-edit')">Edit</button>
+            <button class="cancel-button" onclick="openModal('modal-cancel')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Card 4 (MINIMIZED VERSION) -->
+    <div class="reservation-card" id="card-4">
+        <img src="/images/AirAsia.png" class="card-airline-logo" alt="Airline Logo">
+        <div class="flight-subheader">
+            <h2 class="flight-title">
+                IIA (Iloilo)
+                <img src="/images/right-arrow-red.png" class="right-arrow-img">
+                NAIA (Manila)
+            </h2>
+            <span class="status-badge confirmed">Confirmed</span>
+        </div>
+
+        <div class="flight-subheader">
+            <p><strong>Flight:</strong> Z2-420</p>
+            <p><strong>Provided by:<br></strong> Air Asia</p>
+        </div>
+
+        <p><strong>Date:</strong> 18-11-2026</p>
+        <p><strong><br>Passenger:</strong> Rod Alvarez</p>
+
+        <div class="options-group">
+            <button class="view-button" onclick="openModal('modal-4')">View Details</button>
+            <button class="edit-button" onclick="openModal('modal-edit')">Edit</button>
+            <button class="cancel-button" onclick="openModal('modal-cancel')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Card 5 (MINIMIZED VERSION) -->
+    <div class="reservation-card" id="card-5">
+        <img src="/images/PAL.png" class="card-airline-logo" alt="Airline Logo">
+        <div class="flight-subheader">
+            <h2 class="flight-title">
+                DIA (Davao)
+                <img src="/images/right-arrow-red.png" class="right-arrow-img">
+                NAIA (Manila)
+            </h2>
+            <span class="status-badge pending">Pending</span>
+        </div>
+
+        <div class="flight-subheader">
+            <p><strong>Flight:</strong> PR-0067</p>
+            <p><strong>Provided by:<br></strong> Philippine Airlines</p>
+        </div>
+
+        <p><strong>Date:</strong> 01-09-2026</p>
+        <p><strong><br>Passenger:</strong> Camry Cruz</p>
+
+        <div class="options-group">
+            <button class="view-button" onclick="openModal('modal-5')">View Details</button>
+            <button class="edit-button" onclick="openModal('modal-edit')">Edit</button>
+            <button class="cancel-button" onclick="openModal('modal-cancel')">Cancel</button>
+        </div>
+    </div>
+
+
+
+    <!-- Modals -->
+
+
+
+    <!-- Modal of Card 1 (FULL DETAILED TICKET) -->
+    <div id="modal-1" class="modal-overlay" onclick="whenUserClicksOutside(event, 'modal-1')">
+        <div class="modal-content-box">
+            <span class="modal-close-btn" onclick="closeModal('modal-1')">
+                <img src="/images/close_gray_x.png">
+            </span>
+            
+            <div class="reservation-card">
+                <img src="/images/PAL.png" class="full-card-airline-logo" alt="Airline Logo">
+                
+                <div class="flight-header">
+                    <div class="flight-subheader">
+                        <h2 class="flight-title">
+                            NAIA (Manila)
+                            <img src="/images/right-arrow-red.png" class="right-arrow-img">
+                            MCIA (Cebu)
+                        </h2>
+                        <h2 class="flight-title">
+                            PR-1845
+                        </h2>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <p><strong>12-07-2026</strong></p>
+                        <span class="status-badge confirmed">Confirmed</span>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <div class="timeline">
+                            <p class="timeline-route"><strong>08:30</strong> Ninoy Aquino International Airport (MANILA)</p> <br>
+                        </div>
+                        <h4 class="flight-passenger"><strong>Juan Cruz(12A)</strong></h4>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <img src="/images/dotted-line-arrow-down.png" class="dotted-line-arrow-down-img">
+                        <p class="flight-airline"><strong>Provided by:</strong><br>Philippine Airlines</p>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <div class="timeline">
+                            <p class="timeline-route"><strong>10:00</strong> Mactan-Cebu International Airport (CEBU)</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flight-subheader">
+                    <p class="vertical-spacer"></p>
+                </div>
+
+                <div class="flight-subheader">
+                    <h4 class="flight-duration">
+                        <img src="/images/flight-image-ticket.png" class="plane-img">
+                        Flight Duration: 1h 30m
+                    </h4>
+                    <h2 class="flight-price">PHP 38,250</h2>    
+                </div>
+                
+                <div class="flight-subheader">
+                    <p></p>
+                    <h4>BK-DOM982</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal of Card 2 (FULL DETAILED TICKET) -->
+    <div id="modal-2" class="modal-overlay" onclick="whenUserClicksOutside(event, 'modal-2')">
+        <div class="modal-content-box">
+            <span class="modal-close-btn" onclick="closeModal('modal-2')">
+                <img src="/images/close_gray_x.png">
+            </span>
+            
+            <div class="reservation-card">
+                <img src="/images/CebuPac.png" class="full-card-airline-logo" alt="Airline Logo">
+                
+                <div class="flight-header">
+                    <div class="flight-subheader">
+                        <h2 class="flight-title">
+                            MCIA (Cebu)
+                            <img src="/images/right-arrow-red.png" class="right-arrow-img">
+                            DIA (Davao)
+                        </h2>
+                        <h2 class="flight-title">
+                            5J-597
+                        </h2>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <p><strong>05-08-2026</strong></p>
+                        <span class="status-badge pending">Pending</span>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <div class="timeline">
+                            <p class="timeline-route"><strong>13:15</strong> Mactan-Cebu International Airport (CEBU)</p> <br>
+                        </div>
+                        <h4 class="flight-passenger">
+                            <strong>
+                                Alex Santos(04A)
+                            </strong>
+                        </h4>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <img src="/images/dotted-line-arrow-down.png" class="dotted-line-arrow-down-img">
+                        <p class="flight-airline"><strong>Provided by:</strong><br>Cebu Pacific</p>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <div class="timeline">
+                            <p class="timeline-route"><strong>14:45</strong> Francisco Bangoy International Airport (DAVAO)</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flight-subheader">
+                    <p class="vertical-spacer"></p>
+                </div>
+
+                <div class="flight-subheader">
+                    <h4 class="flight-duration">
+                        <img src="/images/flight-image-ticket.png" class="plane-img">
+                        Flight Duration: 1h 30m
+                    </h4>
+                    <h2 class="flight-price">PHP 15,900</h2>    
+                </div>
+                
+                <div class="flight-subheader">
+                    <p></p>
+                    <h4>BK-DOM441</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal of Card 3 (FULL DETAILED TICKET) -->
+    <div id="modal-3" class="modal-overlay" onclick="whenUserClicksOutside(event, 'modal-3')">
+        <div class="modal-content-box">
+            <span class="modal-close-btn" onclick="closeModal('modal-3')">
+                <img src="/images/close_gray_x.png">
+            </span>
+            
+            <div class="reservation-card">
+                <img src="/images/CathPac.png" class="full-card-airline-logo" alt="Airline Logo">
+                
+                <div class="flight-header">
+                    <div class="flight-subheader">
+                        <h2 class="flight-title">
+                            NAIA (Manila)
+                            <img src="/images/right-arrow-red.png" class="right-arrow-img">
+                            PPIA (Puerto Princesa)
+                        </h2>
+                        <h2 class="flight-title">
+                            CX-118
+                        </h2>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <p><strong>20-05-2026</strong></p>
+                        <span class="status-badge cancelled">Cancelled</span>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <div class="timeline">
+                            <p class="timeline-route"><strong>11:00</strong> Ninoy Aquino International Airport (MANILA)</p> <br>
+                        </div>
+                        <h4 class="flight-passenger">
+                            <strong>
+                                James de los Santos(21A)
+                            </strong>
+                        </h4>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <img src="/images/dotted-line-arrow-down.png" class="dotted-line-arrow-down-img">
+                        <p class="flight-airline"><strong>Provided by:</strong><br>Cathay Pacific</p>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <div class="timeline">
+                            <p class="timeline-route"><strong>12:25</strong> Puerto Princesa International Airport (PUERTO PRINCESA)</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flight-subheader">
+                    <p class="vertical-spacer"></p>
+                </div>
+
+                <div class="flight-subheader">
+                    <h4 class="flight-duration">
+                        <img src="/images/flight-image-ticket.png" class="plane-img">
+                        Flight Duration: 1h 25m
+                    </h4>
+                    <h2 class="flight-price">PHP 16,500</h2>    
+                </div>
+                
+                <div class="flight-subheader">
+                    <p></p>
+                    <h4>BK-DOM112</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal of Card 4 (FULL DETAILED TICKET) -->
+    <div id="modal-4" class="modal-overlay" onclick="whenUserClicksOutside(event, 'modal-4')">
+        <div class="modal-content-box">
+            <span class="modal-close-btn" onclick="closeModal('modal-4')">
+                <img src="/images/close_gray_x.png">
+            </span>
+            
+            <div class="reservation-card">
+                <img src="/images/AirAsia.png" class="full-card-airline-logo" alt="Airline Logo">
+                
+                <div class="flight-header">
+                    <div class="flight-subheader">
+                        <h2 class="flight-title">
+                            IIA (Iloilo)
+                            <img src="/images/right-arrow-red.png" class="right-arrow-img">
+                            NAIA (Manila)
+                        </h2>
+                        <h2 class="flight-title">
+                            Z2-420
+                        </h2>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <p><strong>18-11-2026</strong></p>
+                        <span class="status-badge confirmed">Confirmed</span>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <div class="timeline">
+                            <p class="timeline-route"><strong>18:15</strong> Iloilo International Airport (ILOILO)</p> <br>
+                        </div>
+                        <h4 class="flight-passenger">
+                            <strong>
+                                Rod Alvarez(08A)
+                            </strong>
+                        </h4>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <img src="/images/dotted-line-arrow-down.png" class="dotted-line-arrow-down-img">
+                        <p class="flight-airline"><strong>Provided by:</strong><br>Air Asia</p>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <div class="timeline">
+                            <p class="timeline-route"><strong>19:40</strong> Ninoy Aquino International Airport (MANILA)</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flight-subheader">
+                    <p class="vertical-spacer"></p>
+                </div>
+
+                <div class="flight-subheader">
+                    <h4 class="flight-duration">
+                        <img src="/images/flight-image-ticket.png" class="plane-img">
+                        Flight Duration: 1h 25m
+                    </h4>
+                    <h2 class="flight-price">PHP 23,200</h2>    
+                </div>
+                
+                <div class="flight-subheader">
+                    <p></p>
+                    <h4>BK-DOM007</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal of Card 5 (FULL DETAILED TICKET) -->
+    <div id="modal-5" class="modal-overlay" onclick="whenUserClicksOutside(event, 'modal-5')">
+        <div class="modal-content-box">
+            <span class="modal-close-btn" onclick="closeModal('modal-5')">
+                <img src="/images/close_gray_x.png">
+            </span>
+            
+            <div class="reservation-card">
+                <img src="/images/PAL.png" class="full-card-airline-logo" alt="Airline Logo">
+                
+                <div class="flight-header">
+                    <div class="flight-subheader">
+                        <h2 class="flight-title">
+                            DIA (Davao)
+                            <img src="/images/right-arrow-red.png" class="right-arrow-img">
+                            NAIA (Manila)
+                        </h2>
+                        <h2 class="flight-title">
+                            PR-0067
+                        </h2>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <p><strong>01-09-2026</strong></p>
+                        <span class="status-badge pending">Pending</span>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <div class="timeline">
+                            <p class="timeline-route"><strong>16:00</strong> Francisco Bangoy International Airport (DAVAO)</p> <br>
+                        </div>
+                        <h4 class="flight-passenger"><strong>Camry Cruz(10A)</strong></h4>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <img src="/images/dotted-line-arrow-down.png" class="dotted-line-arrow-down-img">
+                        <p class="flight-airline"><strong>Provided by:</strong><br>Philippine Airlines</p>
+                    </div>
+
+                    <div class="flight-subheader">
+                        <div class="timeline">
+                            <p class="timeline-route"><strong>17:45</strong> Ninoy Aquino International Airport (MANILA)</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flight-subheader">
+                    <p class="vertical-spacer"></p>
+                </div>
+
+                <div class="flight-subheader">
+                    <h4 class="flight-duration">
+                        <img src="/images/flight-image-ticket.png" class="plane-img">
+                        Flight Duration: 1h 45m
+                    </h4>
+                    <h2 class="flight-price">PHP 4,750</h2>    
+                </div>
+                
+                <div class="flight-subheader">
+                    <p></p>
+                    <h4>BK-DOM553</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancellation of Reservation Modal -->
+    <div id="modal-cancel" class="modal-overlay">
+        <div class="modal-content-box-small">
+            <h2>CANCELLATION OF RESERVATION</h3>
+            <p">
+                Proceed with cancelling this reservation?
+            </p>
+
+            <div class="options-group">
+                <button class="cancellation-modal-yes-btn" onclick="closeModal('modal-cancel')">Yes, Cancel Reservation</button>
+                <button class="cancellation-modal-no-btn" onclick="closeModal('modal-cancel')">No, Keep Reservation</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Changes Modal -->
+    <div id="modal-edit-save" class="modal-overlay">
+        <div class="modal-content-box-small">
+            <h2>SAVE CHANGES</h3>
+            <p">
+                Proceed with updated changes?
+            </p>
+
+            <div class="options-group">
+                <button class="cancellation-modal-yes-btn" onclick="closeModal('modal-edit-save')">Yes, Save</button>
+                <button class="cancellation-modal-no-btn" onclick="closeModal('modal-edit-save')">No, Keep Editing</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Reservation Modal -->
+    <div id="modal-edit" class="modal-overlay">
+        <div class="modal-content-box-small">
+            <h2>EDIT RESERVATION</h2>
+            
+            <form class="modal-form-grid" id="editReservationForm">
+                <div class="form-group">
+                    <label for="edit-flight-passenger-name">Passenger Name</label>
+                    <input type="text" id="edit-flight-passenger-name" placeholder="Juan Mario F. Reyes">
+                </div>
+
+                <div class="form-group">
+                    <label for="statusFilter">Status</label>
+                    <select id="statusFilter">
+                        <option value="None">None</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-flight-number">Flight Number</label>
+                    <input type="text" id="edit-flight-number" placeholder="Ex. PR-2032">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-flight-airline">Airline</label>
+                    <select id="edit-flight-airline" value="None">
+                        <option value="None">None</option>
+                        <option value="Philippine Airlines (PAL)">Philippine Airlines (PAL)</option>
+                        <option value="Cebu Pacific (CP)">Cebu Pacific (CP)</option>
+                        <option value="Cathay Pacific (CP)">Cathay Pacific (CP)</option>
+                        <option value="Air Asia (AA)">Air Asia (AA)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-flight-booking-number">Booking Reference</label>
+                    <input type="text" id="edit-flight-booking-number" placeholder="Ex. BK-3927">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-flight-date">Departure Date</label>
+                    <input type="date" id="edit-flight-date">
+                </div>
+
+                <div class="form-group grid-col-2">
+                    <label for="edit-flight-departure-time">Departure Time</label>
+                    <input type="time" id="edit-flight-departure-time">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-flight-origin">Origin Airport</label>
+                    <select id="edit-flight-airline" value="None">
+                        <option value="None">None</option>
+                        <option value="NAIA (Manila)">NAIA (Manila)</option>
+                        <option value="IA (Albay)">BIA (Albay)</option>
+                        <option value="MCIA (Cebu)">MCIA (Cebu)</option>
+                        <option value="CIA (Clark)">CIA (Clark)</option>
+                        <option value="BSA (Bacolod)">BSA (Bacolod)</option>
+                        <option value="IIA (Iloilo)">IIA (Iloilo)</option>
+                        <option value="SA (Siargao)">SA (Siargao)</option>
+                        <option value="GPRA (Caticlan)">GPRA (Caticlan)</option>
+                    </select>
+                </div>
+
+                <div class="form-group grid-col-2">
+                    <label for="edit-flight-arrival-time">Arrival Time</label>
+                    <input type="time" id="edit-flight-arrival-time">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-flight-destination">Destination Airport</label>
+                    <select id="edit-flight-destination" value="None">
+                        <option value="None">None</option>
+                        <option value="NAIA (Manila)">NAIA (Manila)</option>
+                        <option value="IA (Albay)">BIA (Albay)</option>
+                        <option value="MCIA (Cebu)">MCIA (Cebu)</option>
+                        <option value="CIA (Clark)">CIA (Clark)</option>
+                        <option value="BSA (Bacolod)">BSA (Bacolod)</option>
+                        <option value="IIA (Iloilo)">IIA (Iloilo)</option>
+                        <option value="SA (Siargao)">SA (Siargao)</option>
+                        <option value="GPRA (Caticlan)">GPRA (Caticlan)</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group grid-col-2">
+                    <label for="edit-flight-duration">Duration (mins)</label>
+                    <input type="number" id="edit-flight-duration" placeholder="Ex. 180">
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-flight-price">Price (PHP)</label>
+                    <input type="number" id="edit-flight-price" placeholder="12,350.50">
+                </div>
+            </form>
+
+            <div class="options-group">
+                <button class="save-button" onclick="saveChangesModal('modal-edit-save')">Save Changes</button>
+                <button class="cancel-button" onclick="closeModal('modal-edit')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    </main>
+
+<!-- Navbar -->
+    <div style="height:300px"></div>
+    <script>
+        $("#navbar").load("navigation.html", function() {
+            $("#nav-home").addClass("active");
+        });
+    </script>
+</body>
+</html>
