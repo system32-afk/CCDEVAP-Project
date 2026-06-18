@@ -50,6 +50,7 @@ $(document).ready(function () {
         const insurance = $("#insurance-toggle").is(":checked");
         const lounge = $("#lounge-toggle").is(":checked");
 
+        // compute prices
         let totalMeal = 0;
         if (selectedMeal) {
             totalMeal = MEAL_PRICES[selectedMeal];
@@ -76,6 +77,7 @@ $(document).ready(function () {
         const subtotal = BASE_TOTAL + totalMeal + totalSeat + totalExtras;
         const taxes = Math.round(subtotal * TAX_RATE);
 
+        // display selections
         if (selectedSeat) {
             $("#summary-seat").text(selectedSeat);
         } else {
@@ -290,15 +292,17 @@ $(document).ready(function () {
         goToStep(3);
     });
 
+    // done button in passenger forms
     $("#btn-done").click(function() { 
         backToList(); 
     });
 
-    // page navigation
+    // back button from passenger list
     $("#btn-back-5").click(function() { 
         window.location.href = "search.html"; 
     });
 
+    // confirm button from passenger list
     $("#btn-next-5").click(function() { 
         window.location.href = "reservations.html";
     });
