@@ -1,0 +1,25 @@
+.dropdown-list{
+    position: absolute;
+    width: 92%;
+    display:none;
+    top:100%;
+    left:12;
+    border: 1px solid black;
+    border-radius: 0px 0px 10px 10px;
+    text-align: center;
+    background-color: white;
+    z-index: 1000;
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+.city-item:hover{
+    background-color: #8dc4fc;
+    cursor: pointer;
+    border-radius: 0px 0px 6px 6px;
+}
+
+.input-fields {
+    display: flex;
+    flex-direction: column;
+    position:relative
+}
