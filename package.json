@@ -1,0 +1,24 @@
+{
+  "name": "ccdevap-project",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/system32-afk/CCDEVAP-Project#readme",
+  "bugs": {
+    "url": "https://github.com/system32-afk/CCDEVAP-Project/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/system32-afk/CCDEVAP-Project.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "priceSlider_script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "express-handlebars": "^9.0.1"
+  }
+}
