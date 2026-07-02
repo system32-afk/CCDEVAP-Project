@@ -1,0 +1,36 @@
+body{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.315), rgba(0, 0, 0, 0.252)),  url("../images/landingBG.jpg");
+    background-repeat: no-repeat;
+    background-attachment:fixed ;
+    background-position: center center;
+    background-size: cover;
+}
+
+
+#login-form{
+    display: flex;
+    justify-content: center; 
+    align-items: center;    
+    height: 80vh;  
+  
+    
+}
+
+#login-form form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 30rem;
+    max-width: 700px; 
+}
+
+#login-form img{
+    height: 5rem;
+    width: 25rem;
+    display: block;
+    margin: 0 auto 1.5rem auto;
+    object-fit: cover;
+    transform: scale(1.4);
+   
+}

@@ -1,11 +1,48 @@
+const dotenv = require('dotenv');
+dotenv.config({path: './credentials.env'});
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const express = require('express');
 const expresshbs = require('express-handlebars');
-
-const port = 3000;
+const port = process.env.SERVER_port;
+const sessionString = process.env.secretString;
+const DBuri = process.env.DBuri;
 const app = express();
+
+
+//DATABASE CONNECTION
+const {connectToMongoDB} = require('./conn.js'); 
+
+connectToMongoDB((err) =>{
+    if (err){
+        console.log("an error occured while connecting to mongoDB");
+        console.log(err);
+        process.exit(); // close the program
+    }else{
+        console.log("connected")
+    }
+})
 
 // to load static files in /public folder
 app.use(express.static(__dirname + "/public"));
+
+//creates login session for authentication
+app.use(session({
+    secret: sessionString,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.MongoStore.create({
+        mongoUrl: DBuri,
+        collection: "FLIGHT-MANAGEMENT-SYSTEM"
+    }),
+    cookie: {
+        httpOnly: true,
+        secure: false, // Set to true if deploying over HTTPS
+        maxAge: 1000 * 60 * 60 * 24 // expires after 24 hours
+    }
+}));
+
+
 
 app.engine("hbs", expresshbs.engine({
     extname: 'hbs',
@@ -15,6 +52,19 @@ app.engine("hbs", expresshbs.engine({
 }));
 
 app.set("view engine", "hbs");
+
+//makes it so whenever the server starts it goes to login immediately
+app.get('/', function(req,res){
+    res.redirect("/login");
+})
+
+app.get('/login', function(req,res){
+    res.render("pages/login",{layout:'auth'});
+})
+
+app.get('/register', function(req,res){
+    res.render("pages/register",{layout:'auth'});
+})
 
 app.get('/home', function(req, res) {
     res.render("pages/index", {
