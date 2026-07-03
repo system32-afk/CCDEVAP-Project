@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
 
     paymentMethods:[paymentMethodSchema]
 },
-{ collection: 'user' }
+{ collection: 'users' }
 )
 
 
@@ -48,4 +48,4 @@ async function createUser(params) {
 }
 
 
-module.exports  = mongoose.model('user',userSchema);
+module.exports  = mongoose.model('users',userSchema);
