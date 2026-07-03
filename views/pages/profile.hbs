@@ -52,7 +52,7 @@
                                 <div>
                                     <img src="/images/profile-picture.png" id="profile-picture-preview" class="profile-picture" alt="User picture">   
                                 </div>
-                                <h1 class="full-name fs-2">Juan Dela Cruz</h1>
+                                <h1 class="full-name fs-2">{{user.Fname}} {{user.Lname}}</h1>
                             </div>
                             
                             <div class="upload-picture-container position-relative  d-flex">
@@ -66,22 +66,22 @@
                                     
                                     <div class="col-md-5">
                                         <label for="Fname-field" class="form-label">First Name</label>
-                                        <input type="text" id="Fname-field" data-field="Fname" class="form-control py-2" value="" disabled required>
+                                        <input type="text" id="Fname-field" data-field="Fname" class="form-control py-2" value="{{user.Fname}}" disabled required>
                                     </div>
                                     
                                     <div class="col-md-5">
                                         <label for="Lname-field" class="form-label">Last Name</label>
-                                        <input type="text" id="Lname-field" data-field="Lname" class="form-control py-2" value="" disabled required>
+                                        <input type="text" id="Lname-field" data-field="Lname" class="form-control py-2" value="{{user.Lname}}" disabled required>
                                     </div>
 
                                     <div class="col-md-2">
                                         <label for="MI-field" class="form-label">M.I.</label>
-                                        <input type="text" id="MI-field" data-field="MI" class="form-control py-2" value="" disabled required>
+                                        <input type="text" id="MI-field" data-field="MI" class="form-control py-2" value="{{user.MI}}" disabled>
                                     </div>
                                     
                                     <div class="col-md-6">
                                         <label class="form-label">Sex</label>
-                                        <select id="sex-field" data-field="sex" class="form-control" disabled required>
+                                        <select id="sex-field" data-field="sex" data-current-sex="{{user.sex}}" class="form-control" disabled required>
                                             <option value="Male">Male</option>
                                             <option value="Female">Female</option>
                                         </select>
@@ -92,23 +92,23 @@
                                         <label for="mobile-number-field" class="form-label">Mobile Number</label>
                                         <div class="input-group">
                                             <span class="input-group-text">+63</span>
-                                            <input type="number" class="form-control no-spinners py-2" id="mobile-number-field" data-field="mobileNum" value=""  disabled required>
+                                            <input type="number" class="form-control no-spinners py-2" id="mobile-number-field" data-field="MobileNum" value="{{user.MobileNum}}"  disabled required>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label for="DOB-field" class="form-label">Date of Birth</label>
-                                        <input type="text" id="DOB-field" data-field="DOB" class="form-control py-2" value="" placeholder="YYYY/MM/DD" disabled required>
+                                        <input type="text" id="DOB-field" data-field="DOB" class="form-control py-2" value="{{user.DOB}}" placeholder="YYYY/MM/DD" disabled required>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label for="Nationality-field" class="form-label">Nationality</label>
-                                        <input type="text" id="Nationality-field" data-field="nationality" class="form-control py-2" value="" disabled required>
+                                        <input type="text" id="nationality-field" data-field="nationality" class="form-control py-2" value="{{user.nationality}}" disabled required>
                                     </div>
 
                                     <div class="col-md-12">
                                         <label for="email-field" class="form-label">Email Address</label>
-                                        <input type="email" id="email-field" data-field="emailAddress" class="form-control py-2" value="" disabled required>
+                                        <input type="email" id="email-field" data-field="email" class="form-control py-2" value="{{user.emailAddress}}" disabled required>
                                     </div>
 
                                     <!-- Hidden buttons -->
@@ -187,7 +187,7 @@
                                         <p class="notification-description">Receive instant push logs regarding delays, gate gate shifts or boarding updates changes.</p>
                                     </div>
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" value="FlightStatusAlert">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" value="FlightStatusAlert"{{#if user.preferences.flightStatusNotification}}checked{{/if}}>
                                     </div>
                                 </div>
                                 <div class="list-group-item d-flex justify-content-between align-items-center py-3 border-bottom">
@@ -196,7 +196,7 @@
                                         <p class="notification-description">Stay informed about seasonal vouchers and other promotions from us!</p>
                                     </div>
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" value="PromosAndMarketing">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" value="PromosAndMarketing"{{#if user.preferences.marketingNotification}}checked{{/if}}>
                                     </div>
                                 </div>
 
@@ -263,7 +263,7 @@
 
                         <div class="col-md-2">
                             <label class="form-label">M.I.</label>
-                            <input type="text" id="passenger-MI" data-field="MI" class="form-control py-2" value="" placeholder="e.g V" required>
+                            <input type="text" id="passenger-MI" data-field="MI" class="form-control py-2" value="" placeholder="e.g V">
                         </div>
                         
                         <div class="col-md-6">
