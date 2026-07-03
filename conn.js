@@ -15,6 +15,7 @@ dns.setServers([
 
 async function connectToMongoDB() {
     try{
+        console.log("DATABASE: ",process.env.DBuri);
         await mongoose.connect(process.env.DBuri);
         console.log("Database connection established via Mongoose");
     }catch(err){

@@ -11,7 +11,8 @@ const DBname = process.env.DBname;
 const app = express('express');
 const bcrypt  = require('bcryptjs')
 const userModel = require('./models/user_model.js');
-const savedPassengerModel = require('./models/savedPassenger_model.js');
+const savedPassengerModel = require('./models/savedPassenger_Model.js');
+const travelHistoryModel = require('./models/TravelHistory_model.js');
 
 //DATABASE CONNECTION
 const {connectToMongoDB} = require('./conn.js'); 
@@ -212,6 +213,20 @@ app.get("/paymentMethods", isAuthenticated, async function(req,res){
     }
 })
 
+app.get("/travel-history", isAuthenticated, async function(req,res) {
+    try{
+        var history = await travelHistoryModel.find({belongs_to_user: req.session.userID});
+
+        if(!history){
+            return res.status(404).json({message: "Travel history not found!"});
+        }
+
+        return res.status(200).json(history);
+    }catch(error){
+
+    }
+})
+
 
 
 
@@ -328,6 +343,26 @@ app.post("/saved-passengers/add", isAuthenticated, async function (req, res) {
 });
 
 
+app.post("/add-payment",isAuthenticated,async function(req,res){
+    try{
+        const user = await userModel.findById(req.session.userID);
+
+        if(!user){
+            return res.status(404).json({message: "User account not found"});
+        }
+
+        user.paymentMethods.push(req.body);
+
+        await user.save();
+
+        return res.status(200).json({message: "Payment method saved"});
+    }catch(err){
+            console.error("Payment registration error: ",err);
+            return res.status(500).json({ error: err.message });
+        };
+})
+
+
 //==========================PUT FUNCTIONS=============================
 
 
@@ -382,9 +417,48 @@ app.delete("/saved-passengers/delete/:id", isAuthenticated, async function (req,
     }
 });
 
+app.delete("/delete-payment/:cardId",isAuthenticated, async function(req,res){
+    try{
+        const user = await userModel.findById(req.session.userID);
 
 
+        user.paymentMethods.pull({_id: req.params.cardId});
 
+        await user.save();
+
+        return res.status(200).json({ message: "Payment method removed successfully." });
+    }catch(err){
+        console.error(" BACKEND ERROR: CARD DELETION: ", err);
+        return res.status(500).json({ error: err.message });
+    }
+})
+
+
+//=================PATCH FUNCTIONS============================
+
+app.patch("/update-preferences",isAuthenticated, async function(req,res){
+    try{
+
+        var user = await userModel.findById(req.session.userID);
+
+        if (!user) {
+            return res.status(404).json({ message: "User session profile not found." });
+        }
+
+        if (req.body.flightStatusNotification !== undefined) {
+            user.preferences.flightStatusNotifications = req.body.flightStatusNotification;
+        }
+        if (req.body.marketingNotification !== undefined) {
+            user.preferences.marketingNotifications = req.body.marketingNotification;
+        }
+
+        await user.save();
+        return res.status(200).json({ message: "preferences updated successfully." });
+    }catch(err){
+        console.error("BACKEND ERROR: ACC PREFERENCE: ",err);
+        return res.status(500).json({ error: err.message });
+    }
+})
 
 
 
