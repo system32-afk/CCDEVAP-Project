@@ -3,6 +3,13 @@ const dotenv = require('dotenv');
 dotenv.config({path: './credentials.env'});
 const mongoose = require('mongoose')
 
+const dns = require('dns');
+
+dns.setServers([
+    '1.1.1.1',
+    '8.8.8.8'
+])
+
 
 
 
