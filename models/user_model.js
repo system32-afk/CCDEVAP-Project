@@ -33,7 +33,9 @@ const userSchema = new mongoose.Schema({
         }},
 
     paymentMethods:[paymentMethodSchema]
-})
+},
+{ collection: 'user' }
+)
 
 
 
