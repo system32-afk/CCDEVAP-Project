@@ -11,6 +11,7 @@ const DBname = process.env.DBname;
 const app = express('express');
 const bcrypt  = require('bcryptjs')
 const userModel = require('./models/user_model.js');
+const flightModel = require('./models/flight_model.js');
 const savedPassengerModel = require('./models/savedPassenger_Model.js');
 const travelHistoryModel = require('./models/TravelHistory_model.js');
 
@@ -296,6 +297,16 @@ app.post("/register",async  function(req,res){
     await user.save();
 
     res.redirect('/login');
+});
+
+app.post("/create-flight", async function(req,res){
+    const {flightNumber, airline,origin, destination, departureDate, departureTime, arrivalDate,
+        arrivalTime, logoName, numOfLayovers, cabin} = req.body;
+
+    let flight = await flightModel.findOne({flightNumber});
+    if(flight) {
+        return res.redirect('/create-flight');
+    }
 });
 
 app.post("/login", async function(req,res){
