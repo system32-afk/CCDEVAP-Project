@@ -45,42 +45,4 @@ const flightSchema = new mongoose.Schema({
 const Flight = mongoose.model('flights', flightSchema);
 
 
-
-Flight.create({
-    
-  flightNumber: 6789,
-    airline: "Japan Airlines",
-    origin: "Manila",
-    destination: "Tokyo",
-    departureDate: "2026-07-12",
-    departureTime: "22:00",
-    arrivalDate: "2026-07-13",
-    arrivalTime: "05:00",
-    cabin: {
-        economy: {
-            price: 12000,
-            seats: 200,
-            label: "Economy"
-        },
-        premium_economy: {
-            price: 20000,
-            seats: 60,
-            label: "Premium Economy"
-        },
-        business_class: {
-            price: 35000,
-            seats: 35,
-            label: "Business Class"
-        },
-        first_class: {
-            price: 55000,
-            seats: 15,
-            label: "First Class"
-        }
-    },
-    logoName: "JAL",
-    numOfLayovers: 0
-});
-
-
 module.exports = Flight; 
