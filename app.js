@@ -17,7 +17,6 @@ const travelHistoryModel = require('./models/TravelHistory_model.js');
 
 //DATABASE CONNECTION
 const {connectToMongoDB} = require('./conn.js'); 
-const Flight = require('./models/flight_model.js');
 
 connectToMongoDB((err) =>{
     if (err){
@@ -111,10 +110,16 @@ app.get('/admin-dashboard', isAuthenticated,function(req,res){
 });
 
 app.get('/admin-flights', isAuthenticated, async function(req,res){
-   
-    const flights = await Flight.find({ isActive: true});
+    //read flights that are only active and sort flightnumber ascending    
+    const flights = await flightModel.find({ isActive: true}).sort({flightNumber: 1}).lean();
+    // lean for to return JS objects instead of mongoose documents
+
+    // const updateFlight = await flightModel.updateOne();
+    // const deleteFlight = await flightModel.findOneAndDelete('flightNumber');
+
     res.render('pages/admin-flights',{
         title: "Admin Flights",
+        flights: flights,
         pageScripts: `    
             <script src="/scripts/reservations.js" defer></script>
             <script src="/scripts/admin.js" defer></script>
@@ -328,7 +333,6 @@ app.post("/create-flight", async function(req,res){
         departureTime,
         arrivalDate,
         arrivalTime,
-        cabin,
         logoName,
         numOfLayovers,
         isActive,
