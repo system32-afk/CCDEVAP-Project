@@ -17,6 +17,7 @@ const travelHistoryModel = require('./models/TravelHistory_model.js');
 
 //DATABASE CONNECTION
 const {connectToMongoDB} = require('./conn.js'); 
+const Flight = require('./models/flight_model.js');
 
 connectToMongoDB((err) =>{
     if (err){
@@ -109,7 +110,9 @@ app.get('/admin-dashboard', isAuthenticated,function(req,res){
     });
 });
 
-app.get('/admin-flights', isAuthenticated,function(req,res){
+app.get('/admin-flights', isAuthenticated, async function(req,res){
+   
+    const flights = await Flight.find({ isActive: true});
     res.render('pages/admin-flights',{
         title: "Admin Flights",
         pageScripts: `    
@@ -118,6 +121,7 @@ app.get('/admin-flights', isAuthenticated,function(req,res){
             <script src="/scripts/utilities/load_navbar_script.js" defer></script>
     `
     });
+    
 });
 
 
@@ -139,6 +143,12 @@ app.get('/admin-users',isAuthenticated ,function(req,res){
             <script src="/scripts/reservations.js" defer></script>
             <script src="/scripts/utilities/load_navbar_script.js" defer></script>
     `
+    });
+});
+
+app.get('/create-flight', isAuthenticated, function(req,res){
+    res.render('pages/create-flight',{
+        title: "Create Flight"
     });
 });
 
@@ -301,12 +311,32 @@ app.post("/register",async  function(req,res){
 
 app.post("/create-flight", async function(req,res){
     const {flightNumber, airline,origin, destination, departureDate, departureTime, arrivalDate,
-        arrivalTime, logoName, numOfLayovers, cabin} = req.body;
+        arrivalTime, logoName, numOfLayovers, isActive, cabin} = req.body;
 
+    // CHECKS IF FLIGHT ALREADY EXISTS
     let flight = await flightModel.findOne({flightNumber});
     if(flight) {
         return res.redirect('/create-flight');
     }
+
+    flight = new flightModel({
+        flightNumber, 
+        airline,
+        origin,
+        destination,
+        departureDate,
+        departureTime,
+        arrivalDate,
+        arrivalTime,
+        cabin,
+        logoName,
+        numOfLayovers,
+        isActive,
+        cabin
+    });
+    await flight.save();
+
+    res.redirect('/admin-flights');
 });
 
 app.post("/login", async function(req,res){
@@ -372,7 +402,6 @@ app.post("/add-payment",isAuthenticated,async function(req,res){
             return res.status(500).json({ error: err.message });
         };
 })
-
 
 //==========================PUT FUNCTIONS=============================
 
@@ -472,7 +501,7 @@ app.patch("/update-preferences",isAuthenticated, async function(req,res){
 })
 
 
-
+//==========================READ OPERATIIONS=============================
 
 
 

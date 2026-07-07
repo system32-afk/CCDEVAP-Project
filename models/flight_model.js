@@ -37,12 +37,14 @@ const flightSchema = new mongoose.Schema({
     arrivalTime:{type: String, required: true, trim: true},
     cabin:{type: cabinSchema, required: true},
     logoName:{type: String, trim: true, required: true},
-    numOfLayovers:{type: Number, required: true}
+    numOfLayovers:{type: Number, required: true},
+    isActive:{type: Boolean, required: true}
 
 });
 
 
 const Flight = mongoose.model('flights', flightSchema);
+//     Flight.create({
 
-
+// })
 module.exports = Flight; 
