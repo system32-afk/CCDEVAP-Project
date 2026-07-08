@@ -1,3 +1,4 @@
+
    
     <link rel="stylesheet" href="/CSS/reservations.css" media="all">
     <link rel="stylesheet" href="/CSS/admin.css" media="all">
@@ -35,96 +36,81 @@
                     </li>
                 </ul>
             </aside>
-            
+{{!-- dont remove above --}}
         <main class="admin-content">
             <h1 class="admin-title"><strong>FLIGHT MANAGEMENT</strong></h1>
-                
+            <div class=" d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-2">
+
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="fw-bold mb-0">Sort By:</label>
+                        <select id="cabinSelect" class="form-select form-select-sm" style="width: auto;" onchange="applyFilter()">
+                            <option value="economy" {{#if (eq currentCabin 'economy')}}selected{{/if}}>Economy</option>
+                            <option value="premium_economy" {{#if (eq currentCabin 'premium_economy')}}selected{{/if}}>Premium Economy</option>
+                            <option value="business_class" {{#if (eq currentCabin 'business_class')}}selected{{/if}}>Business Class</option>
+                            <option value="first_class" {{#if (eq currentCabin 'first_class')}}selected{{/if}}>First Class</option>
+                        </select>
+                    </div>
+                </div>
+            
+
+            </div>
+            </div>
             <div class="analytics-table-card">
                 <div class="table-responsive">
                     <table class="table table-hover admin-table">
-                        <thead>
+                        <thead> {{!-- header --}}
                             <tr>
                                 <th scope="col">Flight Number</th>
                                 <th scope="col">Airline</th>
                                 <th scope="col">Origin</th>
                                 <th scope="col">Destination</th>
+                                <th scope="col">Departure Date</th>
                                 <th scope="col">Departure Time</th>
+                                <th scope="col">Cabin</th>
                                 <th scope="col">Fare (Price)</th>
-                                <th scope="col" class="text-center">Status</th>
+                                <th scope="col">Seats</th>
+                                <th scope="col" class="text-center"></th>
                                 <th scope="col" class="text-center"></th>
                                 <th scope="col" class="text-center"></th>
                             </tr>
-                        </thead>
+                        </thead> {{!-- header --}}
+                        
                         <tbody>
+                            {{#each flights}}
                             <tr>
-                                <td class="table-code-highlight">PR-1845</td>
-                                <td>Philippine Airlines</td>
-                                <td>NAIA (Manila)</td>
-                                <td>MCIA (Cebu)</td>
-                                <td class="table-code-highlight">08:30 AM</td>
-                                <td>PHP 5,450</td>
-                                <td class="text-center">
-                                    <span class="status-badge confirmed">Available</span>
-                                </td>
-                                <td><button class="edit-button table-btn" onclick="openModal('modal-edit-flight')">Edit</button></td>
-                                <td><button class="cancel-button table-btn" onclick="openModal('modal-cancel-flight')">Cancel</button></td>
-                            </tr>
+                                <td class="table-code-highlight">{{this.flightNumber}}</td>
+                                <td>{{this.airline}}</td>
+                                <td>{{this.origin}}</td>
+                                <td>{{this.destination}}</td>
+                                <td>{{formatDate this.departureDate}}</td>
+                                <td class="table-code-highlight">{{this.departureTime}}</td>
 
-                            <tr>
-                                <td class="table-code-highlight">5J-561</td>
-                                <td>Cebu Pacific</td>
-                                <td>CIA (Clark)</td>
-                                <td>BIA (Albay)</td>
-                                <td class="table-code-highlight">11:15 AM</td>
-                                <td>PHP 3,200</td>
-                                <td class="text-center">
-                                    <span class="status-badge confirmed">Available</span>
-                                </td>
+                                    {{#if (eq ../currentCabin 'economy')}}
+                                        <td>{{this.cabin.economy.label}}</td>
+                                        <td>{{this.cabin.economy.price}}</td>
+                                        <td>{{this.cabin.economy.seats}}</td>                                    
+                                    {{/if}}
+                                    {{#if (eq ../currentCabin 'premium_economy')}}
+                                        <td>{{this.cabin.premium_economy.label}}</td>
+                                        <td>{{this.cabin.premium_economy.price}}</td>
+                                        <td>{{this.cabin.premium_economy.seats}}</td>                                    
+                                    {{/if}}
+                                    {{#if (eq ../currentCabin 'business_class')}}
+                                        <td>{{this.cabin.business_class.label}}</td>
+                                        <td>{{this.cabin.business_class.price}}</td>
+                                        <td>{{this.cabin.business_class.seats}}</td>                                    
+                                    {{/if}}
+                                    {{#if (eq ../currentCabin 'first_class')}}
+                                        <td>{{this.cabin.first_class.label}}</td>
+                                        <td>{{this.cabin.first_class.price}}</td>
+                                        <td>{{this.cabin.first_class.seats}}</td>                                    
+                                    {{/if}}
                                 <td><button class="edit-button table-btn" onclick="openModal('modal-edit-flight')">Edit</button></td>
                                 <td><button class="cancel-button table-btn" onclick="openModal('modal-cancel-flight')">Cancel</button></td>
                             </tr>
-
-                            <tr>
-                                <td class="table-code-highlight">CX-6111</td>
-                                <td>Cathay Pacific</td>
-                                <td>NAIA (Manila)</td>
-                                <td>SA (Siargao)</td>
-                                <td class="table-code-highlight">01:45 PM</td>
-                                <td>PHP 7,800</td>
-                                <td class="text-center">
-                                    <span class="status-badge pending">Delayed</span>
-                                </td>
-                                <td><button class="edit-button table-btn" onclick="openModal('modal-edit-flight')">Edit</button></td>
-                                <td><button class="cancel-button table-btn" onclick="openModal('modal-cancel-flight')">Cancel</button></td>
-                            </tr>
-
-                            <tr>
-                                <td class="table-code-highlight">Z2-2932</td>
-                                <td>Air Asia</td>
-                                <td>IIA (Iloilo)</td>
-                                <td>NAIA (Manila)</td>
-                                <td class="table-code-highlight">04:20 PM</td>
-                                <td>PHP 4,150</td>
-                                <td class="text-center">
-                                    <span class="status-badge confirmed">Available</span>
-                                </td>
-                                <td><button class="edit-button table-btn" onclick="openModal('modal-edit-flight')">Edit</button></td>
-                                <td><button class="cancel-button table-btn" onclick="openModal('modal-cancel-flight')">Cancel</button></td>
-                            </tr>
-
-                            <tr>
-                                <td class="table-code-highlight">PR-712</td>
-                                <td>Philippine Airlines</td>
-                                <td>BSA (Bacolod)</td>
-                                <td>GPRA (Caticlan)</td>
-                                <td class="table-code-highlight">07:55 PM</td>
-                                <td>PHP 2,900</td>
-                                <td class="text-center">
-                                    <span class="status-badge cancelled">Cancelled</span>
-                                </td>
-                                <td><button class="edit-button table-btn" onclick="openModal('modal-edit-flight')">Edit</button></td>
-                                <td><button class="cancel-button table-btn" onclick="openModal('modal-cancel-flight')">Cancel</button></td>
-                            </tr>
+                            {{/each}}
                         </tbody>
                     </table>
                 </div>
@@ -256,8 +242,10 @@
 
 <script>
     $(document).ready(function() {
-        $("#navbar").load("navigation.hbs", function() {
+        $("#navbar").load("navigation", function() {
             $("#nav-home").addClass("active");
         });
     });
+
+    
 </script>

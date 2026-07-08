@@ -31,9 +31,9 @@ const flightSchema = new mongoose.Schema({
     airline:{type: String, required: true, trim:true},
     origin:{type: String , required: true, trim: true},
     destination:{type: String, required: true, trim: true},
-    departureDate:{type: String, required: true},
+    departureDate:{type: Date, required: true},
     departureTime:{type: String, required: true, trim: true},
-    arrivalDate:{type: String, required: true},
+    arrivalDate:{type: Date, required: true},
     arrivalTime:{type: String, required: true, trim: true},
     cabin:{type: cabinSchema, required: true},
     logoName:{type: String, trim: true, required: true},
@@ -45,6 +45,38 @@ const flightSchema = new mongoose.Schema({
 
 const Flight = mongoose.model('flights', flightSchema);
 //     Flight.create({
-
+//    "flightNumber": 6789,
+//     "airline": "Japan Airlines",
+//     "origin": "Manila",
+//     "destination": "Tokyo",
+//     "departureDate": "2026-07-12",
+//     "departureTime": "22:00",
+//     "arrivalDate": "2026-07-13",
+//     "arrivalTime": "05:00",
+//     "cabin": {
+//       "economy": {
+//         "price": 12000,
+//         "seats": 200,
+//         "label": "Economy"
+//       },
+//       "premium_economy": {
+//         "price": 20000,
+//         "seats": 60,
+//         "label": "Premium Economy"
+//       },
+//       "business_class": {
+//         "price": 35000,
+//         "seats": 35,
+//         "label": "Business Class"
+//       },
+//       "first_class": {
+//         "price": 55000,
+//         "seats": 15,
+//         "label": "First Class"
+//       }
+//     },
+//     "logoName": "JAL",
+//     "numOfLayovers": 0,
+//     "isActive": false
 // })
 module.exports = Flight; 
