@@ -27,7 +27,7 @@ const cabinSchema = new mongoose.Schema({
 });
 
 const flightSchema = new mongoose.Schema({
-    flightNumber:{type: Number, required: true, min: 0},
+    flightNumber:{type: Number, required: true, min: 0, unique:true},
     airline:{type: String, required: true, trim:true},
     origin:{type: String , required: true, trim: true},
     destination:{type: String, required: true, trim: true},
