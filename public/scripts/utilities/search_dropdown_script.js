@@ -1,6 +1,6 @@
 const cities = 
-['NAIA (Manila)', 'BIA (Albay)', 'MCIA (Cebu)', 'CIA (Clark)', 'BSA (Bacolod)','IIA (Iloilo)',
-'SA (Siargao)','GPRA (Caticlan)'
+['Manila', 'Albay', 'Cebu', 'Clark', 'Bacolod','Iloilo',
+'Siargao','Caticlan'
 ];
 
 //hides all dropdown lists when the user clicks outside of the input fields
