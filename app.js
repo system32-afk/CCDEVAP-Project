@@ -56,7 +56,17 @@ app.engine("hbs", expresshbs.engine({
     extname: 'hbs',
     defaultLayout: 'main',
     layoutsDir: __dirname + "/views/layouts",
-    partialsDir: __dirname + "/views/partials"
+    partialsDir: __dirname + "/views/partials",
+    helpers: {
+        eq: function(a, b){
+            return a === b;
+        },
+        formatDate: function(date){
+            if (!date) return '';
+            const d = new Date(date);
+            return d.toISOString().split('T')[0]; // Returns YYYY-MM-DD
+        }
+    }
 }));
 
 app.set("view engine", "hbs");
@@ -110,6 +120,26 @@ app.get('/admin-dashboard', isAuthenticated,function(req,res){
 });
 
 app.get('/admin-flights', isAuthenticated, async function(req,res){
+
+    const currentCabin = req.query.cabin || 'economy';
+      let sortField = {};
+        switch(currentCabin) {
+            case 'economy':
+                sortField = { 'cabin.economy.price': 1 };
+                break;
+            case 'premium_economy':
+                sortField = { 'cabin.premium_economy.price': 1 };
+                break;
+            case 'business_class':
+                sortField = { 'cabin.business_class.price': 1 };
+                break;
+            case 'first_class':
+                sortField = { 'cabin.first_class.price': 1 };
+                break;
+            default:
+                sortField = { 'cabin.economy.price': 1 };
+                break;
+        }
     //read flights that are only active and sort flightnumber ascending    
     const flights = await flightModel.find({ isActive: true}).sort({flightNumber: 1}).lean();
     // lean for to return JS objects instead of mongoose documents
@@ -120,6 +150,7 @@ app.get('/admin-flights', isAuthenticated, async function(req,res){
     res.render('pages/admin-flights',{
         title: "Admin Flights",
         flights: flights,
+        currentCabin:currentCabin,
         pageScripts: `    
             <script src="/scripts/reservations.js" defer></script>
             <script src="/scripts/admin.js" defer></script>
@@ -128,6 +159,14 @@ app.get('/admin-flights', isAuthenticated, async function(req,res){
     });
     
 });
+
+app.get('/api/flights', isAuthenticated, async function(req,res){
+
+    const flights = await flightModel.find({ isActive: true}).sort({flightNumber: 1}).lean();
+
+    res.json(flights);
+})
+
 
 
 app.get('/admin-reservations', isAuthenticated,function(req,res){
@@ -314,14 +353,14 @@ app.post("/register",async  function(req,res){
     res.redirect('/login');
 });
 
-app.post("/create-flight", async function(req,res){
+app.post("/admin-flights", async function(req,res){
     const {flightNumber, airline,origin, destination, departureDate, departureTime, arrivalDate,
         arrivalTime, logoName, numOfLayovers, isActive, cabin} = req.body;
 
     // CHECKS IF FLIGHT ALREADY EXISTS
     let flight = await flightModel.findOne({flightNumber});
     if(flight) {
-        return res.redirect('/create-flight');
+        return res.redirect('/admin-flights');
     }
 
     flight = new flightModel({
@@ -503,6 +542,35 @@ app.patch("/update-preferences",isAuthenticated, async function(req,res){
         return res.status(500).json({ error: err.message });
     }
 })
+
+app.patch("/admin-flights/:flightNumber/deactivate", isAuthenticated, async function(req,res){
+
+    try{
+        const flightNumber = Number(req.params.flightNumber);
+    
+        
+        const flight = await flightModel.findOneAndUpdate(
+            {flightNumber: flightNumber},
+            {$set: {isActive: false}},
+            {returnDocument: 'after'}
+        );
+
+        if(!flight){
+            return res.status(404).json({
+                message: "Flight not found."
+            });
+        }
+        return res.status(200).json({
+            message: "Flight canncelled successfully."
+        });
+
+    }catch(err){
+        return res.status(500).json({
+            error:err.message
+        });
+    }
+
+});
 
 
 //==========================READ OPERATIIONS=============================
