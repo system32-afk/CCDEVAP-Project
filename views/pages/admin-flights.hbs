@@ -39,11 +39,10 @@
 {{!-- dont remove above --}}
         <main class="admin-content">
             <h1 class="admin-title"><strong>FLIGHT MANAGEMENT</strong></h1>
-            <div class=" d-flex justify-content-between align-items-center mb-3">
+            {{!-- sort  --}}
+            <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="d-flex align-items-center gap-2">
-
-                    <div class="d-flex align-items-center gap-2">
+  
                         <label class="fw-bold mb-0">Sort By:</label>
                         <select id="cabinSelect" class="form-select form-select-sm" style="width: auto;" onchange="applyFilter()">
                             <option value="economy" {{#if (eq currentCabin 'economy')}}selected{{/if}}>Economy</option>
@@ -51,12 +50,21 @@
                             <option value="business_class" {{#if (eq currentCabin 'business_class')}}selected{{/if}}>Business Class</option>
                             <option value="first_class" {{#if (eq currentCabin 'first_class')}}selected{{/if}}>First Class</option>
                         </select>
-                    </div>
                 </div>
-            
+            {{!-- sort  --}}
+                
+            {{!-- create flight button --}}
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-3">
+                    <button type="button" class="btn btn-white btn-outline-dark" 
+                            data-bs-toggle="modal" data-bs-target="#modal-create-flight">
+                            Create Flight
+                    </button>
+                </div>
+            </div>
+            </div>
+            {{!-- create flight button --}}
 
-            </div>
-            </div>
             <div class="analytics-table-card">
                 <div class="table-responsive">
                     <table class="table table-hover admin-table">
@@ -108,7 +116,7 @@
                                         <td>{{this.cabin.first_class.seats}}</td>                                    
                                     {{/if}}
                                 <td><button class="edit-button table-btn" onclick="openModal('modal-edit-flight')">Edit</button></td>
-                                <td><button class="cancel-button table-btn" onclick="openModal('modal-cancel-flight')">Cancel</button></td>
+                                <td><button class="cancel-button table-btn" onclick="openCancelModal({{this.flightNumber}})">Cancel</button></td>
                             </tr>
                             {{/each}}
                         </tbody>
@@ -123,19 +131,18 @@
 
 
             <!-- Cancellation of Reservation Modal -->
+<!-- Cancellation of Flight Modal -->
             <div id="modal-cancel-flight" class="modal-overlay">
                 <div class="modal-content-box-small">
-                    <h2>CANCELLATION OF FLIGHT</h3>
-                    <p>
-                        Proceed with cancelling this flight?
-                    </p>
-
+                    <h2>CANCELLATION OF FLIGHT</h2>
+                    <p>Proceed with cancelling this flight?</p>
                     <div class="options-group">
-                        <button class="cancellation-modal-yes-btn" onclick="closeModal('modal-cancel-flight')">Yes, Cancel Flight</button>
+                        <button class="cancellation-modal-yes-btn" onclick="confirmDeactivate()">Yes, Cancel Flight</button>
                         <button class="cancellation-modal-no-btn" onclick="closeModal('modal-cancel-flight')">No, Keep Flight</button>
                     </div>
                 </div>
             </div>
+            <!-- Cancellation of Reservation Modal -->
 
             <!-- Save Changes Modal -->
             <div id="modal-edit-save" class="modal-overlay">
@@ -232,6 +239,163 @@
                     <div class="options-group">
                         <button class="save-button" onclick="saveFlightModal()">Save Changes</button>
                         <button class="cancel-button" onclick="closeModal('modal-edit-flight')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            {{!-- create-flight modal --}}
+            <div class="modal fade" id="modal-create-flight" data-bs-backdrop="static"data-bs-keyboard="false" tabindex="-1">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-primary fw-bold">Create Flight</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/admin-flights" method="POST">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="flightNumber" class="form-label">Flight Number:</label>
+                                        <input type="number" class="form-control" name="flightNumber" id="flightNumber" placeholder="6767" min="0">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="airline" class="form-label">Airline:</label>
+                                        <input type="text" class="form-control" name="airline" id="airline" placeholder="Philippine Airlines" required>
+                                </div>
+                                </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="origin" class="form-label">Origin:</label>
+                                        <input type="text" class="form-control" name="origin" id="origin-field" placeholder="Manila" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="destination" class="form-label">Destination:</label>
+                                        <input type="text" class="form-control" name="destination" id="destination-field" placeholder="Siargao" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label" for="logoName">Logo Code:</label>
+                                        <input type="text" class="form-control" name="logoName" id="logoName" placeholder="PAL" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" for="numOfLayovers">Layovers:</label>
+                                        <input type="number" class="form-control" name="numOfLayovers" id="numOfLayovers" placeholder="0" required>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label class="form-label" for="isActive">Status:</label>
+                                        <select class="form-control" name="isActive" id="isActive" required>
+                                            <option value="true">Active</option>
+                                            <option value="false">Inactive</option>
+                                        </select>
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label  class="form-label" for="departureDate">Departure Date:</label>
+                                        <input type="date" class="form-control" name="departureDate" id="departureDate" placeholder="YYYY-MM-DD" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="departureTime">Departure Time:</label>
+                                        <input type="time" class="form-control" name="departureTime" id="departureTime"required>
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="arrivalDate">Arrival Date:</label>
+                                        <input type="date" class="form-control" name="arrivalDate" id="arrivalDate" placeholder="YYYY-MM-DD" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="arrivalTime" class="form=label">Arrival Time:</label>
+                                        <input type="time" class="form-control" name="arrivalTime" id="arrivalTime"required>
+                                </div>
+
+                            </div>
+                            <hr>
+                            <h5 class="mb-3 text-primary fw-bold">Cabin Classes:</h5>
+                            {{!-- ECONOMY --}}
+                                <div class="row mb-2 align-items-center">
+                                    <div class="col-md-4">
+                                    
+                                        <label class="form-label fw-bold">Economy:</label>
+                                    </div>
+                                        <div class="col-md-4">
+                                            <label for="economy_price" class="form-label">Price:</label>
+                                                <input type="number" class="form-control" id="economy_price" name="cabin[economy][price]"
+                                                placeholder="Price" min="0" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="economy_seats" class="form-label">Seats:</label>
+                                                <input type="number" class="form-control" id="economy_seats" name="cabin[economy][seats]"
+                                                placeholder="Seats" min="0" required>
+                                        </div>                                     
+
+                                </div>
+                            {{!-- PREM ECONOMY --}}
+                                <div class="row mb-2 align-items-center">
+                                    <div class="col-md-4">
+                                    
+                                        <label class="form-label fw-bold">Premium Economy:</label>
+                                    </div>
+                                        <div class="col-md-4">
+                                            <label for="premium_economy_price" class="form-label">Price:</label>
+                                                <input type="number" class="form-control" id="premium_economy_price" name="cabin[premium_economy][price]"
+                                                placeholder="Price" min="0" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="premium_economy_seats" class="form-label">Seats:</label>
+                                                <input type="number" class="form-control" id="premium_economy_seats" name="cabin[premium_economy][seats]"
+                                                placeholder="Seats" min="0" required>
+                                        </div>                                     
+
+                                </div>
+                            {{!-- BUSINESS CLASS --}}
+                                <div class="row mb-2 align-items-center">
+                                    <div class="col-md-4">
+                                    
+                                        <label class="form-label fw-bold">Business Class:</label>
+                                    </div>
+                                        <div class="col-md-4">
+                                            <label for="business_class_price" class="form-label">Price:</label>
+                                                <input type="number" class="form-control" id="business_class_price" name="cabin[business_class][price]"
+                                                placeholder="Price" min="0" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="business_class_seats" class="form-label">Seats:</label>
+                                                <input type="number" class="form-control" id="business_class_seats" name="cabin[business_class][seats]"
+                                                placeholder="Seats" min="0" required>
+                                        </div>                                     
+
+                                </div>
+
+                            {{!-- FIRST CLASS --}}
+                                <div class="row mb-2 align-items-center">
+                                    <div class="col-md-4">
+                                    
+                                        <label class="form-label fw-bold">First Class:</label>
+                                    </div>
+                                        <div class="col-md-4">
+                                            <label for="first_class_price" class="form-label">Price:</label>
+                                                <input type="number" class="form-control" id="first_class_price" name="cabin[first_class][price]"
+                                                placeholder="Price" min="0" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="first_class_price_seats" class="form-label">Seats:</label>
+                                                <input type="number" class="form-control" id="first_class_seats" name="cabin[first_class][seats]"
+                                                placeholder="Seats" min="0" required>
+                                        </div>                                     
+
+                                </div>
+                            </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit"id="saveFlightBtn" class="btn btn-primary">Create Flight</button>
+                                </div>
+                        </form>
+                    </div>
+
                     </div>
                 </div>
             </div>
