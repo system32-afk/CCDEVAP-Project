@@ -12,8 +12,8 @@ const app = express('express');
 const bcrypt  = require('bcryptjs')
 const userModel = require('./models/user_model.js');
 const flightModel = require('./models/flight_model.js');
-// const airlineModel = require('/models/airline_model.js');
-// const cityModel = require('/models/city_model.js');
+const airlineModel = require('./models/airline_model.js');
+// const cityModel = require('./models/city_model.js');
 const savedPassengerModel = require('./models/savedPassenger_Model.js');
 const travelHistoryModel = require('./models/TravelHistory_model.js');
 
@@ -449,6 +449,23 @@ app.post("/register",async  function(req,res){
     await user.save();
 
     res.redirect('/login');
+});
+
+app.post("/admin-flights", async function(req, res){
+    const {airlineName} = req.body;
+
+    // checks if airline already exists
+    let airline = await airlineModel.findOne({airlineName});
+        if(airline){
+            return res.redirect('/admin-flights');
+        }
+
+        airline = new airlineModel({
+            airlineName
+        });
+        await airline.save();
+
+        res.redirect('/admin-flights');
 });
 
 app.post("/admin-flights", async function(req,res){
