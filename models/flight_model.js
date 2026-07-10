@@ -1,6 +1,6 @@
 //FILE FOR USER COLLECTION
 const mongoose = require('mongoose');
-const { create } = require('./user_model');
+
 
 const cabinSchema = new mongoose.Schema({
     economy:{

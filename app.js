@@ -12,11 +12,14 @@ const app = express('express');
 const bcrypt  = require('bcryptjs')
 const userModel = require('./models/user_model.js');
 const flightModel = require('./models/flight_model.js');
+// const airlineModel = require('/models/airline_model.js');
+// const cityModel = require('/models/city_model.js');
 const savedPassengerModel = require('./models/savedPassenger_Model.js');
 const travelHistoryModel = require('./models/TravelHistory_model.js');
 
 //DATABASE CONNECTION
 const {connectToMongoDB} = require('./conn.js'); 
+const { ReturnDocument } = require('mongodb');
 
 connectToMongoDB((err) =>{
     if (err){
@@ -160,12 +163,21 @@ app.get('/admin-flights', isAuthenticated, async function(req,res){
     
 });
 
-app.get('/api/flights', isAuthenticated, async function(req,res){
+app.get('/api/flights/:flightNumber', isAuthenticated, async function(req,res){
 
-    const flights = await flightModel.find({ isActive: true}).sort({flightNumber: 1}).lean();
+    const flight = await flightModel.findOne({
+        flightNumber: Number(req.params.flightNumber)
+    });
 
-    res.json(flights);
-})
+    if(!flight){
+        return res.status(404).json({
+            message: "Flight not found"
+        });
+    }
+
+    
+    res.json(flight);
+});
 
 
 
@@ -574,6 +586,15 @@ app.put("/saved-passengers/update/:id",isAuthenticated, async function(req,res){
     }
 })
 
+// route that updates the document with selected flightNumber 
+app.put("/admin-flights/:flightNumber", async function(req,res){
+    const updatedFlight = await flightModel.findOneAndUpdate(
+        { flightNumber: Number(req.params.flightNumber) },
+        req.body, 
+        {returnDocument:"after"}
+    );
+    res.jsonp(updatedFlight);
+})
 
 
 //====================================DELETE FUNCTIONS=====================
@@ -629,6 +650,7 @@ app.patch("/update-preferences",isAuthenticated, async function(req,res){
     }
 })
 
+// soft deletes flight
 app.patch("/admin-flights/:flightNumber/deactivate", isAuthenticated, async function(req,res){
 
     try{
