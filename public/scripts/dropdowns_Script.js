@@ -10,10 +10,10 @@ $(function(){
 
 
 cabinOptions.on("click", function(e) {
-    var selectedCabinType = $(this).data("cabin");
+    var selectedCabinType = $(this).data("displayCabinType");
     var text = $(this).text();
     cabinField.text(text);
-    booking_info.cabinType   = selectedCabinType;
+    booking_info.cabinType   = $(this).data("cabin");
     console.log(booking_info.cabinType)
 
 });

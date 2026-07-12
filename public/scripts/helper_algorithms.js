@@ -104,8 +104,8 @@ function showAlert(message, type) {
 
 
 function convertDateToWords(date) {
-  // split the dd/mm/yyyy string into individual day, month, and year parts
-  const [day, month, year] = date.split('/');
+  // split the YYYY/MM/DD string into individual day, month, and year parts
+  const [year, month, day] = date.split('/');
   
   // construct a native Date object (months is 0 index so -1 to align properly w months)
   const dateObj = new Date(year, month - 1, day);
@@ -118,4 +118,20 @@ function convertDateToWords(date) {
   });
   
   return formatter.format(dateObj);
+}
+
+
+function getDateRange(chosenDate, dates){
+    var baseDate = new Date(chosenDate);
+
+    var minus5 = new Date(chosenDate);
+    var plus5 = new Date(chosenDate);
+
+    plus5.setDate(baseDate.getDate()+5);
+
+    return{
+        minus5: minus5.toISOString().split('T')[0],
+        baseDate: baseDate.toISOString().split('T')[0],
+        plus5: plus5.toISOString().split('T')[0]
+    }
 }
