@@ -272,7 +272,8 @@ function renderFlights(flightsArray){
 async function lockInFlight(flightID){
     var chosenFlight = await getFlightData(flightID);
     var selectedCabinType = getBookingInfo().cabinType;
-    var totalPassengers = getTotalPassengers(getBookingInfo());
+    var bookingInfo = getBookingInfo();
+    var totalPassengers = parseInt(bookingInfo.passengers.adults) + parseInt(bookingInfo.passengers.children) + parseInt(bookingInfo.passengers.infants);
     var tripType = getBookingInfo().tripType;
 
     // var {outboundTrip, returnTrip} = trips
@@ -295,13 +296,13 @@ async function lockInFlight(flightID){
             // save departure flight and show return flights
             sessionStorage.setItem("selected_departure", JSON.stringify({
                 id: chosenFlight.id,
-                flightNum: chosenFlight.flightNum,
+                flightNum: chosenFlight.flightNumber,
                 airline: chosenFlight.airline,
-                departure: chosenFlight.Departure,
-                arrival: chosenFlight.arrival,
-                duration: calculateFlightDuration(chosenFlight.Departure, chosenFlight.arrival).display,
+                departure: chosenFlight.departureTime,
+                arrival: chosenFlight.arrivalTime,
+                duration: calculateFlightDuration(chosenFlight.departureTime, chosenFlight.arrivalTime).display,
                 cabinType: getBookingInfo().cabinType,
-                ticketPrice: chosenFlight.cabins[getBookingInfo().cabinType].price,
+                ticketPrice: chosenFlight.cabin[getBookingInfo().cabinType].price,
                 origin: getBookingInfo().originCity,
                 destination: getBookingInfo().destinationCity,
                 departureDate: getBookingInfo().departureDate
@@ -313,19 +314,19 @@ async function lockInFlight(flightID){
             // one way flight
             sessionStorage.setItem("selected_flight", JSON.stringify({
                 id: chosenFlight.id,
-                flightNum: chosenFlight.flightNum,
+                flightNum: chosenFlight.flightNumber,
                 airline: chosenFlight.airline,
-                departure: chosenFlight.Departure,
-                arrival: chosenFlight.arrival,
-                duration: calculateFlightDuration(chosenFlight.Departure, chosenFlight.arrival).display,
+                departure: chosenFlight.departureTime,
+                arrival: chosenFlight.arrivalTime,
+                duration: calculateFlightDuration(chosenFlight.departureTime, chosenFlight.arrivalTime).display,
                 cabinType: getBookingInfo().cabinType,
-                ticketPrice: chosenFlight.cabins[getBookingInfo().cabinType].price,
+                ticketPrice: chosenFlight.cabin[getBookingInfo().cabinType].price,
                 origin: getBookingInfo().originCity,
                 destination: getBookingInfo().destinationCity,
                 departureDate: getBookingInfo().departureDate
             }));
 
-            window.location.href = "/booking";
+            window.location.href = "/booking?flightId=" + chosenFlight._id;
         }
         
         
@@ -335,19 +336,19 @@ async function lockInFlight(flightID){
         // save return flight
         sessionStorage.setItem("selected_return", JSON.stringify({
             id: chosenFlight.id,
-            flightNum: chosenFlight.flightNum,
+            flightNum: chosenFlight.flightNumber,
             airline: chosenFlight.airline,
-            departure: chosenFlight.Departure,
-            arrival: chosenFlight.arrival,
-            duration: calculateFlightDuration(chosenFlight.Departure, chosenFlight.arrival).display,
+            departure: chosenFlight.departureTime,
+            arrival: chosenFlight.arrivalTime,
+            duration: calculateFlightDuration(chosenFlight.departureTime, chosenFlight.arrivalTime).display,
             cabinType: getBookingInfo().cabinType,
-            ticketPrice: chosenFlight.cabins[getBookingInfo().cabinType].price,
+            ticketPrice: chosenFlight.cabin[getBookingInfo().cabinType].price,
             origin: getBookingInfo().destinationCity,
             destination: getBookingInfo().originCity,
             departureDate: getBookingInfo().returnDate
         }));
 
-        window.location.href = "/booking";
+        window.location.href = "/booking?flightId=" + chosenFlight._id;
     }
 }
 
@@ -432,7 +433,7 @@ async function getFlightData(ID){
 
         let searchParams = new URLSearchParams({flightID:ID})
 
-        let response = await fetch(`/flight-info?${searchParams.toString()}`);
+        let response = await fetch(`../flight-info?${searchParams.toString()}`);
 
         if (!response.ok) {
             throw new Error(`error status: ${response.status}`);

@@ -1,9 +1,9 @@
-var flightsDB = null;
+// var flightsDB = null;
 
-$(document).ready(function() {
+// $(document).ready(function() {
 //flight database
- flightsDB = getFlightsDatabase();
-});
+// flightsDB = getFlightsDatabase();
+// });
 
 
 

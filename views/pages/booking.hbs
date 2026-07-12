@@ -1,6 +1,6 @@
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/CSS/Booking_Style.css" media="all">
+<!-- CSS -->
+<link rel="stylesheet" href="/CSS/Booking_Style.css" media="all">
 
 
 <!-- Hero Banner -->
@@ -9,55 +9,16 @@
 </div>
 
 <div class="container my-5">
+
+    <input type="hidden" id="flight-id" value="{{flightId}}">
+
     <div class="row g-4">
         <div class="col-lg-9">
 
             <!-- Passenger Cards List -->
             <div id="passenger-list" class="row row-cols-1 row-cols-md-3 g-3">
 
-                <!-- Adult 1 -->
-                <div class="col">
-                    <div class="card h-100 p-3">
-                        <h5 class="card-title">Adult 1</h5>
-                        <button class="btn btn-add-details w-100" data-passenger="adult-1">Add this traveler's details</button>
-                        <hr>
-                        <p class="passenger-detail">Name: <span id="display-name-adult-1">-</span></p>
-                        <p class="passenger-detail">Seat: <span id="display-seat-adult-1">-</span></p>
-                        <p class="passenger-detail">Meal: <span id="display-meal-adult-1">-</span></p>
-                        <hr>
-                        <p class="passenger-detail">Additional Baggage: <span id="display-baggage-adult-1">-</span></p>
-                        <p class="passenger-detail">Priority Boarding: <span id="display-priority-adult-1">-</span></p>
-                        <p class="passenger-detail">Travel Insurance: <span id="display-insurance-adult-1">-</span></p>
-                        <p class="passenger-detail">Lounge Access: <span id="display-lounge-adult-1">-</span></p>
-                    </div>
-                </div>
-
-                <!-- Child 1 -->
-                <div class="col">
-                    <div class="card h-100 p-3">
-                        <h5 class="card-title">Child 1</h5>
-                        <button class="btn btn-add-details w-100" data-passenger="child-1">Add this traveler's details</button>
-                        <hr>
-                        <p class="passenger-detail">Name: <span id="display-name-child-1">-</span></p>
-                        <p class="passenger-detail">Seat: <span id="display-seat-child-1">-</span></p>
-                        <p class="passenger-detail">Meal: <span id="display-meal-child-1">-</span></p>
-                        <hr>
-                        <p class="passenger-detail">Additional Baggage: <span id="display-baggage-child-1">-</span></p>
-                        <p class="passenger-detail">Priority Boarding: <span id="display-priority-child-1">-</span></p>
-                        <p class="passenger-detail">Travel Insurance: <span id="display-insurance-child-1">-</span></p>
-                        <p class="passenger-detail">Lounge Access: <span id="display-lounge-child-1">-</span></p>
-                    </div>
-                </div>
-
-                <!-- Infant 1 -->
-                <div class="col">
-                    <div class="card h-100 p-3">
-                        <h5 class="card-title">Infant 1</h5>
-                        <button class="btn btn-add-details w-100" data-passenger="infant-1">Add this traveler's details</button>
-                        <hr>
-                        <p class="passenger-detail">Name: <span id="display-name-infant-1">-</span></p>
-                    </div>
-                </div>
+                <!-- Dyanmic Cards -->
 
             </div>
 
@@ -506,36 +467,36 @@
 
                     <div class="d-flex justify-content-between mb-1">
                         <p class="summary-section-detail text-muted">Flight</p>
-                        <p class="passenger-detail">Philippine Airlines 6767</p>
+                        <p class="passenger-detail" id="summary-flight">-</p>
                     </div>
 
                     <div class="d-flex justify-content-between mb-1">
                         <p class="summary-section-detail text-muted">Route</p>
-                        <p class="passenger-detail">Manila → Cebu</p>
+                        <p class="passenger-detail" id="summary-route">-</p>
                     </div>
 
                     <div class="d-flex justify-content-between mb-1">
                         <p class="summary-section-detail text-muted">Departure</p>
-                        <p class="passenger-detail">07:00</p>
+                        <p class="passenger-detail" id="summary-departure">-</p>
                     </div>
 
                     <div class="d-flex justify-content-between mb-1">
                         <p class="summary-section-detail text-muted">Arrival</p>
-                        <p class="passenger-detail">9:30</p>
+                        <p class="passenger-detail" id="summary-arrival">-</p>
                     </div>
 
                     <div class="d-flex justify-content-between mb-1">
                         <p class="summary-section-detail text-muted">Duration</p>
-                        <p class="passenger-detail">2 hrs 30 mins</p>
+                        <p class="passenger-detail" id="summary-duration">-</p>
                     </div>
 
                     <div class="d-flex justify-content-between mb-1">
                         <p class="summary-section-detail text-muted">Cabin Class</p>
-                        <p class="passenger-detail">Economy</p>
+                        <p class="passenger-detail" id="summary-cabin">-</p>
                     </div>
                     <div class="d-flex justify-content-between mb-1">
                         <p class="summary-section-detail text-muted">Passengers</p>
-                        <p class="passenger-detail">3</p>
+                        <p class="passenger-detail" id="summary-passengers">-</p>
                     </div>
 
                     <hr>
@@ -624,8 +585,3 @@
         </div>
     </div>
 </div>
-
-<!-- Load Navigation Bar -->
-<script>
-    $("#navbar").load("navigation");
-</script>

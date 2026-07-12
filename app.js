@@ -16,6 +16,7 @@ const flightModel = require('./models/flight_model.js');
 // const cityModel = require('/models/city_model.js');
 const savedPassengerModel = require('./models/savedPassenger_Model.js');
 const travelHistoryModel = require('./models/TravelHistory_model.js');
+const bookingModel = require('./models/booking_model.js');
 
 //DATABASE CONNECTION
 const {connectToMongoDB} = require('./conn.js'); 
@@ -89,7 +90,7 @@ app.get('/register', function(req,res){
     res.render("pages/register",{
         layout:'auth',
          pageScripts: `
-            <script src="/scripts/DOB_formater_script.js" defer></script>
+            <script src="../scripts/DOB_formater_script.js" defer></script>
             
            `});
 })
@@ -101,9 +102,9 @@ app.get('/home', isAuthenticated, async function(req, res) {
         res.render("pages/index", {
         title: "Online Airline Ticketing System",
         pageScripts: `
-            <script src="/scripts/sessionStorage.js" defer></script>
-            <script src = "/scripts/index_searchFlight.js" defer></script>
-            <script src="/scripts/utilities/search_dropdown_script.js" defer></script>
+            <script src="../scripts/sessionStorage.js" defer></script>
+            <script src="../scripts/index_searchFlight.js" defer></script>
+            <script src="../scripts/utilities/search_dropdown_script.js" defer></script>
         `
     });
     }catch(err){
@@ -116,8 +117,8 @@ app.get('/admin-dashboard', isAuthenticated,function(req,res){
     res.render('pages/admin-dashboard',{
         title: "Admin Dashboard",
         pageScripts: `
-            <script src="/scripts/reservations.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/reservations.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
         `
     });
 });
@@ -155,9 +156,9 @@ app.get('/admin-flights', isAuthenticated, async function(req,res){
         flights: flights,
         currentCabin:currentCabin,
         pageScripts: `    
-            <script src="/scripts/reservations.js" defer></script>
-            <script src="/scripts/admin.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/reservations.js" defer></script>
+            <script src="../scripts/admin.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
     `
     });
     
@@ -185,9 +186,9 @@ app.get('/admin-reservations', isAuthenticated,function(req,res){
     res.render('pages/admin-reservations',{
         title: "Admin Reservations",
         pageScripts: `
-            <script src="/scripts/reservations.js" defer></script>
-            <script src="/scripts/admin.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/reservations.js" defer></script>
+            <script src="../scripts/admin.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
     `
     });
 });
@@ -196,8 +197,8 @@ app.get('/admin-users',isAuthenticated ,function(req,res){
     res.render('pages/admin-users',{
         title: "Admin Users",
         pageScripts: `
-            <script src="/scripts/reservations.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/reservations.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
     `
     });
 });
@@ -208,16 +209,16 @@ app.get('/create-flight', isAuthenticated, function(req,res){
     });
 });
 
-app.get('/booking', isAuthenticated,function(req,res){
-    res.render('pages/booking',{
+app.get('/booking', isAuthenticated, function(req, res) {
+    res.render('pages/booking', {
         title: "Bookings",
+        flightId: req.query.flightId,
         pageScripts: `
-            <script src="/scripts/booking.js"></script>    
+            <script src="../scripts/sessionStorage.js"></script>
+            <script src="../scripts/booking.js"></script>
     `
     });
 });
-
-
 
 app.get('/profile', isAuthenticated , async function(req,res){
     var user = await userModel.findById(req.session.userID).lean();
@@ -228,14 +229,14 @@ app.get('/profile', isAuthenticated , async function(req,res){
         savedPassenger:savedPassenger,
         title: "Profile",
         pageScripts: `
-            <script src="/scripts/utilities/saved_passengers.js" defer></script>
-            <script src="/scripts/utilities/user_travel_history.js" defer></script>
-            <script src="/scripts/profile.js" defer></script>
-            <script src="/scripts/utilities/payment_methods.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
-            <script src="/scripts/helper_algorithms.js" defer></script>
-            <script src="/scripts/utilities/user_info.js" defer></script>
-            <script src="/scripts/DOB_formater_script.js" defer></script>
+            <script src="../scripts/utilities/saved_passengers.js" defer></script>
+            <script src="../scripts/utilities/user_travel_history.js" defer></script>
+            <script src="../scripts/profile.js" defer></script>
+            <script src="../scripts/utilities/payment_methods.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/helper_algorithms.js" defer></script>
+            <script src="../scripts/utilities/user_info.js" defer></script>
+            <script src="../scripts/DOB_formater_script.js" defer></script>
     `
     });
 });
@@ -304,8 +305,8 @@ app.get('/reservations', function(req,res){
     res.render('pages/reservations',{
         title: "Reservations",
         pageScripts: `
-            <script src="/scripts/reservations.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/reservations.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
     `
     });
 });
@@ -315,17 +316,17 @@ app.get('/search', isAuthenticated, function(req,res){
         title: "Search",
         layout:"main", 
         pageScripts: `           
-            <script src="/scripts/sessionStorage.js" defer></script>
-            <script src="/scripts/search_script.js" defer></script>
-            <script src="/scripts/PassengerTypes_script.js" defer></script>
-            <script src="/scripts/dropdowns_Script.js" defer></script>
-            <script src="/scripts/advanceSearch_scripts.js" defer></script>
-            <script src="/scripts/getFlights_script.js" defer></script>
-            <script src="/scripts/utilities/search_dropdown_script.js" defer></script>
-            <script src="/scripts/utilities/flights_database_script.js" defer></script>
-            <script src="/scripts/helper_algorithms.js" defer></script>
-            <script src="/scripts/filter_sidebar.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/sessionStorage.js" defer></script>
+            <script src="../scripts/search_script.js" defer></script>
+            <script src="../scripts/PassengerTypes_script.js" defer></script>
+            <script src="../scripts/dropdowns_Script.js" defer></script>
+            <script src="../scripts/advanceSearch_scripts.js" defer></script>
+            <script src="../scripts/getFlights_script.js" defer></script>
+            <script src="../scripts/utilities/search_dropdown_script.js" defer></script>
+            <script src="../scripts/utilities/flights_database_script.js" defer></script>
+            <script src="../scripts/helper_algorithms.js" defer></script>
+            <script src="../scripts/filter_sidebar.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
     `
     });
 });
@@ -700,13 +701,9 @@ app.patch("/admin-flights/:flightNumber/deactivate", isAuthenticated, async func
 
 //==========================READ OPERATIIONS=============================
 
-
-
 app.listen(port, () =>{
     console.log("Server now listening on port " + port);
 });
-
-
 
 function isAuthenticated(req, res, next) {
     if (req.session && req.session.isLoggedIn && req.session.userID) {
@@ -716,3 +713,44 @@ function isAuthenticated(req, res, next) {
     // session is invalid or doesn't exist
     res.redirect('/login');
 }
+
+//========================== FLIGHT BOOKING =============================
+
+app.post("/booking", isAuthenticated, async function(req, res) {
+    try {
+        const { flightId, passengers } = req.body;
+
+        const flight = await flightModel.findById(flightId);
+
+        if (!flight) {
+            return res.status(404).json({ message: "Flight not found" });
+        }
+
+        const passengersWithRef = passengers.map(function(p) {
+            p.bookingReference = "BK-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+            p.price = 0;
+            return p;
+        });
+
+        const newBooking = new bookingModel({
+            flightNum: flight.flightNumber,
+            origin: flight.origin,
+            destination: flight.destination,
+            airline: flight.airline,
+            departureDate: flight.departureDate,
+            departureTime: flight.departureTime,
+            arrivalTime: flight.arrivalTime,
+            duration: 0,
+            belongsToUser: req.session.userID,
+            totalPrice: 0,
+            passengers: passengersWithRef
+        });
+
+        await newBooking.save();
+
+        return res.status(201).json({ message: "Booking saved successfully" });
+    } catch(err) {
+        console.error("Booking error: ", err);
+        return res.status(500).json({ error: err.message });
+    }
+});
