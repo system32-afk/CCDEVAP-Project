@@ -146,14 +146,18 @@ app.get('/admin-flights', isAuthenticated, async function(req,res){
         }
     //read flights that are only active and sort flightnumber ascending    
     const flights = await flightModel.find({ isActive: true}).sort({flightNumber: 1}).lean();
+    const cities = await cityModel.find({}).sort({ cityName: 1}).lean();
+    const airlines = await airlineModel.find({}).sort({ airlineName :1}).lean();
+
     // lean for to return JS objects instead of mongoose documents
 
-    // const updateFlight = await flightModel.updateOne();
-    // const deleteFlight = await flightModel.findOneAndDelete('flightNumber');
+
 
     res.render('pages/admin-flights',{
         title: "Admin Flights",
         flights: flights,
+        airlines,
+        cities,
         currentCabin:currentCabin,
         pageScripts: `    
             <script src="../scripts/reservations.js" defer></script>
@@ -178,6 +182,30 @@ app.get('/api/flights/:flightNumber', isAuthenticated, async function(req,res){
 
     
     res.json(flight);
+});
+
+// gets airlines
+app.get('/api/airlines', isAuthenticated, async function(req,res) {
+    try{
+        const airlines = await airlineModel.find({}).sort({ airlineName :1}).lean();
+
+    }catch(error){
+            console.error("Error fetching airlines", error);
+            return res.status(500).json({ message: "Server error fetching airlines"})
+        }
+    res.json(airlines);
+});
+
+// gets cities
+app.get('/api/cities', isAuthenticated, async function(req,res) {
+    try{
+        const cities = await cityModel.find({}).sort({ cityName: 1}).lean();
+
+    }catch(error){
+            console.error("Error fetching cities", error);
+            return res.status(500).json({ message: "Server error fetching cities"})
+        }
+    res.json(cities);
 });
 
 
@@ -468,7 +496,7 @@ app.post("/register",async  function(req,res){
 app.post("/admin-flights", async function(req, res){
     const {cityName} = req.body;
 
-    // checks if airline already exists
+    // checks if city already exists
     let city = await cityModel.findOne({cityName});
         if(city){
             return res.redirect('/admin-flights');

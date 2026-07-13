@@ -1,24 +1,24 @@
-const flightNumberField = $("#flightNumber-field");
-const airlineField = $("#airline-field");
-const originField = $("#origin-field");
-const destinationField = $("#destination-field");
-const logoNameField = $("#logoName-field");
-const numOfLayoversField = $("#numOfLayovers-field");
-const isActiveField = $("#isActive-field");
-const departureDateField = $("#departureDate-field");
-const departureTimeField = $("#departureTime-field");
-const arrivalDateField = $("#arrivalDate-field");
-const arrivalTimeField = $("#arrivalTime-field");
+const flightNumberField = $("#update-flightNumber-field");
+const airlineField = $("#update-airline-field");
+const originField = $("#update-origin-field");
+const destinationField = $("#update-destination-field");
+const logoNameField = $("#update-logoName-field");
+const numOfLayoversField = $("#update-numOfLayovers-field");
+const isActiveField = $("#update-isActive-field");
+const departureDateField = $("#update-departureDate-field");
+const departureTimeField = $("#update-departureTime-field");
+const arrivalDateField = $("#update-arrivalDate-field");
+const arrivalTimeField = $("#update-arrivalTime-field");
 
 // cabins
-const economyPriceField = $("#economy_price-field");
-const economySeatsField = $("#economy_seats-field");
-const premiumEconomyPriceField = $("#premium_economy_price-field");
-const premiumEconomySeatsField = $("#premium_economy_seats-field");
-const businessClassPriceField = $("#business_class_price-field");
-const businessClassSeatsField = $("#business_class_seats-field");
-const firstClassPriceField = $("#first_class_price-field");
-const firstClassSeatsField = $("#first_class_seats-field");
+const economyPriceField = $("#update-economy_price-field");
+const economySeatsField = $("#update-economy_seats-field");
+const premiumEconomyPriceField = $("#update-premium_economy_price-field");
+const premiumEconomySeatsField = $("#update-premium_economy_seats-field");
+const businessClassPriceField = $("#update-business_class_price-field");
+const businessClassSeatsField = $("#update-business_class_seats-field");
+const firstClassPriceField = $("#update-first_class_price-field");
+const firstClassSeatsField = $("#update-first_class_seats-field");
 
 
 function saveFlightModal() {
@@ -56,6 +56,7 @@ function openCancelModal(flightNumber){
 async function openUpdateModal(flightNumber){
 
     try{
+
         const response = await fetch(`/api/flights/${flightNumber}`);
 
         if(!response.ok){
@@ -64,6 +65,7 @@ async function openUpdateModal(flightNumber){
         }
 
         const flight = await response.json();
+        console.log("Flight airline:", flight.airline);
         // retrieves the data of selected flight number
         flightNumberField.val(flight.flightNumber);
         airlineField.val(flight.airline);
@@ -93,6 +95,7 @@ async function openUpdateModal(flightNumber){
     }catch(error){
         console.log(error);
     }
+
 }
 
 async function confirmDeactivate(){
@@ -162,10 +165,10 @@ async function updateFlightInformation(){
             if(modal){
                 modal.hide();
             }
-            location.reload;
         }
     }catch(error){
         console.error("ERROR UPDATING FLIGHT DETAILS");
     }
 
 }
+
