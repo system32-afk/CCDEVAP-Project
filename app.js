@@ -13,7 +13,7 @@ const bcrypt  = require('bcryptjs')
 const userModel = require('./models/user_model.js');
 const flightModel = require('./models/flight_model.js');
 const airlineModel = require('./models/airline_model.js');
-// const cityModel = require('./models/city_model.js');
+const cityModel = require('./models/city_model.js');
 const savedPassengerModel = require('./models/savedPassenger_Model.js');
 const travelHistoryModel = require('./models/TravelHistory_model.js');
 
@@ -202,11 +202,6 @@ app.get('/admin-users',isAuthenticated ,function(req,res){
     });
 });
 
-app.get('/create-flight', isAuthenticated, function(req,res){
-    res.render('pages/create-flight',{
-        title: "Create Flight"
-    });
-});
 
 app.get('/booking', isAuthenticated,function(req,res){
     res.render('pages/booking',{
@@ -451,6 +446,25 @@ app.post("/register",async  function(req,res){
     res.redirect('/login');
 });
 
+// create city
+app.post("/admin-flights", async function(req, res){
+    const {cityName} = req.body;
+
+    // checks if airline already exists
+    let city = await cityModel.findOne({cityName});
+        if(city){
+            return res.redirect('/admin-flights');
+        }
+
+        city = new cityModel({
+            cityName
+        });
+        await city.save();
+
+        res.redirect('/admin-flights');
+});
+
+// creates airline
 app.post("/admin-flights", async function(req, res){
     const {airlineName} = req.body;
 

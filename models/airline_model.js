@@ -8,7 +8,7 @@ const airlineSchema = new mongoose.Schema({
 const Airline = mongoose.model('airlines', airlineSchema);
 
 
-Airline.create({
-    "airlineName": "Philippine Airlines"
-});
+// Airline.create({
+//     "airlineName": "Japan Airlines"
+// });
 module.exports = Airline;
