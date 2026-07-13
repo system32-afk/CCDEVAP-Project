@@ -169,36 +169,47 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="flightNumber" class="form-label">Flight Number:</label>
-                                        <input type="number" class="form-control" name="flightNumber" id="flightNumber-field" value="{{flight.flightNumber}}" min="0"  required >
+                                        <input type="number" class="form-control" name="flightNumber" id="update-flightNumber-field" value="{{flight.flightNumber}}" min="0"  required >
                                 </div>
                                 <div class="col-md-6">
                                     <label for="airline" class="form-label">Airline:</label>
-                                        <input type="text" class="form-control" name="airline" id="airline-field" value="{{flight.airline}}"  required>
-                                </div>
+                                        <select name="airline" class="form-control" id="update-airline-field" required>
+                                            {{#each airlines}}
+                                                    <option value="{{airlineName}}">{{airlineName}}</option>
+                                                {{/each}}
+                                        </select>
                                 </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="origin" class="form-label">Origin:</label>
-                                        <input type="text" class="form-control" name="origin" id="origin-field" value="{{flight.origin}}"  required>
+                                        <select name="origin" id="update-origin-field" class="form-control" required>
+                                            {{#each cities}}
+                                                <option value="{{this.cityName}}">{{cityName}}</option>
+                                            {{/each}}
+                                        </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="destination" class="form-label">Destination:</label>
-                                        <input type="text" class="form-control" name="destination" id="destination-field" value="{{flight.destination}}"  required>
+                                        <select name="origin" id="update-destination-field" class="form-control" required>
+                                            {{#each cities}}
+                                                <option value="{{this.cityName}}">{{cityName}}</option>
+                                            {{/each}}
+                                        </select>                                
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label class="form-label" for="logoName">Logo Code:</label>
-                                        <input type="text" class="form-control" name="logoName" id="logoName-field" value="{{flight.logoName}}"  required>
+                                        <input type="text" class="form-control" name="logoName" id="update-logoName-field" value="{{flight.logoName}}"  required>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label" for="numOfLayovers">Layovers:</label>
-                                        <input type="number" class="form-control" name="numOfLayovers" id="numOfLayovers-field" value="{{flight.numOfLayovers}}"  required>
+                                        <input type="number" class="form-control" name="numOfLayovers" id="update-numOfLayovers-field" value="{{flight.numOfLayovers}}"  required>
                                 </div>
                                 
                                 <div class="col-md-4">
                                     <label class="form-label" for="isActive">Status:</label>
-                                        <select class="form-control" name="isActive" id="isActive-field"  required>
+                                        <select class="form-control" name="isActive" id="update-isActive-field" value="{{flight.isActive}}" required>
                                             <option value="true">Active</option>
                                             <option value="false">Inactive</option>
                                         </select>
@@ -208,22 +219,22 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label  class="form-label" for="departureDate">Departure Date:</label>
-                                        <input type="date" class="form-control" name="departureDate" id="departureDate-field" value="{{flight.departureDate}}"  required>
+                                        <input type="date" class="form-control" name="departureDate" id="update-departureDate-field" value="{{flight.departureDate}}"  required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label" for="departureTime">Departure Time:</label>
-                                        <input type="time" class="form-control" name="departureTime" id="departureTime-field" value="{{flight.departureTime}}" required>
+                                        <input type="time" class="form-control" name="departureTime" id="update-departureTime-field" value="{{flight.departureTime}}" required>
                                 </div>
 
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label" for="arrivalDate">Arrival Date:</label>
-                                        <input type="date" class="form-control" name="arrivalDate" id="arrivalDate-field" value="{{flight.arrivalDate}}"  required>
+                                        <input type="date" class="form-control" name="arrivalDate" id="update-arrivalDate-field" value="{{flight.arrivalDate}}"  required>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="arrivalTime" class="form=label">Arrival Time:</label>
-                                        <input type="time" class="form-control" name="arrivalTime" id="arrivalTime-field" value="{{flight.arrivalTime}}"  required>
+                                        <input type="time" class="form-control" name="arrivalTime" id="update-arrivalTime-field" value="{{flight.arrivalTime}}"  required>
                                 </div>
 
                             </div>
@@ -237,12 +248,12 @@
                                     </div>
                                         <div class="col-md-4">
                                             <label for="economy_price" class="form-label">Price:</label>
-                                                <input type="number" class="form-control" id="economy_price-field" name="cabin[economy][price]"
+                                                <input type="number" class="form-control" id="update-economy_price-field" name="cabin[economy][price]"
                                                 value="{{flight.cabin.economy.price}}" min="0"   required>
                                         </div>
                                         <div class="col-md-4">
                                             <label for="economy_seats" class="form-label">Seats:</label>
-                                                <input type="number" class="form-control" id="economy_seats-field" name="cabin[economy][seats]"
+                                                <input type="number" class="form-control" id="update-economy_seats-field" name="cabin[economy][seats]"
                                                 value="{{flight.cabin.economy.seats}}" min="0"   required>
                                         </div>                                     
 
@@ -255,12 +266,12 @@
                                     </div>
                                         <div class="col-md-4">
                                             <label for="premium_economy_price" class="form-label">Price:</label>
-                                                <input type="number" class="form-control" id="premium_economy_price-field" name="cabin[premium_economy][price]"
+                                                <input type="number" class="form-control" id="update-premium_economy_price-field" name="cabin[premium_economy][price]"
                                                 value="{{flight.cabin.premium_economy.price}}" min="0"   required>
                                         </div>
                                         <div class="col-md-4">
                                             <label for="premium_economy_seats" class="form-label">Seats:</label>
-                                                <input type="number" class="form-control" id="premium_economy_seats-field" name="cabin[premium_economy][seats]"
+                                                <input type="number" class="form-control" id="update-premium_economy_seats-field" name="cabin[premium_economy][seats]"
                                                 value="{{flight.cabin.premium_economy.seats}}"  min="0"   required>
                                         </div>                                     
 
@@ -273,12 +284,12 @@
                                     </div>
                                         <div class="col-md-4">
                                             <label for="business_class_price" class="form-label">Price:</label>
-                                                <input type="number" class="form-control" id="business_class_price-field" name="cabin[business_class][price]"
+                                                <input type="number" class="form-control" id="update-business_class_price-field" name="cabin[business_class][price]"
                                                 value="{{flight.cabin.business_class.price}}"  min="0"   required>
                                         </div>
                                         <div class="col-md-4">
                                             <label for="business_class_seats" class="form-label">Seats:</label>
-                                                <input type="number" class="form-control" id="business_class_seats-field" name="cabin[business_class][seats]"
+                                                <input type="number" class="form-control" id="update-business_class_seats-field" name="cabin[business_class][seats]"
                                                 value="{{flight.cabin.business_class.seats}}"  min="0"   required>
                                         </div>                                     
 
@@ -292,12 +303,12 @@
                                     </div>
                                         <div class="col-md-4">
                                             <label for="first_class_price" class="form-label">Price:</label>
-                                                <input type="number" class="form-control" id="first_class_price-field" name="cabin[first_class][price]"
+                                                <input type="number" class="form-control" id="update-first_class_price-field" name="cabin[first_class][price]"
                                                 value="{{flight.cabin.first_class.price}}" min="0"   required>
                                         </div>
                                         <div class="col-md-4">
                                             <label for="first_class_price_seats" class="form-label">Seats:</label>
-                                                <input type="number" class="form-control" id="first_class_seats-field" name="cabin[first_class][seats]"
+                                                <input type="number" class="form-control" id="update-first_class_seats-field" name="cabin[first_class][seats]"
                                                 value="{{flight.cabin.first_class.seats}}"  min="0"   required>
                                         </div>                                     
 
@@ -311,6 +322,7 @@
                         </form>
                     </div>
 
+                    </div>
                     </div>
                 </div>
                 {{!-- update flight modal --}}
@@ -327,36 +339,54 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="flightNumber" class="form-label">Flight Number:</label>
-                                        <input type="number" class="form-control" name="flightNumber" id="flightNumber" placeholder="6767" min="0">
+                                        <input type="number" class="form-control" name="flightNumber" id="flightNumber-field" placeholder="6767" min="0">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="airline" class="form-label">Airline:</label>
-                                        <input type="text" class="form-control" name="airline" id="airline" placeholder="Philippine Airlines" required>
+                                        <select name="airline" id="airline-field" class="form-control" required>
+
+                                            <option value="">Select Airline</option>
+                                                {{#each airlines}}
+                                                    <option value="{{this.airlineName}}">{{this.airlineName}}</option>
+                                                {{/each}}
+                                        </select>
                                 </div>
                                 </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="origin" class="form-label">Origin:</label>
-                                        <input type="text" class="form-control" name="origin" id="origin-field" placeholder="Manila" required>
+                                        <select name="origin" id="origin-field" class="form-control" required>
+
+                                            <option value="">Select Origin</option>
+                                                {{#each cities}}
+                                                    <option value="{{this.cityName}}">{{this.cityName}}</option>
+
+                                                {{/each}}
+                                        </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="destination" class="form-label">Destination:</label>
-                                        <input type="text" class="form-control" name="destination" id="destination-field" placeholder="Siargao" required>
+                                        <select name="destination" id="destination-field" class="form-control" required>
+                                            <option value="">Select Destination</option>
+                                                {{#each cities}}
+                                                    <option value="{{this.cityName}}">{{this.cityName}}</option>
+                                                {{/each}}
+                                        </select>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-4">
                                     <label class="form-label" for="logoName">Logo Code:</label>
-                                        <input type="text" class="form-control" name="logoName" id="logoName" placeholder="PAL" required>
+                                        <input type="text" class="form-control" name="logoName" id="logoName-field" placeholder="PAL" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label" for="numOfLayovers">Layovers:</label>
-                                        <input type="number" class="form-control" name="numOfLayovers" id="numOfLayovers" placeholder="0" required>
+                                        <input type="number" class="form-control" name="numOfLayovers-field" id="numOfLayovers" placeholder="0" required>
                                 </div>
                                 
                                 <div class="col-md-4">
                                     <label class="form-label" for="isActive">Status:</label>
-                                        <select class="form-control" name="isActive" id="isActive" required>
+                                        <select class="form-control" name="isActive-field" id="isActive" required>
                                             <option value="true">Active</option>
                                             <option value="false">Inactive</option>
                                         </select>
@@ -366,22 +396,22 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label  class="form-label" for="departureDate">Departure Date:</label>
-                                        <input type="date" class="form-control" name="departureDate" id="departureDate" placeholder="YYYY-MM-DD" required>
+                                        <input type="date" class="form-control" name="departureDate" id="departureDate-field" placeholder="YYYY-MM-DD" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label" for="departureTime">Departure Time:</label>
-                                        <input type="time" class="form-control" name="departureTime" id="departureTime"required>
+                                        <input type="time" class="form-control" name="departureTime" id="departureTime-field"required>
                                 </div>
 
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label" for="arrivalDate">Arrival Date:</label>
-                                        <input type="date" class="form-control" name="arrivalDate" id="arrivalDate" placeholder="YYYY-MM-DD" required>
+                                        <input type="date" class="form-control" name="arrivalDate" id="arrivalDate-field" placeholder="YYYY-MM-DD" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="arrivalTime" class="form=label">Arrival Time:</label>
-                                        <input type="time" class="form-control" name="arrivalTime" id="arrivalTime"required>
+                                        <input type="time" class="form-control" name="arrivalTime" id="arrivalTime-field"required>
                                 </div>
 
                             </div>
@@ -395,12 +425,12 @@
                                     </div>
                                         <div class="col-md-4">
                                             <label for="economy_price" class="form-label">Price:</label>
-                                                <input type="number" class="form-control" id="economy_price" name="cabin[economy][price]"
+                                                <input type="number" class="form-control" id="economy_price-field" name="cabin[economy][price]"
                                                 placeholder="Price" min="0" required>
                                         </div>
                                         <div class="col-md-4">
                                             <label for="economy_seats" class="form-label">Seats:</label>
-                                                <input type="number" class="form-control" id="economy_seats" name="cabin[economy][seats]"
+                                                <input type="number" class="form-control" id="economy_seats-field" name="cabin[economy][seats]"
                                                 placeholder="Seats" min="0" required>
                                         </div>                                     
 
@@ -413,12 +443,12 @@
                                     </div>
                                         <div class="col-md-4">
                                             <label for="premium_economy_price" class="form-label">Price:</label>
-                                                <input type="number" class="form-control" id="premium_economy_price" name="cabin[premium_economy][price]"
+                                                <input type="number" class="form-control" id="premium_economy_price-field" name="cabin[premium_economy][price]"
                                                 placeholder="Price" min="0" required>
                                         </div>
                                         <div class="col-md-4">
                                             <label for="premium_economy_seats" class="form-label">Seats:</label>
-                                                <input type="number" class="form-control" id="premium_economy_seats" name="cabin[premium_economy][seats]"
+                                                <input type="number" class="form-control" id="premium_economy_seats-field" name="cabin[premium_economy][seats]"
                                                 placeholder="Seats" min="0" required>
                                         </div>                                     
 
@@ -431,12 +461,12 @@
                                     </div>
                                         <div class="col-md-4">
                                             <label for="business_class_price" class="form-label">Price:</label>
-                                                <input type="number" class="form-control" id="business_class_price" name="cabin[business_class][price]"
+                                                <input type="number" class="form-control" id="business_class_price-field" name="cabin[business_class][price]"
                                                 placeholder="Price" min="0" required>
                                         </div>
                                         <div class="col-md-4">
                                             <label for="business_class_seats" class="form-label">Seats:</label>
-                                                <input type="number" class="form-control" id="business_class_seats" name="cabin[business_class][seats]"
+                                                <input type="number" class="form-control" id="business_class_seats-field" name="cabin[business_class][seats]"
                                                 placeholder="Seats" min="0" required>
                                         </div>                                     
 
@@ -450,12 +480,12 @@
                                     </div>
                                         <div class="col-md-4">
                                             <label for="first_class_price" class="form-label">Price:</label>
-                                                <input type="number" class="form-control" id="first_class_price" name="cabin[first_class][price]"
+                                                <input type="number" class="form-control" id="first_class_price-field" name="cabin[first_class][price]"
                                                 placeholder="Price" min="0" required>
                                         </div>
                                         <div class="col-md-4">
                                             <label for="first_class_price_seats" class="form-label">Seats:</label>
-                                                <input type="number" class="form-control" id="first_class_seats" name="cabin[first_class][seats]"
+                                                <input type="number" class="form-control" id="first_class_seats-field" name="cabin[first_class][seats]"
                                                 placeholder="Seats" min="0" required>
                                         </div>                                     
 
