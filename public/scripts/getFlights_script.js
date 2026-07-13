@@ -1,10 +1,6 @@
 
-var flightsDB = null;
-$(document).ready(function() {
-//flight database
- flightsDB = getFlightsDatabase();
- 
-});
+
+
 
 //utilities
 const promptMessage = $("#prompt-message");
@@ -13,6 +9,7 @@ const bookFlightBtn = $(".select-flight-btn");
 const sidebar = $("#offcanvasRight")
 const sidebarBody = $("#offcanvasRight .offcanvas-body");
 const sortBy = $(".sort");
+
 
 
 //state tracking 
@@ -66,8 +63,13 @@ sortBy.on("click", function(){
 })
 
 
-function sortFlights(sortBy, shouldRender = false, mode = "ascending"){
-    var filteredFlights = getFlights(getFilterOptions(), getBookingInfo());
+async function sortFlights(sortBy, shouldRender = false, mode = "ascending"){
+    var filteredFlights = "";
+
+    filteredFlights = await getFlights(filter_options,getBookingInfo());
+
+
+
     var sortedFlights = null;
 
 
@@ -106,145 +108,66 @@ function sortFlights(sortBy, shouldRender = false, mode = "ascending"){
 
 }
 //handles flight options logic / UI
-function renderFlightsUI(){
+async function renderFlightsUI(){
     var flightsToRender = "";
 
     if (currentBookingPhase === "departure"){
-        promptMessage.text(`Select your departure flight: ${booking_info.originCity} -> ${booking_info.destinationCity}`);
-        flightsToRender = getFlights(filter_options, booking_info);
-
-    }else if (currentBookingPhase === "return" && booking_info.tripType === "round-trip"){
-        promptMessage.text(`Select your departure flight: ${booking_info.destinationCity} -> ${booking_info.originCity}`);
+        promptMessage.text(`Select your departure flight: ${getBookingInfo().originCity} -> ${getBookingInfo().destinationCity}`);
+        
+        
+    }else if (currentBookingPhase === "return" && getBookingInfo().tripType === "round-trip"){
+        promptMessage.text(`Select your departure flight: ${getBookingInfo().destinationCity} -> ${getBookingInfo().originCity}`);
 
         var returnInfo = {
-            departDate: booking_info.returnDate,
-            originCity: booking_info.destinationCity,
-            destinationCity: booking_info.originCity
+            departDate: getBookingInfo().returnDate,
+            originCity: getBookingInfo().destinationCity,
+            destinationCity: getBookingInfo().originCity
         };
 
         console.log("return info "+returnInfo);
 
-        flightsToRender = getFlights(filter_options, returnInfo);
+        flightsToRender = await getFlights(filter_options,returnInfo);
+        renderFlights(flightsToRender);
     }
 
-    renderFlights(flightsToRender);
+   
 };
 
 //filters the flights based on advance search optiions and booking
-function getFlights(filter_options, booking_info){
-    const {
-        departureDate, 
-        returnDate, 
-        originCity,
-        destinationCity,
-        cabinType
-    } = booking_info;
+async function getFlights(filterOptions, bookingInfo) {
+    
+    var searchParams = new URLSearchParams({
+        origin: bookingInfo.originCity,
+        destination: bookingInfo.destinationCity,
+        departureDate: bookingInfo.departureDate,
+        cabinType: bookingInfo.cabinType,
+        airline: filterOptions.airline,
+        isFlexible: filterOptions.isFlexible,
+        isDirectFlight: filterOptions.isDirectFlight,
+        minPrice: filterOptions.minPrice,
+        maxPrice: filterOptions.maxPrice
+    })
 
-    const {
-        airline,
-        isFlexible,     
-        isDirectFlight,
-        minPrice,
-        maxPrice
-    } = filter_options;
+    console.log("isFlexible before passing: ", filterOptions.isFlexible);
 
+    try{
 
-    var dayOfWeek =  null;
-    console.log(filter_options);
-    if(departureDate){
-        dayOfWeek = new Date(departureDate).getDay();
-        console.log(dayOfWeek);
+        let response = await fetch(`/search-flights?${searchParams.toString()}`);
+
+        if (!response.ok) {
+            throw new Error(`error status: ${response.status}`);
+        }
+
+        return await response.json();
+    }catch(error){
+        console.error("Failed to fetch flights", error);
+        return [];
     }
-
-
-    
-    var filtered = flightsDB.filter (flights =>{
-
-        var selectedCabin = flights.cabins[booking_info.cabinType];
-        
-        //if flexible dates is NOT checked, then only give flights on specific date
-        if (dayOfWeek !== null && !isFlexible){
-
-            //if flight doesn't operate in day of the week we skip
-            if(!flights.departDate.includes(dayOfWeek)){
-                return false;
-            }
-        }
-
-        //DIRECT FLIGHTS FLITER
-        //if direct flight is checked, skip if the flight has more than 0 layovers.
-        if(isDirectFlight && flights.numOfLayovers >0){
-            return false;
-        }
-
-
-        
-
-        //PRICE FILTER
-        //check first if max price is set to 0 (default value)
-        if(maxPrice !== 0){
-
-
-
-            //Minimum price
-            //if it's cheaper than the minimum price, skip
-            if(selectedCabin.price < minPrice){
-                return false;
-            }
-
-
-            //if the ticket price is higher than the maxPrice, skip
-            if(selectedCabin.price > maxPrice){
-                return false;
-            }
-        }
-
-        //preferred airline
-
-        //if airline preference isn't set to "any"
-        if (airline.trim() !== "any"){
-            //compare the preferred airlines to the database
-            if(flights.airline.trim() !== airline.trim()){
-                return false; //skip if it doesn't match preferred airline
-            }
-        }
-
-        return true;
-
-    })
-
-   
-
-    
-    var results = filtered.map(flight => {
-        var flightDuration = calculateFlightDuration(flight.Departure, flight.arrival);
-        var selectedCabin = flight.cabins[booking_info.cabinType];
-        return{
-            ...flight,
-            origin: originCity,
-            destination: destinationCity,
-            duration: flightDuration.display,
-            durationMinutes: flightDuration.durationMinutes,
-            numOfLayovers: flight.numOfLayovers,
-
-            //cabin info
-            ticketPrice: selectedCabin.price,
-            remainingSeats: selectedCabin.seats,
-            cabinLabel:selectedCabin.label
-
-        }
-    })
-
-    searchResults = results;
-    console.log("search results: ",searchResults);
-    return results  
-    
 }
 
 
 //renders the flight cards
 function renderFlights(flightsArray){
-
     flightsContainer.empty();
     var cards = "";
     if (flightsArray.length === 0){
@@ -252,9 +175,30 @@ function renderFlights(flightsArray){
         return;
     }
 
+    var cabinType  =  getBookingInfo().cabinType;
+    var layover = "";
+    
+    //Cabin related Info
+    var cabinInfo ="";
+    var price="";
+    var seats="";
+    var label="";
+    
+    var flightDuration = "";
 
     flightsArray.forEach(flight => {
-        var layover = "";
+
+        cabinInfo = flight.cabin[cabinType];
+        price = cabinInfo.price;
+        seats = cabinInfo.seats;
+        label = cabinInfo.label;
+        layover = "";
+
+         var { display } = calculateFlightDuration(
+            flight.departureTime,
+            flight.arrivalTime
+        );
+
         
         if(flight.numOfLayovers > 0){
             layover = "layovers: "+ flight.numOfLayovers;
@@ -269,8 +213,8 @@ function renderFlights(flightsArray){
                     <div class = "FC-Row1">
                         <div class = "top-flight-info">
                             <img class ="airline-logo" src = "/images/${flight.logoName}.png"/>
-                            <h4 class="airline-name">${flight.airline} (${flight.flightNum})</h4>
-                            <span class="badge bg-secondary ms-2">${flight.cabinLabel}</span>
+                            <h4 class="airline-name">${flight.airline} (${flight.flightNumber})</h4>
+                            <span class="badge bg-secondary ms-2">${cabinInfo.label}</span>
                         </div>
                     </div>
                     
@@ -279,13 +223,13 @@ function renderFlights(flightsArray){
                     <div class = "FC-Row2">
                     <div class="route-node origin-node">
                         <h3>${flight.origin}</h3>
-                        <span class = "times">${flight.Departure}</span>
+                        <span class = "times">${flight.departureTime}</span>
                     </div>
                         
                     
 
                         <div class="flight-path-container">
-                            <span class="flight-duration">${flight.duration}</span>
+                            <span class="flight-duration">${display}</span>
                             <div class="flight-line">
                                 <img class="airplane-icon" src="/images/plane.png">
                             </div>
@@ -294,23 +238,23 @@ function renderFlights(flightsArray){
                         
                         <div class="route-node destination-node">
                             <h3>${flight.destination}</h3>
-                            <span class = "times">${flight.arrival}</span>
+                            <span class = "times">${flight.arrivalTime}</span>
                         
                         </div>
                     </div>
 
                     <div class = "view-details-btn-container">
-                    <button class="btn btn-outline-info view-details" data-flight-id="${flight.id}">
+                    <button class="btn btn-outline-info view-details" data-flight-id="${flight._id}">
                         View Details
                     </button>
                 </div>
                 </div>
 
                 <div class = "FC-Col2">
-                    <p class = "flight-price">PHP ${flight.ticketPrice.toLocaleString()}</p>
-                    <p id = "seats-remaining">${flight.remainingSeats} seats remaining</p>
+                    <p class = "flight-price">PHP ${price.toLocaleString()}</p>
+                    <p id = "seats-remaining">${seats} seats remaining</p>
 
-                    <button class="btn btn-primary select-flight-btn" data-flight-id="${flight.id}">
+                    <button class="btn btn-primary select-flight-btn" data-flight-id="${flight._id}">
                         Select Flight
                     </button>
                 </div>
@@ -325,18 +269,19 @@ function renderFlights(flightsArray){
 }
 
 //select flight
-function lockInFlight(flightID){
-    var chosenFlight = getFlightData(flightID);
-    var selectedCabinType = booking_info.cabinType;
-    var totalPassengers = getTotalPassengers(booking_info);
-    var tripType = booking_info.tripType;
+async function lockInFlight(flightID){
+    var chosenFlight = await getFlightData(flightID);
+    var selectedCabinType = getBookingInfo().cabinType;
+    var bookingInfo = getBookingInfo();
+    var totalPassengers = parseInt(bookingInfo.passengers.adults) + parseInt(bookingInfo.passengers.children) + parseInt(bookingInfo.passengers.infants);
+    var tripType = getBookingInfo().tripType;
 
     // var {outboundTrip, returnTrip} = trips
 
     console.log(totalPassengers)
     
 
-    if(totalPassengers > chosenFlight.cabins[selectedCabinType].seats){
+    if(totalPassengers > chosenFlight.cabin[selectedCabinType].seats){
         showAlert("Passenger count cannot exceed available seats remaining.","warning") 
         return;
     }
@@ -351,16 +296,16 @@ function lockInFlight(flightID){
             // save departure flight and show return flights
             sessionStorage.setItem("selected_departure", JSON.stringify({
                 id: chosenFlight.id,
-                flightNum: chosenFlight.flightNum,
+                flightNum: chosenFlight.flightNumber,
                 airline: chosenFlight.airline,
-                departure: chosenFlight.Departure,
-                arrival: chosenFlight.arrival,
-                duration: calculateFlightDuration(chosenFlight.Departure, chosenFlight.arrival).display,
-                cabinType: booking_info.cabinType,
-                ticketPrice: chosenFlight.cabins[booking_info.cabinType].price,
-                origin: booking_info.originCity,
-                destination: booking_info.destinationCity,
-                departureDate: booking_info.departureDate
+                departure: chosenFlight.departureTime,
+                arrival: chosenFlight.arrivalTime,
+                duration: calculateFlightDuration(chosenFlight.departureTime, chosenFlight.arrivalTime).display,
+                cabinType: getBookingInfo().cabinType,
+                ticketPrice: chosenFlight.cabin[getBookingInfo().cabinType].price,
+                origin: getBookingInfo().originCity,
+                destination: getBookingInfo().destinationCity,
+                departureDate: getBookingInfo().departureDate
             }));
 
             currentBookingPhase = "return";
@@ -369,19 +314,19 @@ function lockInFlight(flightID){
             // one way flight
             sessionStorage.setItem("selected_flight", JSON.stringify({
                 id: chosenFlight.id,
-                flightNum: chosenFlight.flightNum,
+                flightNum: chosenFlight.flightNumber,
                 airline: chosenFlight.airline,
-                departure: chosenFlight.Departure,
-                arrival: chosenFlight.arrival,
-                duration: calculateFlightDuration(chosenFlight.Departure, chosenFlight.arrival).display,
-                cabinType: booking_info.cabinType,
-                ticketPrice: chosenFlight.cabins[booking_info.cabinType].price,
-                origin: booking_info.originCity,
-                destination: booking_info.destinationCity,
-                departureDate: booking_info.departureDate
+                departure: chosenFlight.departureTime,
+                arrival: chosenFlight.arrivalTime,
+                duration: calculateFlightDuration(chosenFlight.departureTime, chosenFlight.arrivalTime).display,
+                cabinType: getBookingInfo().cabinType,
+                ticketPrice: chosenFlight.cabin[getBookingInfo().cabinType].price,
+                origin: getBookingInfo().originCity,
+                destination: getBookingInfo().destinationCity,
+                departureDate: getBookingInfo().departureDate
             }));
 
-            window.location.href = "/booking";
+            window.location.href = "/booking?flightId=" + chosenFlight._id;
         }
         
         
@@ -391,47 +336,57 @@ function lockInFlight(flightID){
         // save return flight
         sessionStorage.setItem("selected_return", JSON.stringify({
             id: chosenFlight.id,
-            flightNum: chosenFlight.flightNum,
+            flightNum: chosenFlight.flightNumber,
             airline: chosenFlight.airline,
-            departure: chosenFlight.Departure,
-            arrival: chosenFlight.arrival,
-            duration: calculateFlightDuration(chosenFlight.Departure, chosenFlight.arrival).display,
-            cabinType: booking_info.cabinType,
-            ticketPrice: chosenFlight.cabins[booking_info.cabinType].price,
-            origin: booking_info.destinationCity,
-            destination: booking_info.originCity,
-            departureDate: booking_info.returnDate
+            departure: chosenFlight.departureTime,
+            arrival: chosenFlight.arrivalTime,
+            duration: calculateFlightDuration(chosenFlight.departureTime, chosenFlight.arrivalTime).display,
+            cabinType: getBookingInfo().cabinType,
+            ticketPrice: chosenFlight.cabin[getBookingInfo().cabinType].price,
+            origin: getBookingInfo().destinationCity,
+            destination: getBookingInfo().originCity,
+            departureDate: getBookingInfo().returnDate
         }));
 
-        window.location.href = "/booking";
+        window.location.href = "/booking?flightId=" + chosenFlight._id;
     }
 }
 
-function sideBarInfo(flightID) {
+async function sideBarInfo(flightID) {
     if(!flightID) {
         console.error("Could not find flight matching ID: " + flightID);
         return;
     }
 
-    var flight = getFlightData(flightID);
+    var flight = await getFlightData(flightID);
+    console.log("FLIGHT INFO: ", flight);
     var layover = flight.numOfLayovers > 0 ? `layover(s): ${flight.numOfLayovers}` : "direct flight";
 
-    
+    //Cabin related Info
+    var cabinInfo ="";
+    var price="";
+    var seats="";
+    var label="";
     var cabinsHTML = "";
-    Object.keys(flight.cabins).forEach(cabinType => {
-        var cabin = flight.cabins[cabinType];
+    Object.keys(flight.cabin).forEach(cabinType => {
+        if (cabinType === '_id' || cabinType === '__v') return;
+        var cabinInfo = flight.cabin[cabinType];
+        price = cabinInfo.price.toLocaleString();
+
+        seats = cabinInfo.seats;
+        label = cabinInfo.label;
         
         //if seats are low, make them turn red and bold
-        var seatWarningClass = cabin.seats <= 3 ? "text-danger fw-bold" : "text-muted";
+        var seatWarningClass = seats <= 3 ? "text-danger fw-bold" : "text-muted";
         
         cabinsHTML += `
             <div class=" list-group-item d-flex  justify-content-between align-items-center py-3">
                 <div>
-                    <h6 class="mb-0 fw-bold">${cabin.label}</h6>
-                    <small class="${seatWarningClass}">${cabin.seats} seats left</small>
+                    <h6 class="mb-0 fw-bold">${label}</h6>
+                    <small class="${seatWarningClass}">${seats} seats left</small>
                 </div>
                 <div class="text-end">
-                    <span class="fs-5 fw-semibold text-primary">PHP ${cabin.price.toLocaleString()}</span>
+                    <span class="fs-5 fw-semibold text-primary">PHP ${price}</span>
                 </div>
             </div>
         `;
@@ -441,17 +396,17 @@ function sideBarInfo(flightID) {
         <div class="text-center">
             <img src="/images/${flight.logoName}.png" alt="Logo" id="sidebar-logo" class="mb-2" style="max-height: 50px;">
             <h4>${flight.airline}</h4>
-            <p class="text-muted">Flight #${flight.flightNum}</p>
+            <p class="text-muted">Flight #${flight.flightNumber}</p>
         </div>
         <hr>
         <div class="row mb-3">
             <div class="col cities-and-time">
-                <strong>From:</strong> <span class="booking-info-cities d-block fw-bold">${booking_info.originCity}</span>
-                <span class="text-secondary">${flight.Departure}</span>
+                <strong>From:</strong> <span class="booking-info-cities d-block fw-bold">${getBookingInfo().originCity}</span>
+                <span class="text-secondary">${flight.departureTime}</span>
             </div>
             <div class="col text-end cities-and-time">
-                <strong>To:</strong> <span class="booking-info-cities d-block fw-bold">${booking_info.destinationCity}</span>
-                <span class="text-secondary">${flight.arrival}</span>
+                <strong>To:</strong> <span class="booking-info-cities d-block fw-bold">${getBookingInfo().destinationCity}</span>
+                <span class="text-secondary">${flight.arrivalTime}</span>
             </div>
         </div>
         <div class="mb-3">
@@ -472,58 +427,23 @@ function sideBarInfo(flightID) {
 }
 
 
-//get data of a certain flight from the database
-function getFlightData(flightID){
-    return flightsDatabase.find(flight => flight.id === flightID)
+
+async function getFlightData(ID){
+    try{
+
+        let searchParams = new URLSearchParams({flightID:ID})
+
+        let response = await fetch(`../flight-info?${searchParams.toString()}`);
+
+        if (!response.ok) {
+            throw new Error(`error status: ${response.status}`);
+        }
+
+        return await response.json()
+    }catch(error){
+        console.error("Failed to fetch flight info: ", error);
+        return [];
+    }
 }
 
-
-
-function SearchFlight(){
-
-    var origin = booking_info.originCity;
-    var destination = booking_info.destinationCity;
-    var departDate = booking_info.departureDate;
-    var returnDate = booking_info.returnDate;
-    var tripType = booking_info.tripType;
-
-
-    console.log(booking_info);
-
-    // check for  empty locations
-    if (!origin || !destination) {
-        showAlert("Please select both your origin and destination cities before searching!","danger");
-        return;
-    }
-
-    //check for same city conflict
-    if (origin.trim().toLowerCase() === destination.trim().toLowerCase()) {
-        showAlert("Origin and Destination cannot be the same city! Please select a different arrival location.","danger");
-        return;
-    }
-
-    //check for missing department dates
-    if (!departDate) {
-        showAlert("Please choose a valid departure date!","danger");
-        return;
-    }
-
-   //check for missing trip type (highly doubt since theres a default value)
-    if (tripType === "round-trip" && !returnDate) {
-        showAlert("You have selected a Round-Trip flight. Please select a return date!","danger");
-        return;
-    }
-
-    // Check E: Inverted Travel Dates (Return before Departure)
-    if (tripType === "round-trip" && new Date(returnDate) < new Date(departDate)) {
-        showAlert("Your return date cannot be earlier than your departure date!","danger");
-        return;
-    }
-
-    hasSearched = true;
-    getFlights(getFilterOptions(),getBookingInfo());
-    renderFlightsUI();
-
-    showSidebarBtn()
-}
 

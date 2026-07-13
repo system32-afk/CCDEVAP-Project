@@ -1,6 +1,8 @@
 
 //direct flights section================================
 const directFlights = $("#direct-flight-checkbox");
+const filter_options = getFilterOptions();
+
 
 directFlights.on("change", function(){
     var value = this.checked;

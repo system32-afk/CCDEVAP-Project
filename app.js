@@ -16,6 +16,7 @@ const airlineModel = require('./models/airline_model.js');
 const cityModel = require('./models/city_model.js');
 const savedPassengerModel = require('./models/savedPassenger_Model.js');
 const travelHistoryModel = require('./models/TravelHistory_model.js');
+const bookingModel = require('./models/booking_model.js');
 
 //DATABASE CONNECTION
 const {connectToMongoDB} = require('./conn.js'); 
@@ -89,7 +90,7 @@ app.get('/register', function(req,res){
     res.render("pages/register",{
         layout:'auth',
          pageScripts: `
-            <script src="/scripts/DOB_formater_script.js" defer></script>
+            <script src="../scripts/DOB_formater_script.js" defer></script>
             
            `});
 })
@@ -101,9 +102,9 @@ app.get('/home', isAuthenticated, async function(req, res) {
         res.render("pages/index", {
         title: "Online Airline Ticketing System",
         pageScripts: `
-            <script src="/scripts/sessionStorage.js" defer></script>
-            <script src = "/scripts/index_searchFlight.js" defer></script>
-            <script src="/scripts/utilities/search_dropdown_script.js" defer></script>
+            <script src="../scripts/sessionStorage.js" defer></script>
+            <script src="../scripts/index_searchFlight.js" defer></script>
+            <script src="../scripts/utilities/search_dropdown_script.js" defer></script>
         `
     });
     }catch(err){
@@ -116,8 +117,8 @@ app.get('/admin-dashboard', isAuthenticated,function(req,res){
     res.render('pages/admin-dashboard',{
         title: "Admin Dashboard",
         pageScripts: `
-            <script src="/scripts/reservations.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/reservations.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
         `
     });
 });
@@ -155,9 +156,9 @@ app.get('/admin-flights', isAuthenticated, async function(req,res){
         flights: flights,
         currentCabin:currentCabin,
         pageScripts: `    
-            <script src="/scripts/reservations.js" defer></script>
-            <script src="/scripts/admin.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/reservations.js" defer></script>
+            <script src="../scripts/admin.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
     `
     });
     
@@ -185,9 +186,9 @@ app.get('/admin-reservations', isAuthenticated,function(req,res){
     res.render('pages/admin-reservations',{
         title: "Admin Reservations",
         pageScripts: `
-            <script src="/scripts/reservations.js" defer></script>
-            <script src="/scripts/admin.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/reservations.js" defer></script>
+            <script src="../scripts/admin.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
     `
     });
 });
@@ -196,19 +197,142 @@ app.get('/admin-users',isAuthenticated ,function(req,res){
     res.render('pages/admin-users',{
         title: "Admin Users",
         pageScripts: `
-            <script src="/scripts/reservations.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/reservations.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
     `
     });
 });
 
 
-app.get('/booking', isAuthenticated,function(req,res){
-    res.render('pages/booking',{
+app.get('/booking', isAuthenticated, function(req, res) {
+    res.render('pages/booking', {
         title: "Bookings",
+        flightId: req.query.flightId,
         pageScripts: `
-            <script src="/scripts/booking.js"></script>    
+            <script src="../scripts/sessionStorage.js"></script>
+            <script src="../scripts/booking.js"></script>
     `
+    });
+});
+
+app.get('/profile', isAuthenticated , async function(req,res){
+    var user = await userModel.findById(req.session.userID).lean();
+    var savedPassenger = await savedPassengerModel.find({belong_to_user:req.session.userID})
+    console.log("Sending user to template:", user);
+    res.render('pages/profile',{
+        user: user,
+        savedPassenger:savedPassenger,
+        title: "Profile",
+        pageScripts: `
+            <script src="../scripts/utilities/saved_passengers.js" defer></script>
+            <script src="../scripts/utilities/user_travel_history.js" defer></script>
+            <script src="../scripts/profile.js" defer></script>
+            <script src="../scripts/utilities/payment_methods.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/helper_algorithms.js" defer></script>
+            <script src="../scripts/utilities/user_info.js" defer></script>
+            <script src="../scripts/DOB_formater_script.js" defer></script>
+    `
+    });
+});
+
+
+app.get("/saved-passengers",isAuthenticated, async function(req,res) {
+    try{
+
+        console.log("Session User ID:", req.session.userID);
+        var passengers = await savedPassengerModel.find({
+            belongs_to_user: req.session.userID
+        });
+
+        return res.status(200).json(passengers);
+    }catch(error){
+        console.error("error fetching saved passengers:", error);
+        return res.status(500).json({ message: "server error fetching passengers." });
+    }
+})
+
+app.get("/saved-passengers/edit/:id", isAuthenticated, async function(req,res){
+    try{
+        var passenger = await savedPassengerModel.findById(req.params.id);
+        res.status(200).json(passenger);
+    }catch(err){
+        res.status(500).json({ error: err.message});
+    }
+})
+
+app.get("/paymentMethods", isAuthenticated, async function(req,res){
+    try{
+        var user = await userModel.findById(req.session.userID);
+
+        if(!user){
+            return res.status(404).json({message: "User profile not found!"});
+        }
+
+        var cards = user.paymentMethods;
+
+        return res.status(200).json(cards);
+    }catch(err){
+        console.error("Error retreiving payment methods: ",err);
+        return res.status(500).json({ error: " server error fetching payment records." });
+    }
+})
+
+app.get("/travel-history", isAuthenticated, async function(req,res) {
+    try{
+        var history = await travelHistoryModel.find({belongs_to_user: req.session.userID});
+
+        if(!history){
+            return res.status(404).json({message: "Travel history not found!"});
+        }
+
+        return res.status(200).json(history);
+    }catch(error){
+
+    }
+})
+
+
+
+
+
+app.get('/reservations', function(req,res){
+    res.render('pages/reservations',{
+        title: "Reservations",
+        pageScripts: `
+            <script src="../scripts/reservations.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
+    `
+    });
+});
+
+app.get('/search', isAuthenticated, function(req,res){
+    res.render('pages/search',{
+        title: "Search",
+        layout:"main", 
+        pageScripts: `           
+            <script src="../scripts/sessionStorage.js" defer></script>
+            <script src="../scripts/search_script.js" defer></script>
+            <script src="../scripts/PassengerTypes_script.js" defer></script>
+            <script src="../scripts/dropdowns_Script.js" defer></script>
+            <script src="../scripts/advanceSearch_scripts.js" defer></script>
+            <script src="../scripts/getFlights_script.js" defer></script>
+            <script src="../scripts/utilities/search_dropdown_script.js" defer></script>
+            <script src="../scripts/utilities/flights_database_script.js" defer></script>
+            <script src="../scripts/helper_algorithms.js" defer></script>
+            <script src="../scripts/filter_sidebar.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
+    `
+    });
+});
+
+app.get('/logout',isAuthenticated ,function(req, res) {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.redirect('/dashboard');
+        }
+        res.clearCookie('connect.sid'); // Clears the browser session cookie
+        res.redirect('/login');
     });
 });
 
@@ -297,128 +421,22 @@ app.get("/search-flights",isAuthenticated, async function(req,res){
  
 })
 
-app.get('/profile', isAuthenticated , async function(req,res){
-    var user = await userModel.findById(req.session.userID).lean();
-    var savedPassenger = await savedPassengerModel.find({belong_to_user:req.session.userID})
-    console.log("Sending user to template:", user);
-    res.render('pages/profile',{
-        user: user,
-        savedPassenger:savedPassenger,
-        title: "Profile",
-        pageScripts: `
-            <script src="/scripts/utilities/saved_passengers.js" defer></script>
-            <script src="/scripts/utilities/user_travel_history.js" defer></script>
-            <script src="/scripts/profile.js" defer></script>
-            <script src="/scripts/utilities/payment_methods.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
-            <script src="/scripts/helper_algorithms.js" defer></script>
-            <script src="/scripts/utilities/user_info.js" defer></script>
-            <script src="/scripts/DOB_formater_script.js" defer></script>
-    `
-    });
-});
-
-
-app.get("/saved-passengers",isAuthenticated, async function(req,res) {
+app.get("/flight-info",isAuthenticated, async function(req,res){
     try{
+        let {flightID} = req.query; 
 
-        console.log("Session User ID:", req.session.userID);
-        var passengers = await savedPassengerModel.find({
-            belongs_to_user: req.session.userID
-        });
+        const flightInfo = await flightModel.findById(flightID);
 
-        return res.status(200).json(passengers);
+        if (!flightInfo) {
+            return res.status(404).json({ message: "Flight not found" });
+        }
+
+        return res.status(200).json(flightInfo);
     }catch(error){
-        console.error("error fetching saved passengers:", error);
-        return res.status(500).json({ message: "server error fetching passengers." });
+        console.error("BACKEND ERROR: ERROR FETCHING FLIGHT INFO: ", error);
+        return res.status(500).json({ message: "server error fetching flight info" });
     }
 })
-
-app.get("/saved-passengers/edit/:id", isAuthenticated, async function(req,res){
-    try{
-        var passenger = await savedPassengerModel.findById(req.params.id);
-        res.status(200).json(passenger);
-    }catch(err){
-        res.status(500).json({ error: err.message});
-    }
-})
-
-app.get("/paymentMethods", isAuthenticated, async function(req,res){
-    try{
-        var user = await userModel.findById(req.session.userID);
-
-        if(!user){
-            return res.status(404).json({message: "User profile not found!"});
-        }
-
-        var cards = user.paymentMethods;
-
-        return res.status(200).json(cards);
-    }catch(err){
-        console.error("Error retreiving payment methods: ",err);
-        return res.status(500).json({ error: " server error fetching payment records." });
-    }
-})
-
-app.get("/travel-history", isAuthenticated, async function(req,res) {
-    try{
-        var history = await travelHistoryModel.find({belongs_to_user: req.session.userID});
-
-        if(!history){
-            return res.status(404).json({message: "Travel history not found!"});
-        }
-
-        return res.status(200).json(history);
-    }catch(error){
-
-    }
-})
-
-
-
-
-
-app.get('/reservations', function(req,res){
-    res.render('pages/reservations',{
-        title: "Reservations",
-        pageScripts: `
-            <script src="/scripts/reservations.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
-    `
-    });
-});
-
-app.get('/search', isAuthenticated, function(req,res){
-    res.render('pages/search',{
-        title: "Search",
-        layout:"main", 
-        pageScripts: `           
-            <script src="/scripts/sessionStorage.js" defer></script>
-            <script src="/scripts/search_script.js" defer></script>
-            <script src="/scripts/PassengerTypes_script.js" defer></script>
-            <script src="/scripts/dropdowns_Script.js" defer></script>
-            <script src="/scripts/advanceSearch_scripts.js" defer></script>
-            <script src="/scripts/getFlights_script.js" defer></script>
-            <script src="/scripts/utilities/search_dropdown_script.js" defer></script>
-            <script src="/scripts/utilities/flights_database_script.js" defer></script>
-            <script src="/scripts/helper_algorithms.js" defer></script>
-            <script src="/scripts/filter_sidebar.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
-    `
-    });
-});
-
-app.get('/logout',isAuthenticated ,function(req, res) {
-    req.session.destroy((err) => {
-        if (err) {
-            return res.redirect('/dashboard');
-        }
-        res.clearCookie('connect.sid'); // Clears the browser session cookie
-        res.redirect('/login');
-    });
-});
-
-
 
 //=========================POST FUNCTIONS=============================================
 app.post("/register",async  function(req,res){
@@ -714,13 +732,9 @@ app.patch("/admin-flights/:flightNumber/deactivate", isAuthenticated, async func
 
 //==========================READ OPERATIIONS=============================
 
-
-
 app.listen(port, () =>{
     console.log("Server now listening on port " + port);
 });
-
-
 
 function isAuthenticated(req, res, next) {
     if (req.session && req.session.isLoggedIn && req.session.userID) {
@@ -730,3 +744,44 @@ function isAuthenticated(req, res, next) {
     // session is invalid or doesn't exist
     res.redirect('/login');
 }
+
+//========================== FLIGHT BOOKING =============================
+
+app.post("/booking", isAuthenticated, async function(req, res) {
+    try {
+        const { flightId, passengers } = req.body;
+
+        const flight = await flightModel.findById(flightId);
+
+        if (!flight) {
+            return res.status(404).json({ message: "Flight not found" });
+        }
+
+        const passengersWithRef = passengers.map(function(p) {
+            p.bookingReference = "BK-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+            p.price = 0;
+            return p;
+        });
+
+        const newBooking = new bookingModel({
+            flightNum: flight.flightNumber,
+            origin: flight.origin,
+            destination: flight.destination,
+            airline: flight.airline,
+            departureDate: flight.departureDate,
+            departureTime: flight.departureTime,
+            arrivalTime: flight.arrivalTime,
+            duration: 0,
+            belongsToUser: req.session.userID,
+            totalPrice: 0,
+            passengers: passengersWithRef
+        });
+
+        await newBooking.save();
+
+        return res.status(201).json({ message: "Booking saved successfully" });
+    } catch(err) {
+        console.error("Booking error: ", err);
+        return res.status(500).json({ error: err.message });
+    }
+});
