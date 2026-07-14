@@ -493,7 +493,7 @@ app.post("/register",async  function(req,res){
 });
 
 // create city
-app.post("/admin-flights", async function(req, res){
+app.post("/admin-cities", async function(req, res){
     const {cityName} = req.body;
 
     // checks if city already exists
@@ -511,7 +511,7 @@ app.post("/admin-flights", async function(req, res){
 });
 
 // creates airline
-app.post("/admin-flights", async function(req, res){
+app.post("/admin-airlines", async function(req, res){
     const {airlineName} = req.body;
 
     // checks if airline already exists

@@ -40,31 +40,50 @@
         <main class="admin-content">
             <h1 class="admin-title"><strong>FLIGHT MANAGEMENT</strong></h1>
             {{!-- sort  --}}
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="d-flex align-items-center gap-3">
-  
-                        <label class="fw-bold mb-0">Sort By:</label>
-                        <select id="cabinSelect" class="form-select form-select-sm" style="width: auto;" onchange="applyFilter()">
-                            <option value="economy" {{#if (eq currentCabin 'economy')}}selected{{/if}}>Economy</option>
-                            <option value="premium_economy" {{#if (eq currentCabin 'premium_economy')}}selected{{/if}}>Premium Economy</option>
-                            <option value="business_class" {{#if (eq currentCabin 'business_class')}}selected{{/if}}>Business Class</option>
-                            <option value="first_class" {{#if (eq currentCabin 'first_class')}}selected{{/if}}>First Class</option>
-                        </select>
-                </div>
-            {{!-- sort  --}}
-                
-            {{!-- create flight button --}}
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="d-flex align-items-center gap-3">
-                    <button type="button" class="btn btn-white btn-outline-dark" 
-                            data-bs-toggle="modal" data-bs-target="#modal-create-flight">
-                            Create Flight
-                    </button>
-                </div>
-            </div>
-            </div>
-            {{!-- create flight button --}}
+        <div class="d-flex justify-content-between align-items-center mb-3">
 
+            <!-- Left -->
+            <div class="d-flex align-items-center gap-3">
+                <label class="fw-bold mb-0">Sort By:</label>
+
+                <select id="cabinSelect"
+                        class="form-select form-select-sm"
+                        style="width: auto;"
+                        onchange="applyFilter()">
+                    <option value="economy" {{#if (eq currentCabin 'economy')}}selected{{/if}}>Economy</option>
+                    <option value="premium_economy" {{#if (eq currentCabin 'premium_economy')}}selected{{/if}}>Premium Economy</option>
+                    <option value="business_class" {{#if (eq currentCabin 'business_class')}}selected{{/if}}>Business Class</option>
+                    <option value="first_class" {{#if (eq currentCabin 'first_class')}}selected{{/if}}>First Class</option>
+                </select>
+            </div>
+
+            {{!-- Create Flight bUtton --}}
+            <div class="d-flex gap-2">
+                <button type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal-create-flight">
+                    Create Flight
+                </button>
+            {{!-- Create Flight bUtton --}}
+            {{!-- Airline Button --}}
+                <button type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal-airline">
+                    Airlines
+                </button>
+                
+                <button type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal-city">
+                    Cities
+                </button>
+            {{!-- Airline Button --}}
+            </div>
+
+        </div>
             <div class="analytics-table-card">
                 <div class="table-responsive">
                     <table class="table table-hover admin-table">
@@ -142,6 +161,152 @@
                 </div>
             </div>
             <!-- Cancellation of Reservation Modal -->
+
+{{!-- Cities Modal --}}
+<div class="modal fade" id="modal-city"
+     data-bs-backdrop="static"
+     data-bs-keyboard="false"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title text-primary fw-bold">
+                    City Management
+                </h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover admin-table align-middle">
+                        <thead>
+                            <tr>
+                                <th>City Name</th>
+                                <th>City Code</th>
+                                <th width="120"></th>
+                                <th width="120"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each cities}}
+                            <tr>
+                                <td>{{this.cityName}}</td>
+                                <td>
+                                    <button class="edit-button table-btn"
+                                            onclick="openUpdateCityModal('{{this._id}}')">
+                                        Edit
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="cancel-button table-btn"
+                                            onclick="deleteCity('{{this._id}}')">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal-add-city">
+                    Add City
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{{!-- Airline Modal --}}
+<div class="modal fade" id="modal-airline"
+     data-bs-backdrop="static"
+     data-bs-keyboard="false"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title text-primary fw-bold">
+                    Airline Management
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="table-responsive">
+                    <table class="table table-hover admin-table align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>Airline Name</th>
+                                <th width="120"></th>
+                                <th width="120"></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {{#each airlines}}
+                            <tr>
+
+                                <td>{{this.airlineName}}</td>
+
+                                <td>
+                                    <button
+                                        class="edit-button table-btn"
+                                        onclick="openUpdateAirlineModal('{{this._id}}')">
+                                        Edit
+                                    </button>
+                                </td>
+
+                                <td>
+                                    <button
+                                        class="cancel-button table-btn"
+                                        onclick="deleteAirline('{{this._id}}')">
+                                        Delete
+                                    </button>
+                                </td>
+
+                            </tr>
+                            {{/each}}
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal-add-airline">
+                    Add Airline
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+            {{!-- Airline Modal --}}
 
             <!-- Save Changes Modal -->
             <div id="modal-edit-save" class="modal-overlay">
@@ -381,12 +546,12 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label" for="numOfLayovers">Layovers:</label>
-                                        <input type="number" class="form-control" name="numOfLayovers-field" id="numOfLayovers" placeholder="0" required>
+                                        <input type="number" class="form-control" name="numOfLayovers" id="numOfLayovers-field" placeholder="0" required>
                                 </div>
                                 
                                 <div class="col-md-4">
                                     <label class="form-label" for="isActive">Status:</label>
-                                        <select class="form-control" name="isActive-field" id="isActive" required>
+                                        <select class="form-control" name="isActive" id="isActive-field" required>
                                             <option value="true">Active</option>
                                             <option value="false">Inactive</option>
                                         </select>

@@ -242,7 +242,10 @@ h5 {
 .modal-title{
     font-family: 'IBM Plex Mono', monospace;
 }
-
+#create-flight{
+    font-family: 'Istok Web', sans-serif;
+    font-weight: bold;
+}
 
 h5{
     font-family: 'IBM Plex Mono', monospace;
