@@ -168,11 +168,10 @@ app.get('/admin-flights', isAuthenticated, async function(req,res){
     
 });
 
-app.get('/api/flights/:flightNumber', isAuthenticated, async function(req,res){
+// gets flight
+app.get('/api/flights/:id', isAuthenticated, async function(req,res){
 
-    const flight = await flightModel.findOne({
-        flightNumber: Number(req.params.flightNumber)
-    });
+    const flight = await flightModel.findById(req.params.id);
 
     if(!flight){
         return res.status(404).json({
@@ -560,6 +559,7 @@ app.post("/admin-airlines", async function(req, res){
         res.redirect('/admin-flights');
 });
 
+// create flight
 app.post("/admin-flights", async function(req,res){
     const {flightNumber, airline,origin, destination, departureDate, departureTime, arrivalDate,
         arrivalTime, logoName, numOfLayovers, isActive, cabin} = req.body;
@@ -696,11 +696,10 @@ app.put("/saved-passengers/update/:id",isAuthenticated, async function(req,res){
 })
 
 // route that updates the document with selected flightNumber 
-app.put("/admin-flights/:flightNumber",isAuthenticated ,async function(req,res){
+app.put("/admin-flights/:id",isAuthenticated ,async function(req,res){
     
-    const updatedFlight = await flightModel.findOneAndUpdate(
-        { flightNumber: Number(req.params.flightNumber) },
-        req.body, 
+    const updatedFlight = await flightModel.findIdAndUpdate(
+        req.params.id,
         {returnDocument:"after"}
     );
     res.json(updatedFlight);
@@ -781,11 +780,9 @@ app.patch("/update-preferences",isAuthenticated, async function(req,res){
 app.patch("/admin-flights/:id/deactivate", isAuthenticated, async function(req,res){
 
     try{
-        const flightNumber = Number(req.params.flightNumber);
-    
-        
+            
         const flight = await flightModel.findByIdAndUpdate(
-            {flightNumber: flightNumber},
+            req.params.id,
             {$set: {isActive: false}},
             {returnDocument: 'after'}
         );
