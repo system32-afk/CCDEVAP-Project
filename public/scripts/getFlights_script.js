@@ -22,6 +22,8 @@ var hasSearched = false; //global
 var selectedDepartureFlight = null;
 var selectedReturnFlight = null;
 
+//this is where the search result is stored for front-end sorting
+var searchResults = null;
 
 flightsContainer.on("click",".select-flight-btn", function(){
     
@@ -43,13 +45,14 @@ flightsContainer.on("click",".view-details", function(){
 let currentSortOption = null;
 sortBy.on("click", function(){
     var selected = $(this).val();
-
+    console.log("clicked sort options!");
     if(!hasSearched){
         this.checked = false;
         alert("Please search for flights before sorting!");
         return;
     }
 
+    //if user selects option already selected
     if(selected === currentSortOption){
             this.checked = false;
             currentSortOption = null;
@@ -58,51 +61,41 @@ sortBy.on("click", function(){
             console.log("currentSelect: ", currentSortOption, "just selected: ",selected)
     }else if (selected != currentSortOption && hasSearched){
         currentSortOption = selected;
+
         sortFlights(selected);
     }
 })
 
 
-async function sortFlights(sortBy, shouldRender = false, mode = "ascending"){
-    var filteredFlights = "";
-
-    filteredFlights = await getFlights(filter_options,getBookingInfo());
-
-
+async function sortFlights(sortBy){
+    
 
     var sortedFlights = null;
 
 
-    if(filteredFlights.length === 1){
+    if(searchResults.length === 1){
         return;
     }
     //sort by ticket price: lowest First (Ascending)
     if (sortBy === "ticketPrice") {
-        if(mode === "descending"){
-            sortedFlights = sortArray(sortBy, "descending", filteredFlights);
-        }else{
-            sortedFlights = sortArray(sortBy, "ascending", filteredFlights);
-        }
-        
+        sortedFlights = sortArray(sortBy, "ascending", searchResults); 
     }
 
     //sort by departure time: earliest first (Ascending)
     else if (sortBy === "departure"){
-        sortedFlights = sortArray(sortBy, "ascending", filteredFlights);
+        sortedFlights = sortArray(sortBy, "ascending", searchResults);
     }
 
     //sort by duration: shortest first (ascending)
     else if (sortBy === "duration"){
-        sortedFlights = sortArray(sortBy, "ascending", filteredFlights);
+        sortedFlights = sortArray(sortBy, "ascending", searchResults);
     }
 
-    //if the sorted flights are rendered, it will be the new search results.
-    if(shouldRender){
-        renderFlights(sortedFlights);
-        searchResults = sortedFlights;
-    }
+    //once the sorted flights are rendered, it will be the new search results.
+    renderFlights(sortedFlights);
+    
 
-    return sortedFlights; //just for getting
+    
 
     
 
@@ -118,15 +111,16 @@ async function renderFlightsUI(){
     }else if (currentBookingPhase === "return" && getBookingInfo().tripType === "round-trip"){
         promptMessage.text(`Select your departure flight: ${getBookingInfo().destinationCity} -> ${getBookingInfo().originCity}`);
 
-        var returnInfo = {
-            departDate: getBookingInfo().returnDate,
-            originCity: getBookingInfo().destinationCity,
-            destinationCity: getBookingInfo().originCity
-        };
+        var returnInfo = { ...getBookingInfo() };
 
-        console.log("return info "+returnInfo);
+        returnInfo.departureDate = getBookingInfo().returnDate; 
+        returnInfo.originCity = getBookingInfo().destinationCity;
+        returnInfo.destinationCity = getBookingInfo().originCity;
+
+        console.log("return info "+returnInfo.origin);
 
         flightsToRender = await getFlights(filter_options,returnInfo);
+        
         renderFlights(flightsToRender);
     }
 
@@ -148,17 +142,18 @@ async function getFlights(filterOptions, bookingInfo) {
         maxPrice: filterOptions.maxPrice
     })
 
-    console.log("isFlexible before passing: ", filterOptions.isFlexible);
+    console.log("isFlexible before passing: ", bookingInfo.departureDate);
 
     try{
 
-        let response = await fetch(`../search-flights?${searchParams.toString()}`);
+        let response = await fetch(`/search-flights?${searchParams.toString()}`);
 
         if (!response.ok) {
             throw new Error(`error status: ${response.status}`);
         }
+        searchResults = await response.json();
+        return searchResults;
 
-        return await response.json();
     }catch(error){
         console.error("Failed to fetch flights", error);
         return [];
