@@ -302,28 +302,24 @@ async function updateFlightInformation(){
 function validateFlight(){
     const origin = $('#origin-field').val();
     const destination = $('#destination-field').val();
-    const departureDate = new Date($('#departureDate-field').val()); 
-    const arrivalDate = new Date($('#arrivalDate-field').val());
-    const departureTime = $('#departureTime-field').val();
-    const arrivalTime = $('arrivalTime-field').val();
-
+    const departure = new Date(
+        `${$('#departureDate-field').val()}T${$('#departureTime-field').val()}`
+    ); 
+    const arrival = new Date(
+        `${$('#arrivalDate-field').val()}T${$('#arrivalTime-field').val()}`
+    );
 
     if(origin === destination){
         alert("Origin and Destination cannot be the same.");
         return false;
     }
 
-    if(arrivalDate < departureDate){
-        alert("Arrival Date cannot be before Departure Date");
+    if(arrival <= departure){
+        alert("Arrival must be after Departure");
         return false;
     }
 
-    if(arrivalDate === departureDate){
-        if(arrivalTime <= departureTime){
-            alert("Arrival Time cannot be before or same as the Departure Time.");
-            return false;
-        }
-    }
+
     return true;
 }
 

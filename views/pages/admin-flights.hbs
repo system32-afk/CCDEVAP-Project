@@ -127,7 +127,7 @@
                                 data-premium_economy="{{this.cabin.premium_economy.price}}"
                                 data-business_class="{{this.cabin.business_class.price}}"
                                 data-first_class="{{this.cabin.first_class.price}}">
-                                {{this.cabin.economy.label}}
+                                {{this.cabin.economy.price}}
                                 </td>
 
                                 <td class="cabin-seats" 
@@ -135,7 +135,7 @@
                                 data-premium_economy="{{this.cabin.premium_economy.seats}}"
                                 data-business_class="{{this.cabin.business_class.seats}}"
                                 data-first_class="{{this.cabin.first_class.seats}}">
-                                {{this.cabin.economy.label}}
+                                {{this.cabin.economy.seats}}
                                 </td>
 
                                 <td><button class="edit-button table-btn"  data-bs-toggle="modal" data-bs-target="#modal-update-flight" onclick="openUpdateModal('{{this._id}}')">Edit</button></td>
