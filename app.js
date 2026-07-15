@@ -12,6 +12,7 @@ const app = express('express');
 const bcrypt  = require('bcryptjs')
 const userModel = require('./models/user_model.js');
 const flightModel = require('./models/flight_model.js');
+const reservationModel = require('./models/reservation_model.js')
 const savedPassengerModel = require('./models/savedPassenger_Model.js');
 const travelHistoryModel = require('./models/TravelHistory_model.js');
 
@@ -75,14 +76,14 @@ app.get('/login', function(req,res){
 app.get('/register', function(req,res){
     res.render("pages/register",{
         layout:'auth',
-         pageScripts: `
+        pageScripts: `
             <script src="/scripts/DOB_formater_script.js" defer></script>
             
-           `});
+            `});
 })
 
 app.get('/home', isAuthenticated, async function(req, res) {
-     
+    
     try{
         var currentUser = await userModel.findById(req.session.userID);
         res.render("pages/index", {
@@ -134,6 +135,8 @@ app.get('/admin-reservations', isAuthenticated,function(req,res){
     res.render('pages/admin-reservations',{
         title: "Admin Reservations",
         pageScripts: `
+            <script src="/scripts/reservationModal.js" defer></script>
+            <script src="/scripts/reservationsRenderAdmin.js" defer></script>
             <script src="/scripts/reservations.js" defer></script>
             <script src="/scripts/admin.js" defer></script>
             <script src="/scripts/utilities/load_navbar_script.js" defer></script>
@@ -243,14 +246,13 @@ app.get("/travel-history", isAuthenticated, async function(req,res) {
     }
 })
 
-
-
-
-
 app.get('/reservations', function(req,res){
     res.render('pages/reservations',{
         title: "Reservations",
         pageScripts: `
+            <script src="/scripts/editReservation.js" defer></script>
+            <script src="/scripts/reservationModal.js" defer></script>
+            <script src="/scripts/reservationsRender.js" defer></script>
             <script src="/scripts/reservations.js" defer></script>
             <script src="/scripts/utilities/load_navbar_script.js" defer></script>
     `
@@ -381,8 +383,8 @@ app.post("/saved-passengers/add", isAuthenticated, async function (req, res) {
         await newPassenger.save();
         res.status(201).json({ message: "Passenger added successfully" });
     } catch(err) {
-       
-       
+        
+        
         res.status(500).json({ message: err.message });
     }
 });
@@ -411,9 +413,9 @@ app.post("/add-payment",isAuthenticated,async function(req,res){
 
 
 app.put("/profile/update", isAuthenticated, async function(req,res){
-   const {Fname, Lname, MI, sex, MobileNum, DOB, nationality } = req.body;
+    const {Fname, Lname, MI, sex, MobileNum, DOB, nationality } = req.body;
 
-   var updatedUser = await userModel.findByIdAndUpdate(
+    var updatedUser = await userModel.findByIdAndUpdate(
     req.session.userID,
     {
         $set:{
@@ -430,9 +432,9 @@ app.put("/profile/update", isAuthenticated, async function(req,res){
     returnDocument: 'after',
     runValidators: true 
     }
-   )
+    )
 
-   if (!updatedUser) {
+    if (!updatedUser) {
         return res.status(404).json({ message: "User profile record not found." });
     }
 
@@ -507,7 +509,28 @@ app.patch("/update-preferences",isAuthenticated, async function(req,res){
 
 //==========================READ OPERATIIONS=============================
 
+app.get("/reservations-data", isAuthenticated, async function(req, res){
+    try{
+        var reservations = await reservationModel.find({
+            belongsToUser: req.session.userID
+        }).lean();
 
+        return res.status(200).json(reservations);
+    }catch(err){
+        console.error("Error fetching reservations:", err);
+        return res.status(500).json({ message: "server error fetching reservations." });
+    }
+});
+
+app.get("/admin-reservations-data", isAuthenticated, async function(req, res){
+    try{
+        var reservations = await reservationModel.find({}).lean();
+        return res.status(200).json(reservations);
+    }catch(err){
+        console.error("Error fetching all reservations:", err);
+        return res.status(500).json({ message: "server error fetching reservations." });
+    }
+});
 
 app.listen(port, () =>{
     console.log("Server now listening on port " + port);

@@ -1,8 +1,23 @@
-document.getElementById("sortReservations").addEventListener("click", searchReservations);
+let reservations = [];
 
-document.addEventListener("DOMContentLoaded", () => {
-    renderReservations(reservations);
-});
+document.getElementById("sortReservations")?.addEventListener("click", searchReservations);
+
+document.addEventListener("DOMContentLoaded", loadReservations);
+
+async function loadReservations() {
+    try {
+        const isAdminPage = window.location.pathname.startsWith("/admin");
+        const endpoint = isAdminPage ? "/admin-reservations-data" : "/reservations-data";
+
+        const response = await fetch(endpoint);
+        if (!response.ok) throw new Error("Failed to fetch reservations");
+
+        reservations = await response.json();
+        renderReservations(reservations);
+    } catch (err) {
+        console.error("Error loading reservations:", err);
+    }
+}
 
 function swapLocations() {
     var origin = document.getElementById('departure-airports');
@@ -19,39 +34,36 @@ function searchReservations() {
     filteredReservations = sortReservations(filteredReservations);
 
     renderReservations(filteredReservations);
-
 }
 
 function filterReservations(list) {
     const departure = document.getElementById("departure-airports").value;
-    const destination =document.getElementById("destination-airports").value;
+    const destination = document.getElementById("destination-airports").value;
     const departureDate = document.getElementById("departureDate").value;
     const status = document.getElementById("statusFilter").value;
 
     return list.filter(reservation => {
-        if (departure !== "None" && reservation.origin !== departure
-        ) {
+        if (departure !== "None" && reservation.origin !== departure) {
             return false;
         }
 
-        if (destination !== "None" && reservation.destination !== destination
-        ) {
+        if (destination !== "None" && reservation.destination !== destination) {
             return false;
         }
 
-        if (departureDate && reservation.departureDate !== departureDate
-        ) {
+        // reservation.departureDate comes back from Mongo as a full ISO string
+        // (e.g. "2025-08-01T00:00:00.000Z"), while the date input gives "2025-08-01",
+        // so compare just the date portion instead of the full string.
+        if (departureDate && reservation.departureDate.slice(0, 10) !== departureDate) {
             return false;
         }
 
-        if (status && reservation.status !== status
-        ) {
+        if (status && reservation.status !== status) {
             return false;
         }
 
         return true;
     });
-
 }
 
 function sortReservations(list) {
@@ -95,11 +107,9 @@ function sortReservations(list) {
                 reservation2.duration - reservation1.duration
             );
             break;
-
     }
 
     return list;
-
 }
 
 function resetSearch() {
