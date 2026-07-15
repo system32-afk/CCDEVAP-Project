@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const passengerSchema = new mongoose.Schema({
     passengerType: { type: String, required: true, enum: ['adult', 'child', 'infant'] },
+    status: { type: String, default: 'Confirmed', enum: ['Confirmed', 'Cancelled'] },
     fullName: { type: String, required: true, trim: true },
     email: { type: String, required: true, trim: true },
     contact: { type: String, trim: true },
@@ -15,14 +16,14 @@ const passengerSchema = new mongoose.Schema({
     baggage: { type: Number, default: 0 },
     priority: { type: Boolean, default: false },
     insurance: { type: Boolean, default: false },
-    lounge: { type: Boolean, default: false }
+    lounge: { type: Boolean, default: false },
+    price: { type: Number, required: true }
 });
 
 const bookingSchema = new mongoose.Schema({
     bookingReference: { type: String, required: true, unique: true },
     flight: { type: mongoose.Schema.Types.ObjectId, ref: 'flights', required: true },
     cabinType: { type: String, required: true },
-    status: { type: String, default: 'Confirmed', enum: ['Confirmed', 'Cancelled'] },
     belongsToUser: { type: String, required: true },
     totalPrice: { type: Number, required: true },
     passengers: [passengerSchema]
