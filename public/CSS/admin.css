@@ -239,3 +239,26 @@ h5 {
     background-color: #fee2e2;
     color: #6e0c0c;
 }
+.modal-title{
+    font-family: 'IBM Plex Mono', monospace;
+}
+#create-flight{
+    font-family: 'Istok Web', sans-serif;
+    font-weight: bold;
+}
+
+h5{
+    font-family: 'IBM Plex Mono', monospace;
+    
+}
+.form-label{
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: bold;
+    
+}
+
+.form-control{
+    font-family: 'IBM Plex Mono', monospace;
+    border-radius: 16px;
+    border: 1px solid #000000;
+}

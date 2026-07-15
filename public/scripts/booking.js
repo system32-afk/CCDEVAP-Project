@@ -3,8 +3,56 @@ $(document).ready(function () {
     // stores which passenger is currently being edited
     let currentPassenger = null;
 
+    var chosenMeal = null;
+    var chosenSeat = null;
+
+    var totals = {
+        seats: [],
+        meals: [],
+        baggage: 0,
+        priority: 0,
+        insurance: 0,
+        lounge: 0,
+        mealCost: 0,
+        seatCost: 0,
+        extrasCost: 0
+    };
+
+    // get how many passengers cards to display
+    const bookingInfo = JSON.parse(sessionStorage.getItem("booking_info")) || {
+        passengers: { adults: 1, children: 0, infants: 0 }
+    };
+    const passengerCounts = bookingInfo.passengers;
+
+    // saved passengers
+    var saved = {};
+    for (var i = 1; i <= passengerCounts.adults; i++) { 
+        saved["adult-" + i] = null; 
+    }
+    for (var i = 1; i <= passengerCounts.children; i++) {
+         saved["child-" + i] = null; 
+    }
+    for (var i = 1; i <= passengerCounts.infants; i++) {
+         saved["infant-" + i] = null; 
+    }
+
+    // flight id
+    const flightId = $("#flight-id").val();
+
     // price breakdown
-    const BASE_TOTAL = 5920; // adult 3200 + child 2400 + infant 320
+    var selectedFlight = JSON.parse(sessionStorage.getItem("selected_flight"));
+    var basePrice = 0;
+
+    if (selectedFlight) {
+        var adultPrice = selectedFlight.ticketPrice;
+        var childPrice = Math.round(selectedFlight.ticketPrice * 0.75);
+        var infantPrice = Math.round(selectedFlight.ticketPrice * 0.25);
+
+        basePrice = (passengerCounts.adults * adultPrice) +
+                    (passengerCounts.children * childPrice) +
+                    (passengerCounts.infants * infantPrice);
+    }
+
     const MEAL_PRICES = { standard: 0, vegetarian: 150, vegan: 200, halal: 100, kosher: 350, "gluten-free": 300 };
     const SEAT_UPGRADE   = 500;
     const BAGGAGE_PRICE  = 300;
@@ -12,6 +60,69 @@ $(document).ready(function () {
     const INSURANCE_PRICE = 400;
     const LOUNGE_PRICE   = 600;
     const TAX_RATE = 0.12;
+
+    function renderPassengerCards() {
+        var list = $("#passenger-list");
+        list.empty();
+
+        for (var i = 1; i <= passengerCounts.adults; i++) {
+            list.append(buildCard("adult", i));
+        }
+        for (var i = 1; i <= passengerCounts.children; i++) {
+            list.append(buildCard("child", i));
+        }
+        for (var i = 1; i <= passengerCounts.infants; i++) {
+            list.append(buildCard("infant", i));
+        }
+    }
+
+    function buildCard(type, num) {
+        var id = type + "-" + num;
+        var label = type.charAt(0).toUpperCase() + type.slice(1) + " " + num;
+        var extras = "";
+
+        if (type !== "infant") {
+            extras = "<p class='passenger-detail'>Seat: <span id='display-seat-" + id + "'>-</span></p>" +
+                    "<p class='passenger-detail'>Meal: <span id='display-meal-" + id + "'>-</span></p>" +
+                    "<hr>" +
+                    "<p class='passenger-detail'>Additional Baggage: <span id='display-baggage-" + id + "'>-</span></p>" +
+                    "<p class='passenger-detail'>Priority Boarding: <span id='display-priority-" + id + "'>-</span></p>" +
+                    "<p class='passenger-detail'>Travel Insurance: <span id='display-insurance-" + id + "'>-</span></p>" +
+                    "<p class='passenger-detail'>Lounge Access: <span id='display-lounge-" + id + "'>-</span></p>";
+        }
+
+        return "<div class='col'>" +
+                "<div class='card h-100 p-3'>" +
+                    "<h5 class='card-title'>" + label + "</h5>" +
+                    "<button class='btn btn-add-details w-100' data-passenger='" + id + "'>Add this traveler's details</button>" +
+                    "<hr>" +
+                    "<p class='passenger-detail'>Name: <span id='display-name-" + id + "'>-</span></p>" +
+                    extras +
+                "</div>" +
+            "</div>";
+    }
+
+    renderPassengerCards();
+
+    function renderFlightDetails() {
+        var flight = JSON.parse(sessionStorage.getItem("selected_flight"));
+
+        if (!flight) {
+            return;
+        }
+
+        $("#summary-flight").text(flight.airline + " " + flight.flightNum);
+        $("#summary-route").text(flight.origin + " → " + flight.destination);
+        $("#summary-departure").text(flight.departure);
+        $("#summary-arrival").text(flight.arrival);
+        $("#summary-duration").text(flight.duration);
+        $("#summary-cabin").text(flight.cabinType.replace(/_/g, " ").replace(/\b\w/g, function(c) { return c.toUpperCase(); }));
+        $("#summary-passengers").text(passengerCounts.adults + passengerCounts.children + passengerCounts.infants);
+        $("#summary-base").text("₱" + basePrice.toLocaleString());
+        updateSummary();
+    }
+
+    renderFlightDetails();
 
     // hides all the other steps except the current one
     function goToStep(n) {
@@ -40,17 +151,15 @@ $(document).ready(function () {
         $("#passenger-list, #outside-buttons").show();
     }
 
-    // real-time sidebar update
-    function updateSummary() {
-        // get and store selected options
-        const selectedMeal = $(".meal-option.selected").data("meal");
-        const selectedSeat = $(".seat.selected").data("seat");
-        const baggage = parseInt($("#baggage-count").text());
-        const priority = $("#priority-toggle").is(":checked");
-        const insurance = $("#insurance-toggle").is(":checked");
-        const lounge = $("#lounge-toggle").is(":checked");
+    // live updates while filling form
+    function updateSummaryLive() {
+        var selectedMeal = $(".meal-option.selected").data("meal");
+        var selectedSeat = $(".seat.selected").data("seat");
+        var baggage = parseInt($("#baggage-count").text());
+        var priority = $("#priority-toggle").is(":checked");
+        var insurance = $("#insurance-toggle").is(":checked");
+        var lounge = $("#lounge-toggle").is(":checked");
 
-        // compute prices
         let totalMeal = 0;
         if (selectedMeal) {
             totalMeal = MEAL_PRICES[selectedMeal];
@@ -64,55 +173,81 @@ $(document).ready(function () {
         }
 
         let totalExtras = baggage * BAGGAGE_PRICE;
-        if (priority) {
-            totalExtras += PRIORITY_PRICE;
-        }
-        if (insurance) {
-            totalExtras += INSURANCE_PRICE;
-        }
-        if (lounge) {
-            totalExtras += LOUNGE_PRICE;
-        }
+        if (priority) { totalExtras += PRIORITY_PRICE; }
+        if (insurance) { totalExtras += INSURANCE_PRICE; }
+        if (lounge) { totalExtras += LOUNGE_PRICE; }
 
-        const subtotal = BASE_TOTAL + totalMeal + totalSeat + totalExtras;
-        const taxes = Math.round(subtotal * TAX_RATE);
+        var subtotal = basePrice + totals.mealCost + totals.seatCost + totals.extrasCost + totalMeal + totalSeat + totalExtras;
+        var taxes = Math.round(subtotal * TAX_RATE);
 
-        // display selections
+        var liveSeat = totals.seats.slice();
+        if (selectedSeat) { liveSeat.push(selectedSeat); }
+        var liveMeal = totals.meals.slice();
+        if (selectedMeal) { liveMeal.push(selectedMeal.charAt(0).toUpperCase() + selectedMeal.slice(1)); }
+
         if (selectedSeat) {
-            $("#summary-seat").text(selectedSeat);
+            $("#summary-seat").text(liveSeat.join(", "));
         } else {
-             $("#summary-seat").text("-");
+            $("#summary-seat").text(totals.seats.length ? totals.seats.join(", ") : "-");
         }
 
-        let mealDisplay = "-";
-        if (selectedMeal) {
-            mealDisplay = selectedMeal.charAt(0).toUpperCase() + selectedMeal.slice(1);
+        var liveMealCounts = {};
+        for (var i = 0; i < liveMeal.length; i++) {
+            liveMealCounts[liveMeal[i]] = (liveMealCounts[liveMeal[i]] || 0) + 1;
         }
-        $("#summary-meal").text(mealDisplay);
-
-        $("#summary-baggage").text(baggage);
-
-        if (priority) {
-            $("#summary-priority").text(1);
+        if (liveMeal.length) {
+            var liveMealDisplay = "";
+            var liveMealKeys = Object.keys(liveMealCounts);
+            for (var i = 0; i < liveMealKeys.length; i++) {
+                if (liveMealDisplay) { liveMealDisplay += ", "; }
+                liveMealDisplay += liveMealCounts[liveMealKeys[i]] + "x " + liveMealKeys[i];
+            }
+            $("#summary-meal").text(liveMealDisplay);
         } else {
-             $("#summary-priority").text(0);
+            $("#summary-meal").text("-");
         }
 
-        if (insurance) {
-            $("#summary-insurance").text(1);
+        $("#summary-baggage").text(totals.baggage + baggage);
+        $("#summary-priority").text(totals.priority + (priority ? 1 : 0));
+        $("#summary-insurance").text(totals.insurance + (insurance ? 1 : 0));
+        $("#summary-lounge").text(totals.lounge + (lounge ? 1 : 0));
+        $("#summary-meal-cost").text("₱" + (totals.mealCost + totalMeal).toLocaleString());
+        $("#summary-seat-cost").text("₱" + (totals.seatCost + totalSeat).toLocaleString());
+        $("#summary-extras").text("₱" + (totals.extrasCost + totalExtras).toLocaleString());
+        $("#summary-taxes").text("₱" + taxes.toLocaleString());
+        $("#summary-total").text("₱" + (subtotal + taxes).toLocaleString());
+    }
+
+    // cumulative update after done is clicked
+    function updateSummary() {
+        var subtotal = basePrice + totals.mealCost + totals.seatCost + totals.extrasCost;
+        var taxes = Math.round(subtotal * TAX_RATE);
+
+        $("#summary-seat").text(totals.seats.length ? totals.seats.join(", ") : "-");
+        
+        if (totals.meals.length) {
+            var mealCounts = {};
+            for (var i = 0; i < totals.meals.length; i++) {
+                mealCounts[totals.meals[i]] = (mealCounts[totals.meals[i]] || 0) + 1;
+            }
+            var mealDisplay = "";
+            var mealKeys = Object.keys(mealCounts);
+            for (var i = 0; i < mealKeys.length; i++) {
+                if (mealDisplay) { mealDisplay += ", "; }
+                mealDisplay += mealCounts[mealKeys[i]] + "x " + mealKeys[i];
+            }
+            $("#summary-meal").text(mealDisplay);
         } else {
-             $("#summary-insurance").text(0);
+            $("#summary-meal").text("-");
         }
 
-        if (lounge) {
-            $("#summary-lounge").text(1);
-        } else {
-             $("#summary-lounge").text(0);
-        }
-
-        $("#summary-meal-cost").text("₱" + totalMeal.toLocaleString());
-        $("#summary-seat-cost").text("₱" + totalSeat.toLocaleString());
-        $("#summary-extras").text("₱" + totalExtras.toLocaleString());
+        $("#summary-baggage").text(totals.baggage);
+        $("#summary-priority").text(totals.priority);
+        $("#summary-insurance").text(totals.insurance);
+        $("#summary-lounge").text(totals.lounge);
+        $("#summary-meal-cost").text("₱" + totals.mealCost.toLocaleString());
+        $("#summary-seat-cost").text("₱" + totals.seatCost.toLocaleString());
+        $("#summary-extras").text("₱" + totals.extrasCost.toLocaleString());
         $("#summary-taxes").text("₱" + taxes.toLocaleString());
         $("#summary-total").text("₱" + (subtotal + taxes).toLocaleString());
     }
@@ -122,13 +257,62 @@ $(document).ready(function () {
         currentPassenger = $(this).data("passenger");
         resetForm();
 
+        if (saved[currentPassenger]) {
+            var s = saved[currentPassenger];
+            $("#full-name").val(s.fullName);
+            $("#email").val(s.email);
+            $("#contact").val(s.contact);
+            $("#passport").val(s.passport);
+            $("#nationality").val(s.nationality);
+            $("#birthdate").val(s.birthdate);
+            $("#gender").val(s.gender);
+            $("#emergency-contact").val(s.emergencyContact);
+
+            if (s.meal) {
+                $("[data-meal='" + s.meal + "']").addClass("selected");
+            }
+
+            if (s.seat) {
+                $(".seat[data-seat='" + s.seat + "']").addClass("selected");
+                $("#selected-seat-display").text(s.seat);
+            }
+
+            $("#baggage-count").text(s.baggage);
+            $("#priority-toggle").prop("checked", s.priority);
+            $("#insurance-toggle").prop("checked", s.insurance);
+            $("#lounge-toggle").prop("checked", s.lounge);
+        }
+
+        if (saved[currentPassenger]) {
+            var old = saved[currentPassenger];
+
+            if (old.seat && old.seat !== "None") {
+                var seatIndex = totals.seats.indexOf(old.seat);
+                if (seatIndex !== -1) { totals.seats.splice(seatIndex, 1); }
+            }
+
+            if (old.meal) {
+                var oldMealDisplay = old.meal.charAt(0).toUpperCase() + old.meal.slice(1);
+                var mealIndex = totals.meals.indexOf(oldMealDisplay);
+                if (mealIndex !== -1) { totals.meals.splice(mealIndex, 1); }
+                totals.mealCost -= MEAL_PRICES[old.meal] || 0;
+            }
+
+            totals.baggage -= old.baggage;
+            if (old.priority) { totals.priority--; }
+            if (old.insurance) { totals.insurance--; }
+            if (old.lounge) { totals.lounge--; }
+            totals.extrasCost -= (old.baggage * BAGGAGE_PRICE) + (old.priority ? PRIORITY_PRICE : 0) + (old.insurance ? INSURANCE_PRICE : 0) + (old.lounge ? LOUNGE_PRICE : 0);
+            if ($(".seat[data-seat='" + old.seat + "']").hasClass("premium")) { totals.seatCost -= SEAT_UPGRADE; }
+        }
+
         $("#passenger-list, #outside-buttons").hide();
         $("#passenger-form").show();
 
         goToStep(1);
 
         // infants only need step 1 (lap seat and no extra services)
-        if (currentPassenger == "infant-1") {
+        if (currentPassenger.indexOf("infant") !== -1) {
             $(".progress-bar").css("width", "100%");
             $("#btn-next-1").text("Done");
         } else {
@@ -154,18 +338,23 @@ $(document).ready(function () {
             $("#err-email").hide(); 
         }
 
-        if (!$("#contact").val().trim()) {
-            $("#err-contact").show(); 
-            valid = false;
-        } else { 
-            $("#err-contact").hide(); 
-        }
+        if (currentPassenger.indexOf("infant") === -1) {
+            if (!$("#contact").val().trim()) {
+                $("#err-contact").show(); 
+                valid = false;
+            } else { 
+                $("#err-contact").hide(); 
+            }
 
-        if (!$("#passport").val().trim()) {
-            $("#err-passport").show(); 
-            valid = false;
-        } else { 
-            $("#err-passport").hide(); 
+            if (!$("#passport").val().trim()) {
+                $("#err-passport").show(); 
+                valid = false;
+            } else { 
+                $("#err-passport").hide(); 
+            }
+        } else {
+            $("#err-contact").hide();
+            $("#err-passport").hide();
         }
 
         if (!$("#nationality").val()) {
@@ -199,7 +388,27 @@ $(document).ready(function () {
 
         if (valid) {
             // infants skip to done
-            if (currentPassenger === "infant-1") {
+            if (currentPassenger.indexOf("infant") !== -1) {
+                saved["infant-1"] = {
+                    passengerType: "infant",
+                    fullName: $("#full-name").val().trim(),
+                    email: $("#email").val().trim(),
+                    contact: null,
+                    passport: null,
+                    nationality: $("#nationality").val(),
+                    birthdate: $("#birthdate").val(),
+                    gender: $("#gender").val(),
+                    emergencyContact: $("#emergency-contact").val().trim(),
+                    meal: null,
+                    seat: null,
+                    baggage: 0,
+                    priority: false,
+                    insurance: false,
+                    lounge: false
+                };
+
+                $("#display-name-" + currentPassenger).text($("#full-name").val().trim());
+                
                 backToList();
             } else {
                 goToStep(2);
@@ -211,7 +420,7 @@ $(document).ready(function () {
     $(".meal-option").click(function() {
         $(".meal-option").removeClass("selected"); // one card can only be selected at a time
         $(this).addClass("selected");
-        updateSummary();
+        updateSummaryLive()
     });
 
     $("#btn-next-2").click(function() {
@@ -219,7 +428,7 @@ $(document).ready(function () {
             $("#err-meal").show(); 
         } else {
             $("#err-meal").hide();
-            updateSummary();
+            updateSummaryLive()
             goToStep(3);
         }
     });
@@ -230,7 +439,7 @@ $(document).ready(function () {
             $(".seat").removeClass("selected");
             $(this).addClass("selected");
             $("#selected-seat-display").text($(this).data("seat"));
-            updateSummary();
+            updateSummaryLive()
         }
     });
 
@@ -239,7 +448,7 @@ $(document).ready(function () {
             $("#err-seat").show();
         } else {
             $("#err-seat").hide();
-            updateSummary();
+            updateSummaryLive()
             goToStep(4);
         }
     });
@@ -250,7 +459,7 @@ $(document).ready(function () {
 
         if (n < 3) { // only increment if less than 3
             $("#baggage-count").text(n + 1); 
-            updateSummary(); 
+            updateSummaryLive()
         }
     });
 
@@ -259,17 +468,49 @@ $(document).ready(function () {
 
         if (n > 0) { // only decrement if more than 0
             $("#baggage-count").text(n - 1); 
-            updateSummary(); 
+            updateSummaryLive()
         }
     });
 
     // extra service toggles
     $("#priority-toggle, #insurance-toggle, #lounge-toggle").change(function() { 
-        updateSummary(); 
+        updateSummaryLive()
     });
 
     // back buttons
     $("#btn-back-1").click(function() {
+        if (saved[currentPassenger]) {
+            var old = saved[currentPassenger];
+
+            if (old.seat && old.seat !== "None") { 
+                totals.seats.push(old.seat); 
+            }
+
+            if (old.meal) {
+                totals.meals.push(old.meal.charAt(0).toUpperCase() + old.meal.slice(1));
+                totals.mealCost += MEAL_PRICES[old.meal] || 0;
+            }
+
+            totals.baggage += old.baggage;
+
+            if (old.priority) { 
+                totals.priority++; 
+            }
+
+            if (old.insurance) { 
+                totals.insurance++; 
+            }
+
+            if (old.lounge) {
+                totals.lounge++; 
+            }
+
+            totals.extrasCost += (old.baggage * BAGGAGE_PRICE) + (old.priority ? PRIORITY_PRICE : 0) + (old.insurance ? INSURANCE_PRICE : 0) + (old.lounge ? LOUNGE_PRICE : 0);
+            
+            if ($(".seat[data-seat='" + old.seat + "']").hasClass("premium")) { 
+                totals.seatCost += SEAT_UPGRADE; 
+            }
+        }
         backToList();
     });
 
@@ -278,39 +519,67 @@ $(document).ready(function () {
     });
 
     $("#btn-back-3").click(function() {
-        updateSummary(); 
+        updateSummaryLive()
         goToStep(2);
     });
 
     $("#btn-back-4").click(function() {
-        updateSummary(); 
+        updateSummaryLive()
         goToStep(3);
     });
 
     // done button displays text in passenger card
     $("#btn-done").click(function() {
-        $("#display-name-" + currentPassenger).text($("#full-name").val().trim());
-        $("#display-seat-" + currentPassenger).text($("#selected-seat-display").text());
-        $("#display-meal-" + currentPassenger).text($("#summary-meal").text());
-        $("#display-baggage-" + currentPassenger).text($("#baggage-count").text());
+        var meal = $(".meal-option.selected").data("meal");
+        var seat = $("#selected-seat-display").text();
+        var baggage = parseInt($("#baggage-count").text());
+        var priority = $("#priority-toggle").is(":checked");
+        var insurance = $("#insurance-toggle").is(":checked");
+        var lounge = $("#lounge-toggle").is(":checked");
+        var mealDisplay = meal ? meal.charAt(0).toUpperCase() + meal.slice(1) : "-";
 
-        if ($("#priority-toggle").is(":checked")) {
-            $("#display-priority-" + currentPassenger).text("Yes");
-        } else {
-            $("#display-priority-" + currentPassenger).text("No");
+        if (seat && seat !== "None") { totals.seats.push(seat); }
+        if (meal) { 
+            totals.meals.push(meal.charAt(0).toUpperCase() + meal.slice(1));
+            totals.mealCost += MEAL_PRICES[meal] || 0;
         }
+        totals.baggage += baggage;
+        if ($(".seat.selected").hasClass("premium")) { totals.seatCost += SEAT_UPGRADE; }
+        if (priority) { totals.priority++; }
+        if (insurance) { totals.insurance++; }
+        if (lounge) { totals.lounge++; }
+        totals.extrasCost += (baggage * BAGGAGE_PRICE) + (priority ? PRIORITY_PRICE : 0) + (insurance ? INSURANCE_PRICE : 0) + (lounge ? LOUNGE_PRICE : 0);
 
-        if ($("#insurance-toggle").is(":checked")) {
-            $("#display-insurance-" + currentPassenger).text("Yes");
-        } else {
-            $("#display-insurance-" + currentPassenger).text("No");
-        }
+        saved[currentPassenger] = {
+            passengerType: currentPassenger.split("-")[0],
+            fullName: $("#full-name").val().trim(),
+            email: $("#email").val().trim(),
+            contact: $("#contact").val().trim(),
+            passport: $("#passport").val().trim(),
+            nationality: $("#nationality").val(),
+            birthdate: $("#birthdate").val(),
+            gender: $("#gender").val(),
+            emergencyContact: $("#emergency-contact").val().trim(),
+            meal: meal,
+            seat: seat,
+            baggage: baggage,
+            priority: priority,
+            insurance: insurance,
+            lounge: lounge
+        };
 
-        if ($("#lounge-toggle").is(":checked")) {
-            $("#display-lounge-" + currentPassenger).text("Yes");
-        } else {
-            $("#display-lounge-" + currentPassenger).text("No");
-        }
+        $("#display-name-" + currentPassenger).text(saved[currentPassenger].fullName);
+        $("#display-seat-" + currentPassenger).text(seat !== "None" ? seat : "-");
+        $("#display-baggage-" + currentPassenger).text(baggage);
+
+        if (priority) { $("#display-priority-" + currentPassenger).text("Yes"); }
+        else { $("#display-priority-" + currentPassenger).text("No"); }
+        if (insurance) { $("#display-insurance-" + currentPassenger).text("Yes"); }
+        else { $("#display-insurance-" + currentPassenger).text("No"); }
+        if (lounge) { $("#display-lounge-" + currentPassenger).text("Yes"); }
+        else { $("#display-lounge-" + currentPassenger).text("No"); }
+         
+        $("#display-meal-" + currentPassenger).text(mealDisplay);
 
         backToList();
     });
@@ -322,7 +591,47 @@ $(document).ready(function () {
 
     // confirm button from passenger list
     $("#btn-next-5").click(function() { 
-        window.location.href = "/reservations";
+        var allFilled = true;
+        var keys = Object.keys(saved);
+
+        for (var i = 0; i < keys.length; i++) {
+            if (saved[keys[i]] === null) {
+                allFilled = false;
+            }
+        }
+
+        if (!allFilled) {
+            alert("Please fill in details for all passengers before confirming.");
+            return;
+        }
+
+        $.ajax({
+            url: "/booking",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                flightId: flightId,
+                cabinType: selectedFlight ? selectedFlight.cabinType : "",
+                totalPrice: (function() { 
+                    var sub = basePrice + totals.mealCost + totals.seatCost + totals.extrasCost; 
+                    return sub + Math.round(sub * TAX_RATE); 
+                })(),
+                passengers: Object.values(saved)
+            }),
+            success: function(response) {
+                window.location.href = "/reservations";
+            },
+            error: function(err) {
+                alert("Something went wrong. Please try again.");
+                console.error(err);
+            }
+        });
+    });
+
+    // expand/collapse sidebar sections
+    $(".summary-toggle").click(function() {
+        const target = $(this).data("target");
+        $("#" + target).slideToggle(150);
     });
 
     // bootstrap tooltips
@@ -331,8 +640,3 @@ $(document).ready(function () {
     });
 });
 
-// expand/collapse sidebar sections
-$(".summary-toggle").click(function() {
-    const target = $(this).data("target");
-    $("#" + target).slideToggle(150);
-});

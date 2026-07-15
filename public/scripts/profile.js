@@ -120,7 +120,7 @@ function loadInformation(){
     fullNameDisplay.text(`${userInformation.Fname} ${userInformation.Lname}`)
 }
 
-function updateUserInformation(){
+async function updateUserInformation(){
      var updatedInformation = {
             Fname: FnameField.val().trim(),
             Lname: LnameField.val().trim(),
@@ -131,23 +131,28 @@ function updateUserInformation(){
             nationality: nationalityField.val().trim(),
             email: emailField.val().trim()
         };
-    $.ajax({
-        url:"/profile/update",
-        method:"PUT",
-        contentType: "application/json",
-        data: JSON.stringify(updatedInformation),
-        success: function(response){
-            fullNameDisplay.text(`${userInformation.Fname} ${userInformation.Lname}`);
 
-            userInformation = {...updatedInformation};
-            informationSnapshot = {...updatedInformation}
-            loadInformation();
-        },
-        error: function(xhr){
-            console.error(xhr);
+    try{
+
+        let response = await fetch(application/json, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify(updatedInformation) 
+        });
+
+        if (!response.ok) {
+            throw new Error(`error status: ${response.status}`);
         }
-        
-    })
+
+        loadInformation();
+    }catch (error) {
+        console.error("there was an error getting your information: ", error);
+    }
+
+
+    
 }
 
 
@@ -221,68 +226,76 @@ passengerForm.on("submit", (event)=>{
 
 })
 
-function loadSavedPassengers(){
+async function loadSavedPassengers() {
     passengerList.empty();
 
-
-    $.ajax({
-        url: "/saved-passengers",
-        method:"GET",
-        success: function(savedPassengersArray){
-            if (!savedPassengersArray || savedPassengersArray.length === 0){
-                passengerList.append('<p class="text-secondary text-center py-3">you have no saved passengers.</p>');
-                return;
-            }
-
-            var list = "";
-
-            savedPassengersArray.forEach(passenger =>{
-                list += `
-                <div class="list-group-item d-flex flex-column flex-md-row justify-content-md-between align-items-start align-items-md-center px-0 py-3 border-bottom passenger-item" id = "passenger-${passenger._id}">
-                    
-                    <div class="mb-2 mb-md-0">
-                        <h6 class="passenger-name fw-bold text-dark mb-0">${passenger.Lname}, ${passenger.Fname} ${passenger.MI}.</h6>
-                        <small class="passenger-info text-secondary">${passenger.ageClass} | ${passenger.sex} | ${passenger.DOB} | ${passenger.emailAddress} | +63 ${passenger.mobileNum}</small>
-                    </div>
-                    <div class="modify-buttons d-flex gap-3 align-items-center">
-                        <button type="button" class="btn btn-link link-info text-decoration-none btn-sm fw-bold p-0 edit-passenger-btn" data-id="${passenger._id}">Edit</button>
-                        <button type="button" class="btn btn-link link-danger text-decoration-none btn-sm fw-bold p-0 remove-passenger-btn" data-id="${passenger._id}" data-bs-toggle="modal" data-bs-target="#confirm-remove">Remove</button>
-                    </div>
-                </div>
-                `
-            });
-            passengerList.append(list);
-        },
-        error: function(xhr){
-            console.error("Error encounted while loading passengers", xhr);
-            passengerList.append('<p class="text-danger text-center py-3">Error loading saved passengers. Please refresh.</p>');
+    try {
+        
+        let response = await fetch("/saved-passengers");
+        
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error status: ${response.status}`);
         }
-    })
 
+        
+        let savedPassengersArray = await response.json();
+
+        
+        if (!savedPassengersArray || savedPassengersArray.length === 0) {
+            passengerList.append('<p class="text-secondary text-center py-3">you have no saved passengers.</p>');
+            return;
+        }
+
+        let list = "";
+
+        
+        savedPassengersArray.forEach(passenger => {
+            list += `
+            <div class="list-group-item d-flex flex-column flex-md-row justify-content-md-between align-items-start align-items-md-center px-0 py-3 border-bottom passenger-item" id="passenger-${passenger._id}">
+                <div class="mb-2 mb-md-0">
+                    <h6 class="passenger-name fw-bold text-dark mb-0">${passenger.Lname}, ${passenger.Fname} ${passenger.MI}.</h6>
+                    <small class="passenger-info text-secondary">${passenger.ageClass} | ${passenger.sex} | ${passenger.DOB} | ${passenger.emailAddress} | +63 ${passenger.mobileNum}</small>
+                </div>
+                <div class="modify-buttons d-flex gap-3 align-items-center">
+                    <button type="button" class="btn btn-link link-info text-decoration-none btn-sm fw-bold p-0 edit-passenger-btn" data-id="${passenger._id}">Edit</button>
+                    <button type="button" class="btn btn-link link-danger text-decoration-none btn-sm fw-bold p-0 remove-passenger-btn" data-id="${passenger._id}" data-bs-toggle="modal" data-bs-target="#confirm-remove">Remove</button>
+                </div>
+            </div>
+            `;
+        });
+
+        passengerList.append(list);
+
+    } catch (error) {
+        
+        console.error("Error encountered while loading passengers", error);
+        passengerList.append('<p class="text-danger text-center py-3">Error loading saved passengers. Please refresh.</p>');
+    }
 }
 
-function submitPassengerInfo(){
+async function submitPassengerInfo() {
     
-    var editId =  $("#edit-passenger-id").val();
+    const editId = $("#edit-passenger-id").val();
 
-    var Fname = $("#passenger-Fname").val();
-    var Lname = $("#passenger-Lname").val();
-    var MI = $("#passenger-MI").val();
-    var ageClass = $("#passenger-age").val();
-    var sex = $("#passenger-sex").val();
-    var DOB = $("#passenger-DOB").val();
-    var nationality = $("#passenger-nationality").val();
-    var mobileNum = $("#passenger-mobile-number").val().toString();
-    var email = $("#passenger-email").val();
+    const Fname = $("#passenger-Fname").val();
+    const Lname = $("#passenger-Lname").val();
+    const MI = $("#passenger-MI").val();
+    const ageClass = $("#passenger-age").val();
+    const sex = $("#passenger-sex").val();
+    const DOB = $("#passenger-DOB").val();
+    const nationality = $("#passenger-nationality").val();
+    const mobileNum = $("#passenger-mobile-number").val().toString();
+    const email = $("#passenger-email").val();
 
-    //remove leading 0s if ever user puts a 0
-    if (mobileNum.startsWith("0")){
+    // remove leading 0s if ever user puts a 0
+    if (mobileNum.startsWith("0")) {
         mobileNum = mobileNum.slice(1);
     }
 
-    console.log("edit id:",editId);
+    console.log("edit id:", editId);
 
-    var passengerData = {
+    const passengerData = {
         Fname: Fname,
         Lname: Lname,
         MI: MI,
@@ -294,78 +307,88 @@ function submitPassengerInfo(){
         emailAddress: email
     };
 
-    //if form is in edit mode
-    if (editId){
-        $.ajax({
-            url: `/saved-passengers/update/${editId}`,
-            method:"PUT",
-            data: passengerData,
-            success: function(response){
-                loadSavedPassengers()
+    // determine url and method dynamically based on edit state
+    var url = editId ? `/saved-passengers/update/${editId}` : `/saved-passengers/add`;
+    var method = editId ? "PUT" : "POST";
+
+    try {
+        let response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json' 
             },
-            error:function(xhr){
-                console.log("there was an error updating passenger details",xhr);
-            }
-        })
+            body: JSON.stringify(passengerData) 
+        });
+
        
+        if (!response.ok) {
+            throw new Error(`error status: ${response.status}`);
+        }
+
+        
+        
+        
+        if (editId) {
+            console.log("successfully updated passenger");
+        } else {
+            console.log("successfully added passenger");
+        }
+
+        // Reload the UI list
+        loadSavedPassengers();
+
+    } catch (error) {
+        console.error("there was an error processing the passengers", error);
     }
-    //form is in add passenger mode
-    else{
-        $.ajax({
-            url: `/saved-passengers/add`,
-            method:"POST",
-            data: passengerData,
-            success: function(response){
-                console.log("successfully added passenger");
-                loadSavedPassengers();
-            },
-            error:function(xhr){
-                console.log("there was an error adding passenger",xhr);
-            }
-        })
-}
 }
 
-function editPassengerInfo(ID) {
-    // Fetch the target passenger profile from the server
-    $.ajax({
-        url: `/saved-passengers/edit/${ID}`,
-        method: "GET",
-        success: function(passenger) {
-            if (!passenger) {
-                console.log("Passenger details could not be found.");
-                return;
-            }
+async function editPassengerInfo(ID) {
+    try {
+        // fetch the target passenger profile from the server
+        let response = await fetch(`/saved-passengers/edit/${ID}`);
 
-            passengerFormFields.each(function() {
-                let field = $(this).data("field");
-
-
-                if (passenger[field] !== undefined) {
-                    $(this).val(passenger[field]);
-                }
-            });
-        },
-        error: function(xhr) {
-            console.log("Error communicating with the database.");
-            console.error(xhr);
+        if (!response.ok) {
+            throw new Error(`error status: ${response.status}`);
         }
-    });
+
+        let passenger = await response.json();
+
+        if (!passenger) {
+            console.log("Passenger details could not be found.");
+            return;
+        }
+
+        passengerFormFields.each(function() {
+            let field = $(this).data("field");
+
+            if (passenger[field] !== undefined) {
+                $(this).val(passenger[field]);
+            }
+        });
+
+    } catch (error) {
+        console.log("Error communicating with the database.");
+        console.error(error);
+    }
 }
 
-function removePassenger(ID) {
-    $.ajax({
-        url: `/saved-passengers/delete/${ID}`,
-        method: "DELETE",
-        success: function(response) {
-            console.log("Passenger removed successfully.");
-            loadSavedPassengers();
-        },
-        error: function(xhr) {
-            console.log("Failed to remove passenger from database.");
-            console.error(xhr);
+async function removePassenger(ID) {
+    try {
+        let response = await fetch(`/saved-passengers/delete/${ID}`, {
+            method: "DELETE"
+        });
+
+        if (!response.ok) {
+            throw new Error(`error status: ${response.status}`);
         }
-    });
+        
+        console.log("Passenger removed successfully.");
+        loadSavedPassengers();
+
+    } catch (error) {
+        console.log("failed to remove passenger from database.");
+        console.error(error);
+    }
 }
 
 //=====PAYMENT METHOD SECTION===============
@@ -412,61 +435,69 @@ cardContainer.on("click", ".remove-card-btn", function(){
     bootstrap.Modal.getOrCreateInstance(deleteConfirmationModal[0]).show();
 })
 
-function loadCards() {
+async function loadCards() {
     $("#payment-methods-grid .dynamic-card-col").remove(); 
-    console.log("🔍 TRACER: loadCards() was successfully triggered!")
     
-    $.ajax({
-        url: "/paymentMethods",
-        method: "GET",
-        success: function(savedPaymentMethods) {
-            checkAddCardButtonVisibility(savedPaymentMethods);
-            
-            //if no cards is loaded do nothing
-            if (!savedPaymentMethods || savedPaymentMethods.length === 0){
-                return;
+    
+    try {
+        
+        let response = await fetch("/paymentMethods");
+
+        
+        if (!response.ok) {
+            throw new Error(`error status: ${response.status}`);
+        }
+
+       
+        let savedPaymentMethods = await response.json();
+
+        
+        checkAddCardButtonVisibility(savedPaymentMethods);
+        
+        // if no cards are loaded, stop executing here
+        if (!savedPaymentMethods || savedPaymentMethods.length === 0) {
+            return;
+        }
+        
+        let list = "";
+
+        
+        savedPaymentMethods.forEach(card => {
+            let lastfourDigits = card.cardNumber.slice(-4);
+            let bg = "secondary"; 
+
+            if (card.network === "Visa") {
+                bg = "primary";
+            } else if (card.network === "Mastercard") {
+                bg = "dark";
             }
             
-            var list = "";
-
-            savedPaymentMethods.forEach(card => {
-                let lastfourDigits = card.cardNumber.slice(-4);
-                let bg = "secondary"; 
-
-                if (card.network === "Visa") {
-                    bg = "primary";
-                } else if (card.network === "Mastercard") {
-                    bg = "dark";
-                }
-                
-                list += `
-                <div class="col-md-4 col-sm-6 dynamic-card-col">
-                    <div class="card p-3 rounded-3 h-100 bg-${bg} text-white">
-                        <div class="card-body d-flex flex-column justify-content-between">
-                            <h5 class="card-title">•••• •••• •••• ${lastfourDigits} ${card.network}</h5>
-                            <div class="d-flex justify-content-between align-items-center mt-4">
-                                <small>${card.cardHolder}</small>
-                                <small>${card.expDate}</small>
-                            </div>
+            list += `
+            <div class="col-md-4 col-sm-6 dynamic-card-col">
+                <div class="card p-3 rounded-3 h-100 bg-${bg} text-white">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5 class="card-title">•••• •••• •••• ${lastfourDigits} ${card.network}</h5>
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <small>${card.cardHolder}</small>
+                            <small>${card.expDate}</small>
                         </div>
-                       
-                        <button class="btn btn-sm btn-danger remove-card-btn w-50 mt-2" data-id="${card._id}">Remove</button>
                     </div>
-                </div>`;
-            });
+                   
+                    <button class="btn btn-sm btn-danger remove-card-btn w-50 mt-2" data-id="${card._id}">Remove</button>
+                </div>
+            </div>`;
+        });
 
-            console.log("Cards loaded!");
-            cardContainer.prepend(list);
-        },
-        error: function(xhr) {
-            
-            console.error("Error encountered while loading payment methods:", xhr);
-            cardContainer.append('<p class="text-danger text-center py-3">Error loading saved credit cards. Please refresh.</p>');
-        }
-    });
+        console.log("Cards loaded!");
+        cardContainer.prepend(list);
+
+    } catch (error) {
+        console.error("error encountered while loading payment methods:", error);
+        cardContainer.append('<p class="text-danger text-center py-3">Error loading saved credit cards. Please refresh.</p>');
+    }
 }
 
-function addCard(cardHolder, cardNumber, expDate, cvv){
+async function addCard(cardHolder, cardNumber, expDate, cvv){
 
     var storedCardNumber = cardNumber.toString();
     var network = "";
@@ -487,38 +518,49 @@ function addCard(cardHolder, cardNumber, expDate, cvv){
     }
 
     
-    $.ajax({
-        url:"/add-payment",
-        method:"POST",
-        data:newCard,
-        success: function(response){
-            console.log("Payment method added!");
-            loadCards();
-        },
-        error:function(xhr){
-            console.log("Error adding payment information ",xhr);
+    try{
+        let response = await fetch("/add-payment",{
+            method: "POST",
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify(newCard)
+        });
+
+        if (!response.ok) {
+            throw new Error(`error status: ${response.status}`);
         }
-    })
+
+        loadCards();
+    }catch(error){
+        console.error("there was an error adding payment method")
+    }
 }
 
-function removePaymentMethod(ID){
-    if(!ID){
-        console.error("Cannot delete card, card doesn't  exist");
+async function removePaymentMethod(ID) {
+    if (!ID) {
+        console.error("Cannot delete card, card doesn't exist");
         return;
     }
 
+    try {
+        let response = await fetch(`/delete-payment/${ID}`, {
+            method: "DELETE"
+        });
 
-    $.ajax({
-        url: `/delete-payment/${ID}`,
-        method:"DELETE",
-        success:function(respone){
-            loadCards(); //reload
-        },
-        error: function(xhr){
-            console.error("Failed to delete card from server: ",xhr);
+        if (!response.ok) {
+            throw new Error(`error status: ${response.status}`);
         }
-    })
-}   
+
+        
+        const data = await response.json();
+        console.log("Card deleted successfully from server:", data);
+
+        // Reload the UI
+        loadCards();
+    } catch (error) {
+        console.log("failed to delete card from server");
+        console.error(error);
+    }
+} 5
 
 
 function checkAddCardButtonVisibility(cards) {
@@ -544,54 +586,60 @@ toTravelHistory.on("click", () =>{
     loadTravelHistory();
 })
 
-function loadTravelHistory(){
+async function loadTravelHistory(){
     accordionContainer.empty();
-    
-    $.ajax({
-        url:"/travel-history",
-        method:"GET",
-        success: function(travelHistory){
-            
-            if (!travelHistory || travelHistory.length === 0) {
-                accordionContainer.append('<p class="text-muted text-center py-4">No historical travel records found.</p>');
-                return;
-            }  
 
-            var list = "";
-            travelHistory.forEach(history =>{
-                var date = convertDateToWords(history.date)
-            
+    try{
 
-                list += `
-                <div class="accordion-item border-bottom">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed fw-bold text-dark px-0" data-bs-toggle="collapse" data-bs-target="#collapse-${history.bookingRef}" aria-expanded="false">
-                        ${history.origin} to ${history.destination} (${date}) 
-                    </button>
-                </h2>
-                <div id="collapse-${history.bookingRef}" class="accordion-collapse collapse" data-bs-parent="#travelHistory">
-                    <div class="accordion-body px-0 text-secondary">
-                        <div class="row g-2 mb-2 small">
-                            <div class="col-6 col-sm-4">Flight ID: ${history.flightID}</div>
-                            <div class="col-6 col-sm-4">Cabin Seat: ${history.seat} (${history.cabinType})</div>
-                            <div class="col-12 col-sm-4">Booking Reference: ${history.bookingRef}</div>
-                        </div>
-                        <div class="bg-light p-2 rounded small text-muted">
-                            Ticket Invoice Total: PHP ${history.price.toLocaleString()}
-                        </div>
+        let response = await fetch("/travel-history");
+        
+        if (!response.ok) {
+            throw new Error(`error status: ${response.status}`);
+        }
+
+        let list = "";
+
+        let travelHistory = await response.json();
+
+        if (!travelHistory || travelHistory.length === 0) {
+            accordionContainer.append('<p class="text-muted text-center py-4">No historical travel records found.</p>');
+            return;
+        } 
+
+        travelHistory.forEach(history =>{
+            var date = convertDateToWords(history.date)
+        
+
+            list += `
+            <div class="accordion-item border-bottom">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-bold text-dark px-0" data-bs-toggle="collapse" data-bs-target="#collapse-${history.bookingRef}" aria-expanded="false">
+                    ${history.origin} to ${history.destination} (${date}) 
+                </button>
+            </h2>
+            <div id="collapse-${history.bookingRef}" class="accordion-collapse collapse" data-bs-parent="#travelHistory">
+                <div class="accordion-body px-0 text-secondary">
+                    <div class="row g-2 mb-2 small">
+                        <div class="col-6 col-sm-4">Flight ID: ${history.flightID}</div>
+                        <div class="col-6 col-sm-4">Cabin Seat: ${history.seat} (${history.cabinType})</div>
+                        <div class="col-12 col-sm-4">Booking Reference: ${history.bookingRef}</div>
+                    </div>
+                    <div class="bg-light p-2 rounded small text-muted">
+                        Ticket Invoice Total: PHP ${history.price.toLocaleString()}
                     </div>
                 </div>
             </div>
-            `;
-        });
+        </div>
+        `;
+    });
 
-            accordionContainer.append(list);
-        },
-        error: function(xhr){
-            console.error("there was an error getting your travel history");
+        accordionContainer.append(list);
+
+
+    }catch(error){
+        console.error("there was an error getting your travel history");
             accordionContainer.append('<p class="text-danger text-center py-3">Error loading your travel history. Please refresh.</p>');
-        }
-    })
+    }
 
 }
 

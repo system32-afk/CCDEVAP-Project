@@ -12,12 +12,16 @@ const app = express('express');
 const bcrypt  = require('bcryptjs')
 const userModel = require('./models/user_model.js');
 const flightModel = require('./models/flight_model.js');
+const airlineModel = require('./models/airline_model.js');
+const cityModel = require('./models/city_model.js');
 const reservationModel = require('./models/reservation_model.js')
 const savedPassengerModel = require('./models/savedPassenger_Model.js');
 const travelHistoryModel = require('./models/TravelHistory_model.js');
+const bookingModel = require('./models/booking_model.js');
 
 //DATABASE CONNECTION
 const {connectToMongoDB} = require('./conn.js'); 
+const { ReturnDocument } = require('mongodb');
 
 connectToMongoDB((err) =>{
     if (err){
@@ -57,7 +61,17 @@ app.engine("hbs", expresshbs.engine({
     extname: 'hbs',
     defaultLayout: 'main',
     layoutsDir: __dirname + "/views/layouts",
-    partialsDir: __dirname + "/views/partials"
+    partialsDir: __dirname + "/views/partials",
+    helpers: {
+        eq: function(a, b){
+            return a === b;
+        },
+        formatDate: function(date){
+            if (!date) return '';
+            const d = new Date(date);
+            return d.toISOString().split('T')[0]; // Returns YYYY-MM-DD
+        }
+    }
 }));
 
 app.set("view engine", "hbs");
@@ -76,6 +90,8 @@ app.get('/login', function(req,res){
 app.get('/register', function(req,res){
     res.render("pages/register",{
         layout:'auth',
+         pageScripts: `
+            <script src="../scripts/DOB_formater_script.js" defer></script>
         pageScripts: `
             <script src="/scripts/DOB_formater_script.js" defer></script>
             
@@ -89,9 +105,9 @@ app.get('/home', isAuthenticated, async function(req, res) {
         res.render("pages/index", {
         title: "Online Airline Ticketing System",
         pageScripts: `
-            <script src="/scripts/sessionStorage.js" defer></script>
-            <script src = "/scripts/index_searchFlight.js" defer></script>
-            <script src="/scripts/utilities/search_dropdown_script.js" defer></script>
+            <script src="../scripts/sessionStorage.js" defer></script>
+            <script src="../scripts/index_searchFlight.js" defer></script>
+            <script src="../scripts/utilities/search_dropdown_script.js" defer></script>
         `
     });
     }catch(err){
@@ -104,31 +120,97 @@ app.get('/admin-dashboard', isAuthenticated,function(req,res){
     res.render('pages/admin-dashboard',{
         title: "Admin Dashboard",
         pageScripts: `
-            <script src="/scripts/reservations.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/reservations.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
         `
     });
 });
 
 app.get('/admin-flights', isAuthenticated, async function(req,res){
+
+    const currentCabin = req.query.cabin || 'economy';
+      let sortField = {};
+        switch(currentCabin) {
+            case 'economy':
+                sortField = { 'cabin.economy.price': 1 };
+                break;
+            case 'premium_economy':
+                sortField = { 'cabin.premium_economy.price': 1 };
+                break;
+            case 'business_class':
+                sortField = { 'cabin.business_class.price': 1 };
+                break;
+            case 'first_class':
+                sortField = { 'cabin.first_class.price': 1 };
+                break;
+            default:
+                sortField = { 'cabin.economy.price': 1 };
+                break;
+        }
     //read flights that are only active and sort flightnumber ascending    
     const flights = await flightModel.find({ isActive: true}).sort({flightNumber: 1}).lean();
+    const cities = await cityModel.find({}).sort({ cityName: 1}).lean();
+    const airlines = await airlineModel.find({}).sort({ airlineName :1}).lean();
+
     // lean for to return JS objects instead of mongoose documents
 
-    // const updateFlight = await flightModel.updateOne();
-    // const deleteFlight = await flightModel.findOneAndDelete('flightNumber');
+
 
     res.render('pages/admin-flights',{
         title: "Admin Flights",
         flights: flights,
+        airlines,
+        cities,
+        currentCabin:currentCabin,
         pageScripts: `    
-            <script src="/scripts/reservations.js" defer></script>
-            <script src="/scripts/admin.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/reservations.js" defer></script>
+            <script src="../scripts/admin.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
     `
     });
     
 });
+
+app.get('/api/flights/:flightNumber', isAuthenticated, async function(req,res){
+
+    const flight = await flightModel.findOne({
+        flightNumber: Number(req.params.flightNumber)
+    });
+
+    if(!flight){
+        return res.status(404).json({
+            message: "Flight not found"
+        });
+    }
+
+    
+    res.json(flight);
+});
+
+// gets airlines
+app.get('/api/airlines', isAuthenticated, async function(req,res) {
+    try{
+        const airlines = await airlineModel.find({}).sort({ airlineName :1}).lean();
+
+    }catch(error){
+            console.error("Error fetching airlines", error);
+            return res.status(500).json({ message: "Server error fetching airlines"})
+        }
+    res.json(airlines);
+});
+
+// gets cities
+app.get('/api/cities', isAuthenticated, async function(req,res) {
+    try{
+        const cities = await cityModel.find({}).sort({ cityName: 1}).lean();
+
+    }catch(error){
+            console.error("Error fetching cities", error);
+            return res.status(500).json({ message: "Server error fetching cities"})
+        }
+    res.json(cities);
+});
+
 
 
 app.get('/admin-reservations', isAuthenticated,function(req,res){
@@ -148,23 +230,20 @@ app.get('/admin-users',isAuthenticated ,function(req,res){
     res.render('pages/admin-users',{
         title: "Admin Users",
         pageScripts: `
-            <script src="/scripts/reservations.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/reservations.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
     `
     });
 });
 
-app.get('/create-flight', isAuthenticated, function(req,res){
-    res.render('pages/create-flight',{
-        title: "Create Flight"
-    });
-});
 
-app.get('/booking', isAuthenticated,function(req,res){
-    res.render('pages/booking',{
+app.get('/booking', isAuthenticated, function(req, res) {
+    res.render('pages/booking', {
         title: "Bookings",
+        flightId: req.query.flightId,
         pageScripts: `
-            <script src="/scripts/booking.js"></script>    
+            <script src="../scripts/sessionStorage.js"></script>
+            <script src="../scripts/booking.js"></script>
     `
     });
 });
@@ -178,14 +257,14 @@ app.get('/profile', isAuthenticated , async function(req,res){
         savedPassenger:savedPassenger,
         title: "Profile",
         pageScripts: `
-            <script src="/scripts/utilities/saved_passengers.js" defer></script>
-            <script src="/scripts/utilities/user_travel_history.js" defer></script>
-            <script src="/scripts/profile.js" defer></script>
-            <script src="/scripts/utilities/payment_methods.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
-            <script src="/scripts/helper_algorithms.js" defer></script>
-            <script src="/scripts/utilities/user_info.js" defer></script>
-            <script src="/scripts/DOB_formater_script.js" defer></script>
+            <script src="../scripts/utilities/saved_passengers.js" defer></script>
+            <script src="../scripts/utilities/user_travel_history.js" defer></script>
+            <script src="../scripts/profile.js" defer></script>
+            <script src="../scripts/utilities/payment_methods.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/helper_algorithms.js" defer></script>
+            <script src="../scripts/utilities/user_info.js" defer></script>
+            <script src="../scripts/DOB_formater_script.js" defer></script>
     `
     });
 });
@@ -261,19 +340,20 @@ app.get('/reservations', function(req,res){
 
 app.get('/search', isAuthenticated, function(req,res){
     res.render('pages/search',{
-        title: "Search", 
+        title: "Search",
+        layout:"main", 
         pageScripts: `           
-            <script src="/scripts/sessionStorage.js" defer></script>
-            <script src="/scripts/search_script.js" defer></script>
-            <script src="/scripts/PassengerTypes_script.js" defer></script>
-            <script src="/scripts/dropdowns_Script.js" defer></script>
-            <script src="/scripts/advanceSearch_scripts.js" defer></script>
-            <script src="/scripts/getFlights_script.js" defer></script>
-            <script src="/scripts/utilities/search_dropdown_script.js" defer></script>
-            <script src="/scripts/utilities/flights_database_script.js" defer></script>
-            <script src="/scripts/helper_algorithms.js" defer></script>
-            <script src="/scripts/filter_sidebar.js" defer></script>
-            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="../scripts/sessionStorage.js" defer></script>
+            <script src="../scripts/search_script.js" defer></script>
+            <script src="../scripts/PassengerTypes_script.js" defer></script>
+            <script src="../scripts/dropdowns_Script.js" defer></script>
+            <script src="../scripts/advanceSearch_scripts.js" defer></script>
+            <script src="../scripts/getFlights_script.js" defer></script>
+            <script src="../scripts/utilities/search_dropdown_script.js" defer></script>
+            <script src="../scripts/utilities/flights_database_script.js" defer></script>
+            <script src="../scripts/helper_algorithms.js" defer></script>
+            <script src="../scripts/filter_sidebar.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
     `
     });
 });
@@ -288,7 +368,107 @@ app.get('/logout',isAuthenticated ,function(req, res) {
     });
 });
 
+app.get("/search-flights",isAuthenticated, async function(req,res){
+    
 
+    try{
+        var {origin,
+            destination,
+            cabinType,
+            departureDate,
+            airline,
+            isFlexible,
+            isDirectFlight,
+            minPrice,
+            maxPrice} = req.query;
+
+            //default query condition
+            var queryCondition ={isActive:true};
+
+
+            //QUERY PARAMETERS
+
+            //must match origin
+            if(origin){
+                queryCondition.origin = origin;
+            }
+            //must match destination
+            if(destination){
+                queryCondition.destination = destination;
+            }
+
+            //must match airline  preference
+            if(airline && airline !== "any"){
+                queryCondition.airline = airline;
+            }
+
+            //must match cabin type
+            if (cabinType) {
+                const seatsPath = `cabin.${cabinType}.seats`;
+
+                queryCondition[seatsPath] = { $gt: 0 }; 
+            }
+
+            //must match if flight is direct flight
+            if(isDirectFlight==="true"){
+                queryCondition.numOfLayovers = 0;
+            }
+
+            
+            if(Number(maxPrice) !==0){
+                const price = `cabin.${cabinType}.price`;
+                queryCondition[price]={
+                    $gte: Number(minPrice),
+                    $lte: Number(maxPrice)
+                }
+            }
+
+            if (isFlexible === "true" && departureDate) {
+                const baseDate = new Date(`${departureDate}T00:00:00.000Z`);
+                if (!isNaN(baseDate.getTime())) {
+                    const fiveDayRange = 5 * 24 * 60 * 60 * 1000;
+                    const minDate = new Date(baseDate.getTime() - fiveDayRange);
+                    const maxDate = new Date(baseDate.getTime() + fiveDayRange);
+                    queryCondition.departureDate = {
+                    $gte: minDate,
+                    $lte: maxDate
+                    };
+                }
+                }
+                else if (isFlexible==="false") {
+                queryCondition.departureDate = new Date(`${departureDate}T00:00:00.000Z`);
+            }
+
+        
+        console.log("Query Params:", req.query);
+        console.log("Mongo Query:", queryCondition);
+
+        const flights = await flightModel.find(queryCondition);
+        console.log("Flights:", flights);
+        return res.status(200).json(flights);
+    }catch(error){
+        console.error("BACKEND ERROR: ERROR FETCHING FLIGHTS: ", error);
+        return res.status(500).json({ message: "server error fetching flight" });
+    }
+ 
+})
+
+app.get("/flight-info",isAuthenticated, async function(req,res){
+    try{
+        let {flightID} = req.query; 
+
+        const flightInfo = await flightModel.findById(flightID);
+
+        if (!flightInfo) {
+            return res.status(404).json({ message: "Flight not found" });
+        }
+
+        return res.status(200).json(flightInfo);
+    }catch(error){
+        console.error("BACKEND ERROR: ERROR FETCHING FLIGHT INFO: ", error);
+        return res.status(500).json({ message: "server error fetching flight info" });
+    }
+})
 
 //=========================POST FUNCTIONS=============================================
 app.post("/register",async  function(req,res){
@@ -316,14 +496,50 @@ app.post("/register",async  function(req,res){
     res.redirect('/login');
 });
 
-app.post("/create-flight", async function(req,res){
+// create city
+app.post("/admin-cities", async function(req, res){
+    const {cityName} = req.body;
+
+    // checks if city already exists
+    let city = await cityModel.findOne({cityName});
+        if(city){
+            return res.redirect('/admin-flights');
+        }
+
+        city = new cityModel({
+            cityName
+        });
+        await city.save();
+
+        res.redirect('/admin-flights');
+});
+
+// creates airline
+app.post("/admin-airlines", async function(req, res){
+    const {airlineName} = req.body;
+
+    // checks if airline already exists
+    let airline = await airlineModel.findOne({airlineName});
+        if(airline){
+            return res.redirect('/admin-flights');
+        }
+
+        airline = new airlineModel({
+            airlineName
+        });
+        await airline.save();
+
+        res.redirect('/admin-flights');
+});
+
+app.post("/admin-flights", async function(req,res){
     const {flightNumber, airline,origin, destination, departureDate, departureTime, arrivalDate,
         arrivalTime, logoName, numOfLayovers, isActive, cabin} = req.body;
 
     // CHECKS IF FLIGHT ALREADY EXISTS
     let flight = await flightModel.findOne({flightNumber});
     if(flight) {
-        return res.redirect('/create-flight');
+        return res.redirect('/admin-flights');
     }
 
     flight = new flightModel({
@@ -451,6 +667,15 @@ app.put("/saved-passengers/update/:id",isAuthenticated, async function(req,res){
     }
 })
 
+// route that updates the document with selected flightNumber 
+app.put("/admin-flights/:flightNumber", async function(req,res){
+    const updatedFlight = await flightModel.findOneAndUpdate(
+        { flightNumber: Number(req.params.flightNumber) },
+        req.body, 
+        {returnDocument:"after"}
+    );
+    res.jsonp(updatedFlight);
+})
 
 
 //====================================DELETE FUNCTIONS=====================
@@ -506,6 +731,36 @@ app.patch("/update-preferences",isAuthenticated, async function(req,res){
     }
 })
 
+// soft deletes flight
+app.patch("/admin-flights/:flightNumber/deactivate", isAuthenticated, async function(req,res){
+
+    try{
+        const flightNumber = Number(req.params.flightNumber);
+    
+        
+        const flight = await flightModel.findOneAndUpdate(
+            {flightNumber: flightNumber},
+            {$set: {isActive: false}},
+            {returnDocument: 'after'}
+        );
+
+        if(!flight){
+            return res.status(404).json({
+                message: "Flight not found."
+            });
+        }
+        return res.status(200).json({
+            message: "Flight canncelled successfully."
+        });
+
+    }catch(err){
+        return res.status(500).json({
+            error:err.message
+        });
+    }
+
+});
+
 
 //==========================READ OPERATIIONS=============================
 
@@ -536,8 +791,6 @@ app.listen(port, () =>{
     console.log("Server now listening on port " + port);
 });
 
-
-
 function isAuthenticated(req, res, next) {
     if (req.session && req.session.isLoggedIn && req.session.userID) {
         return next(); // session is valid. proceed to next  route
@@ -546,3 +799,33 @@ function isAuthenticated(req, res, next) {
     // session is invalid or doesn't exist
     res.redirect('/login');
 }
+
+//========================== FLIGHT BOOKING =============================
+
+app.post("/booking", isAuthenticated, async function(req, res) {
+    try {
+        const { flightId, cabinType, totalPrice, passengers } = req.body;
+
+        const flight = await flightModel.findById(flightId);
+        if (!flight) {
+            return res.status(404).json({ message: "Flight not found" });
+        }
+
+        const bookingRef = "BK-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+
+        const newBooking = new bookingModel({
+            bookingReference: bookingRef,
+            flight: flightId,
+            cabinType: cabinType,
+            belongsToUser: req.session.userID,
+            totalPrice: totalPrice,
+            passengers: passengers
+        });
+
+        await newBooking.save();
+        return res.status(201).json({ message: "Booking saved successfully" });
+    } catch(err) {
+        console.error("Booking error: ", err);
+        return res.status(500).json({ error: err.message });
+    }
+});
