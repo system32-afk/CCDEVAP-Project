@@ -92,9 +92,6 @@ app.get('/register', function(req,res){
         layout:'auth',
          pageScripts: `
             <script src="../scripts/DOB_formater_script.js" defer></script>
-        pageScripts: `
-            <script src="/scripts/DOB_formater_script.js" defer></script>
-            
             `});
 })
 
@@ -325,9 +322,12 @@ app.get("/travel-history", isAuthenticated, async function(req,res) {
     }
 })
 
-app.get('/reservations', function(req,res){
+app.get('/reservations', async function(req,res){
+    const cities = await cityModel.find({}).sort({ cityName: 1 }).lean();
+
     res.render('pages/reservations',{
         title: "Reservations",
+        cities,
         pageScripts: `
             <script src="/scripts/editReservation.js" defer></script>
             <script src="/scripts/reservationModal.js" defer></script>
