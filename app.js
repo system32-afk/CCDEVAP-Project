@@ -14,6 +14,7 @@ const userModel = require('./models/user_model.js');
 const flightModel = require('./models/flight_model.js');
 const airlineModel = require('./models/airline_model.js');
 const cityModel = require('./models/city_model.js');
+const reservationModel = require('./models/reservation_model.js')
 const savedPassengerModel = require('./models/savedPassenger_Model.js');
 const travelHistoryModel = require('./models/TravelHistory_model.js');
 const bookingModel = require('./models/booking_model.js');
@@ -91,12 +92,14 @@ app.get('/register', function(req,res){
         layout:'auth',
          pageScripts: `
             <script src="../scripts/DOB_formater_script.js" defer></script>
+        pageScripts: `
+            <script src="/scripts/DOB_formater_script.js" defer></script>
             
-           `});
+            `});
 })
 
 app.get('/home', isAuthenticated, async function(req, res) {
-     
+    
     try{
         var currentUser = await userModel.findById(req.session.userID);
         res.render("pages/index", {
@@ -241,9 +244,11 @@ app.get('/admin-reservations', isAuthenticated,function(req,res){
     res.render('pages/admin-reservations',{
         title: "Admin Reservations",
         pageScripts: `
-            <script src="../scripts/reservations.js" defer></script>
-            <script src="../scripts/admin.js" defer></script>
-            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="/scripts/reservationModal.js" defer></script>
+            <script src="/scripts/reservationsRenderAdmin.js" defer></script>
+            <script src="/scripts/reservations.js" defer></script>
+            <script src="/scripts/admin.js" defer></script>
+            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
     `
     });
 });
@@ -347,16 +352,15 @@ app.get("/travel-history", isAuthenticated, async function(req,res) {
     }
 })
 
-
-
-
-
 app.get('/reservations', function(req,res){
     res.render('pages/reservations',{
         title: "Reservations",
         pageScripts: `
-            <script src="../scripts/reservations.js" defer></script>
-            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
+            <script src="/scripts/editReservation.js" defer></script>
+            <script src="/scripts/reservationModal.js" defer></script>
+            <script src="/scripts/reservationsRender.js" defer></script>
+            <script src="/scripts/reservations.js" defer></script>
+            <script src="/scripts/utilities/load_navbar_script.js" defer></script>
     `
     });
 });
@@ -622,8 +626,8 @@ app.post("/saved-passengers/add", isAuthenticated, async function (req, res) {
         await newPassenger.save();
         res.status(201).json({ message: "Passenger added successfully" });
     } catch(err) {
-       
-       
+        
+        
         res.status(500).json({ message: err.message });
     }
 });
@@ -652,9 +656,9 @@ app.post("/add-payment",isAuthenticated,async function(req,res){
 
 
 app.put("/profile/update", isAuthenticated, async function(req,res){
-   const {Fname, Lname, MI, sex, MobileNum, DOB, nationality } = req.body;
+    const {Fname, Lname, MI, sex, MobileNum, DOB, nationality } = req.body;
 
-   var updatedUser = await userModel.findByIdAndUpdate(
+    var updatedUser = await userModel.findByIdAndUpdate(
     req.session.userID,
     {
         $set:{
@@ -671,9 +675,9 @@ app.put("/profile/update", isAuthenticated, async function(req,res){
     returnDocument: 'after',
     runValidators: true 
     }
-   )
+    )
 
-   if (!updatedUser) {
+    if (!updatedUser) {
         return res.status(404).json({ message: "User profile record not found." });
     }
 
@@ -806,6 +810,29 @@ app.patch("/admin-flights/:flightNumber/deactivate", isAuthenticated, async func
 
 //==========================READ OPERATIIONS=============================
 
+app.get("/reservations-data", isAuthenticated, async function(req, res){
+    try{
+        var reservations = await reservationModel.find({
+            belongsToUser: req.session.userID
+        }).lean();
+
+        return res.status(200).json(reservations);
+    }catch(err){
+        console.error("Error fetching reservations:", err);
+        return res.status(500).json({ message: "server error fetching reservations." });
+    }
+});
+
+app.get("/admin-reservations-data", isAuthenticated, async function(req, res){
+    try{
+        var reservations = await reservationModel.find({}).lean();
+        return res.status(200).json(reservations);
+    }catch(err){
+        console.error("Error fetching all reservations:", err);
+        return res.status(500).json({ message: "server error fetching reservations." });
+    }
+});
+
 app.listen(port, () =>{
     console.log("Server now listening on port " + port);
 });
@@ -823,36 +850,25 @@ function isAuthenticated(req, res, next) {
 
 app.post("/booking", isAuthenticated, async function(req, res) {
     try {
-        const { flightId, passengers } = req.body;
+        const { flightId, cabinType, totalPrice, passengers } = req.body;
 
         const flight = await flightModel.findById(flightId);
-
         if (!flight) {
             return res.status(404).json({ message: "Flight not found" });
         }
 
-        const passengersWithRef = passengers.map(function(p) {
-            p.bookingReference = "BK-" + Math.random().toString(36).substring(2, 10).toUpperCase();
-            p.price = 0;
-            return p;
-        });
+        const bookingRef = "BK-" + Math.random().toString(36).substring(2, 10).toUpperCase();
 
         const newBooking = new bookingModel({
-            flightNum: flight.flightNumber,
-            origin: flight.origin,
-            destination: flight.destination,
-            airline: flight.airline,
-            departureDate: flight.departureDate,
-            departureTime: flight.departureTime,
-            arrivalTime: flight.arrivalTime,
-            duration: 0,
+            bookingReference: bookingRef,
+            flight: flightId,
+            cabinType: cabinType,
             belongsToUser: req.session.userID,
-            totalPrice: 0,
-            passengers: passengersWithRef
+            totalPrice: totalPrice,
+            passengers: passengers
         });
 
         await newBooking.save();
-
         return res.status(201).json({ message: "Booking saved successfully" });
     } catch(err) {
         console.error("Booking error: ", err);
