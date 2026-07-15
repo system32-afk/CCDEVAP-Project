@@ -47,12 +47,21 @@ function updateStatusClass(select) {
     select.classList.add(select.value);
 }
 
-function applyFilter(){
-    const cabin = document.getElementById('cabinSelect').value();
+// gets all data attributes to show each cabin
+function applyFilter() {
+    const cabin = document.getElementById("cabinSelect").value;
 
-    fetch(`/api/flights?cabin=${cabin}`)
+    document.querySelectorAll("tbody tr").forEach(row => {
+        row.querySelector(".cabin-label").textContent =
+            row.querySelector(".cabin-label").dataset[cabin];
+
+        row.querySelector(".cabin-price").textContent =
+            row.querySelector(".cabin-price").dataset[cabin];
+
+        row.querySelector(".cabin-seats").textContent =
+            row.querySelector(".cabin-seats").dataset[cabin];
+    });
 }
-
 
 
 function openCancelModal(id){
@@ -288,5 +297,33 @@ async function updateFlightInformation(){
         console.error("ERROR UPDATING FLIGHT DETAILS");
     }
 
+}
+
+function validateFlight(){
+    const origin = $('#origin-field').val();
+    const destination = $('#destination-field').val();
+    const departureDate = new Date($('#departureDate-field').val()); 
+    const arrivalDate = new Date($('#arrivalDate-field').val());
+    const departureTime = $('#departureTime-field').val();
+    const arrivalTime = $('arrivalTime-field').val();
+
+
+    if(origin === destination){
+        alert("Origin and Destination cannot be the same.");
+        return false;
+    }
+
+    if(arrivalDate < departureDate){
+        alert("Arrival Date cannot be before Departure Date");
+        return false;
+    }
+
+    if(arrivalDate === departureDate){
+        if(arrivalTime <= departureTime){
+            alert("Arrival Time cannot be before or same as the Departure Time.");
+            return false;
+        }
+    }
+    return true;
 }
 
