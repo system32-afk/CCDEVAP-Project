@@ -196,6 +196,20 @@ app.get('/api/airlines', isAuthenticated, async function(req,res) {
     res.json(airlines);
 });
 
+// gets airline
+app.get('/api/airlines/:airlineName', isAuthenticated, async function(req,res) {
+
+    const airline = await airlineModel.findOne({airlineName: req.params.airlineName}).lean();
+
+
+    if(!airline){
+        return res.status(404).json({
+            message: "Airline not found"
+        });
+    }
+    res.json(airline);
+});
+
 // gets cities
 app.get('/api/cities', isAuthenticated, async function(req,res) {
     try{
@@ -206,6 +220,19 @@ app.get('/api/cities', isAuthenticated, async function(req,res) {
             return res.status(500).json({ message: "Server error fetching cities"})
         }
     res.json(cities);
+});
+
+// gets city
+app.get('/api/cities/:cityName', isAuthenticated, async function(req,res) {
+    
+        const city = await cityModel.findOne({cityName: req.params.cityName}).lean();
+
+        if(!city){
+            return res.status(404).json({
+                message: "City not found"
+            });
+        }
+    res.json(city);
 });
 
 
@@ -664,14 +691,33 @@ app.put("/saved-passengers/update/:id",isAuthenticated, async function(req,res){
 })
 
 // route that updates the document with selected flightNumber 
-app.put("/admin-flights/:flightNumber", async function(req,res){
+app.put("/admin-flights/:flightNumber",isAuthenticated ,async function(req,res){
     const updatedFlight = await flightModel.findOneAndUpdate(
         { flightNumber: Number(req.params.flightNumber) },
         req.body, 
         {returnDocument:"after"}
     );
-    res.jsonp(updatedFlight);
+    res.json(updatedFlight);
 })
+
+app.put("/admin-airlines/:_id",isAuthenticated, async function(req,res){
+    const updatedAirline = await airlineModel.findOneAndUpdate(
+        {  airlineName: String(req.params.airlineName)},
+        req.body,
+        {returnDocument: "after"}
+    );
+    res.json(updatedAirline);
+})
+
+app.put("/admin-cities/:cityName",isAuthenticated, async function(req,res){
+    const updatedCity = await cityModel.findOneAndUpdate(
+        {  cityName: String(req.params.cityName)},
+        req.body,
+        {returnDocument: "after"}
+    );
+    res.json(updatedCity);
+})
+
 
 
 //====================================DELETE FUNCTIONS=====================

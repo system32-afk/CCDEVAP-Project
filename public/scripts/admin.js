@@ -20,6 +20,8 @@ const businessClassSeatsField = $("#update-business_class_seats-field");
 const firstClassPriceField = $("#update-first_class_price-field");
 const firstClassSeatsField = $("#update-first_class_seats-field");
 
+const airlineNameField = $("#update-airlineName-field");
+
 
 function saveFlightModal() {
     closeModal('modal-edit-flight');
@@ -52,7 +54,54 @@ function openCancelModal(flightNumber){
     openModal("modal-cancel-flight");
 }
 
+async function openUpdateAirlineModal(airlineName){
 
+    try{
+        currentAirlineName = airlineName;
+
+        const response = await fetch(`/api/airlines/${airlineName}`);
+
+        if(!response.ok){
+            alert("Unable to load Airline");
+            return;
+        }
+        const airline = await response.json();
+
+        airlineNameField.val(airline.airlineName);
+        
+    }catch{
+        console.log(error);
+    }
+}
+
+async function updateAirlineInformation(){
+    var updatedAirlineInfo ={
+        airlineName: airlineNameField.val().trim()
+    };
+    var airlineId = $(".edit-button").data("airlineId")
+
+    const airlineName = airlineNameField.val();
+    const 
+    try{
+        const response  = await fetch(`/admin-airlines/${airlineId}`,{
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedAirlineInfo)
+        });
+
+        if(response.ok){
+            alert("Airline updated sucessfully");
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modal-update-flight'));
+            if(modal){
+                modal.hide();
+            }
+        }
+    }catch(error){
+        console.error("ERROR UPDATING AIRLINE NAME");
+    }
+}
 async function openUpdateModal(flightNumber){
 
     try{
@@ -159,10 +208,8 @@ async function updateFlightInformation(){
 
         if(response.ok){
             alert("Flight updated successfully");
-
             const modal = bootstrap.Modal.getInstance(document.getElementById('modal-update-flight'));
-
-            if(modal){
+            if (modal) {
                 modal.hide();
             }
         }
