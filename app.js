@@ -91,7 +91,7 @@ app.get('/register', function(req,res){
     res.render("pages/register",{
         layout:'auth',
          pageScripts: `
-            <script src="../scripts/DOB_formater_script.js" defer></script>            
+            <script src="../scripts/DOB_formater_script.js" defer></script>
             `});
 })
 
@@ -168,11 +168,10 @@ app.get('/admin-flights', isAuthenticated, async function(req,res){
     
 });
 
-app.get('/api/flights/:flightNumber', isAuthenticated, async function(req,res){
+// gets flight
+app.get('/api/flights/:id', isAuthenticated, async function(req,res){
 
-    const flight = await flightModel.findOne({
-        flightNumber: Number(req.params.flightNumber)
-    });
+    const flight = await flightModel.findById(req.params.id);
 
     if(!flight){
         return res.status(404).json({
@@ -352,9 +351,12 @@ app.get("/travel-history", isAuthenticated, async function(req,res) {
     }
 })
 
-app.get('/reservations', function(req,res){
+app.get('/reservations', async function(req,res){
+    const cities = await cityModel.find({}).sort({ cityName: 1 }).lean();
+
     res.render('pages/reservations',{
         title: "Reservations",
+        cities,
         pageScripts: `
             <script src="/scripts/editReservation.js" defer></script>
             <script src="/scripts/reservationModal.js" defer></script>
@@ -560,6 +562,7 @@ app.post("/admin-airlines", async function(req, res){
         res.redirect('/admin-flights');
 });
 
+// create flight
 app.post("/admin-flights", async function(req,res){
     const {flightNumber, airline,origin, destination, departureDate, departureTime, arrivalDate,
         arrivalTime, logoName, numOfLayovers, isActive, cabin} = req.body;
@@ -696,11 +699,10 @@ app.put("/saved-passengers/update/:id",isAuthenticated, async function(req,res){
 })
 
 // route that updates the document with selected flightNumber 
-app.put("/admin-flights/:flightNumber",isAuthenticated ,async function(req,res){
+app.put("/admin-flights/:id",isAuthenticated ,async function(req,res){
     
-    const updatedFlight = await flightModel.findOneAndUpdate(
-        { flightNumber: Number(req.params.flightNumber) },
-        req.body, 
+    const updatedFlight = await flightModel.findIdAndUpdate(
+        req.params.id,
         {returnDocument:"after"}
     );
     res.json(updatedFlight);
@@ -781,11 +783,9 @@ app.patch("/update-preferences",isAuthenticated, async function(req,res){
 app.patch("/admin-flights/:id/deactivate", isAuthenticated, async function(req,res){
 
     try{
-        const flightNumber = Number(req.params.flightNumber);
-    
-        
+            
         const flight = await flightModel.findByIdAndUpdate(
-            {flightNumber: flightNumber},
+            req.params.id,
             {$set: {isActive: false}},
             {returnDocument: 'after'}
         );

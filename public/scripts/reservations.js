@@ -41,6 +41,8 @@ function filterReservations(list) {
     const destination = document.getElementById("destination-airports").value;
     const departureDate = document.getElementById("departureDate").value;
     const status = document.getElementById("statusFilter").value;
+    const flightNumber = document.getElementById("flightNumber").value;
+    const bookingReference = document.getElementById("bookingReference").value;
 
     return list.filter(reservation => {
         if (departure !== "None" && reservation.origin !== departure) {
@@ -59,6 +61,14 @@ function filterReservations(list) {
         }
 
         if (status && reservation.status !== status) {
+            return false;
+        }
+
+        if (flightNumber && reservation.flightNum !== flightNumber) {
+            return false;
+        }
+
+        if (bookingReference && reservation.bookingReference !== bookingReference) {
             return false;
         }
 

@@ -20,6 +20,8 @@ const businessClassSeatsField = $("#update-business_class_seats-field");
 const firstClassPriceField = $("#update-first_class_price-field");
 const firstClassSeatsField = $("#update-first_class_seats-field");
 
+let currentFlightId;
+
 const airlineNameField = $("#update-airlineName-field");
 const isAirlineActiveField= $("#update-isAirlineActive-field");
 let currentAirlineId  = null;
@@ -45,16 +47,25 @@ function updateStatusClass(select) {
     select.classList.add(select.value);
 }
 
-function applyFilter(){
-    const cabinSelect = document.getElementById('cabinSelect').value();
+// gets all data attributes to show each cabin
+function applyFilter() {
+    const cabin = document.getElementById("cabinSelect").value;
 
-    fetch(`/api/flights?cabin=${cabin}`)
+    document.querySelectorAll("tbody tr").forEach(row => {
+        row.querySelector(".cabin-label").textContent =
+            row.querySelector(".cabin-label").dataset[cabin];
+
+        row.querySelector(".cabin-price").textContent =
+            row.querySelector(".cabin-price").dataset[cabin];
+
+        row.querySelector(".cabin-seats").textContent =
+            row.querySelector(".cabin-seats").dataset[cabin];
+    });
 }
 
-let selectedFlightNumber = null;
 
-function openCancelModal(flightNumber){
-    selectedFlightNumber = flightNumber;
+function openCancelModal(id){
+    currentFlightId = id;
     openModal("modal-cancel-flight");
 }
 
@@ -71,7 +82,7 @@ async function openUpdateCityModal(id){
         const city = await response.json();
 
         cityNameField.val(city.cityName);        
-    }catch{
+    }catch(err){
         console.log(error);
     }
 }
@@ -122,7 +133,7 @@ async function openUpdateAirlineModal(id){
         airlineNameField.val(airline.airlineName);
         isAirlineActiveField.val(airline.isAirlineActive);
         
-    }catch{
+    }catch(err){
         console.log(error);
     }
 }
@@ -157,11 +168,11 @@ async function updateAirlineInformation(){
         console.error("ERROR UPDATING AIRLINE NAME");
     }
 }
-async function openUpdateModal(flightNumber){
+async function openUpdateModal(id){
 
     try{
-
-        const response = await fetch(`/api/flights/${flightNumber}`);
+        currentFlightId = id;
+        const response = await fetch(`/api/flights/${id}`);
 
         if(!response.ok){
             alert("Unable to load Flight");
@@ -204,7 +215,7 @@ async function openUpdateModal(flightNumber){
 async function confirmDeactivate(){
 
     const response = await fetch(
-        `/admin-flights/${selectedFlightNumber}/deactivate`,
+        `/admin-flights/${currentFlightId}/deactivate`,
         {
             method: "PATCH"
         }
@@ -220,7 +231,7 @@ async function confirmDeactivate(){
 async function confirmDeactivateAirline() {
 
     const response = await fetch(
-        `/admin-airlines/${selectedAirlineId}/deactivate`,
+        `/admin-airlines/${currentAirlineId}/deactivate`,
         {
             method: "PATCH"
         }
@@ -266,9 +277,8 @@ async function updateFlightInformation(){
         }
     };
 
-    const flightNumber = flightNumberField.val();
     try{
-        const response = await fetch(`/admin-flights/${flightNumber}`, {
+        const response = await fetch(`/admin-flights/${currentFlightId}`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -287,5 +297,29 @@ async function updateFlightInformation(){
         console.error("ERROR UPDATING FLIGHT DETAILS");
     }
 
+}
+
+function validateFlight(){
+    const origin = $('#origin-field').val();
+    const destination = $('#destination-field').val();
+    const departure = new Date(
+        `${$('#departureDate-field').val()}T${$('#departureTime-field').val()}`
+    ); 
+    const arrival = new Date(
+        `${$('#arrivalDate-field').val()}T${$('#arrivalTime-field').val()}`
+    );
+
+    if(origin === destination){
+        alert("Origin and Destination cannot be the same.");
+        return false;
+    }
+
+    if(arrival <= departure){
+        alert("Arrival must be after Departure");
+        return false;
+    }
+
+
+    return true;
 }
 

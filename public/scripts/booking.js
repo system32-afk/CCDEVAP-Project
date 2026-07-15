@@ -89,6 +89,8 @@ $(document).ready(function () {
                     "<p class='passenger-detail'>Priority Boarding: <span id='display-priority-" + id + "'>-</span></p>" +
                     "<p class='passenger-detail'>Travel Insurance: <span id='display-insurance-" + id + "'>-</span></p>" +
                     "<p class='passenger-detail'>Lounge Access: <span id='display-lounge-" + id + "'>-</span></p>";
+                    "<hr>" +
+                    "<p class='passenger-detail fw-bold'>Total: <span id='display-price-" + id + "'>-</span></p>"
         }
 
         return "<div class='col'>" +
@@ -98,6 +100,8 @@ $(document).ready(function () {
                     "<hr>" +
                     "<p class='passenger-detail'>Name: <span id='display-name-" + id + "'>-</span></p>" +
                     extras +
+                    "<hr>" +
+                    "<p class='passenger-detail fw-bold'>Total: <span id='display-price-" + id + "'>-</span></p>"
                 "</div>" +
             "</div>";
     }
@@ -315,8 +319,12 @@ $(document).ready(function () {
         if (currentPassenger.indexOf("infant") !== -1) {
             $(".progress-bar").css("width", "100%");
             $("#btn-next-1").text("Done");
+            $("#contact").closest(".col-md-6").hide();
+            $("#passport").closest(".col-md-6").hide();
         } else {
             $("#btn-next-1").text("Next");
+            $("#contact").closest(".col-md-6").show();
+            $("#passport").closest(".col-md-6").show();
         }
     });
 
@@ -389,6 +397,10 @@ $(document).ready(function () {
         if (valid) {
             // infants skip to done
             if (currentPassenger.indexOf("infant") !== -1) {
+                var infantBasePrice = selectedFlight ? Math.round(selectedFlight.ticketPrice * 0.25) : 0;
+                var infantTax = Math.round(infantBasePrice * TAX_RATE);
+                var infantTotal = infantBasePrice + infantTax;
+
                 saved["infant-1"] = {
                     passengerType: "infant",
                     fullName: $("#full-name").val().trim(),
@@ -404,11 +416,13 @@ $(document).ready(function () {
                     baggage: 0,
                     priority: false,
                     insurance: false,
-                    lounge: false
+                    lounge: false,
+                    price: infantTotal
                 };
 
                 $("#display-name-" + currentPassenger).text($("#full-name").val().trim());
-                
+                $("#display-price-" + currentPassenger).text("₱" + infantTotal.toLocaleString());
+                $("#display-price-" + currentPassenger).text("₱" + (infantBasePrice + infantTax).toLocaleString());
                 backToList();
             } else {
                 goToStep(2);
@@ -550,6 +564,24 @@ $(document).ready(function () {
         if (lounge) { totals.lounge++; }
         totals.extrasCost += (baggage * BAGGAGE_PRICE) + (priority ? PRIORITY_PRICE : 0) + (insurance ? INSURANCE_PRICE : 0) + (lounge ? LOUNGE_PRICE : 0);
 
+        var passengerBasePrice = 0;
+        if (selectedFlight) {
+            if (currentPassenger.indexOf("adult") !== -1) {
+                passengerBasePrice = selectedFlight.ticketPrice;
+            } else if (currentPassenger.indexOf("child") !== -1) {
+                passengerBasePrice = Math.round(selectedFlight.ticketPrice * 0.75);
+            } else {
+                passengerBasePrice = Math.round(selectedFlight.ticketPrice * 0.25);
+            }
+        }
+
+        var passengerExtras = (baggage * BAGGAGE_PRICE) + (priority ? PRIORITY_PRICE : 0) + (insurance ? INSURANCE_PRICE : 0) + (lounge ? LOUNGE_PRICE : 0);
+        var passengerMealCost = MEAL_PRICES[meal] || 0;
+        var passengerSeatCost = $(".seat.selected").hasClass("premium") ? SEAT_UPGRADE : 0;
+        var passengerSubtotal = passengerBasePrice + passengerMealCost + passengerSeatCost + passengerExtras;
+        var passengerTax = Math.round(passengerSubtotal * TAX_RATE);
+        var passengerTotal = passengerSubtotal + passengerTax;
+
         saved[currentPassenger] = {
             passengerType: currentPassenger.split("-")[0],
             fullName: $("#full-name").val().trim(),
@@ -565,7 +597,8 @@ $(document).ready(function () {
             baggage: baggage,
             priority: priority,
             insurance: insurance,
-            lounge: lounge
+            lounge: lounge,
+            price: passengerTotal
         };
 
         $("#display-name-" + currentPassenger).text(saved[currentPassenger].fullName);
@@ -580,6 +613,7 @@ $(document).ready(function () {
         else { $("#display-lounge-" + currentPassenger).text("No"); }
          
         $("#display-meal-" + currentPassenger).text(mealDisplay);
+        $("#display-price-" + currentPassenger).text("₱" + passengerTotal.toLocaleString());
 
         backToList();
     });
@@ -605,6 +639,11 @@ $(document).ready(function () {
             return;
         }
 
+        var totalPrice = 0;
+        for (var i = 0; i < keys.length; i++) {
+            if (saved[keys[i]]) { totalPrice += saved[keys[i]].price; }
+        }
+
         $.ajax({
             url: "/booking",
             method: "POST",
@@ -612,10 +651,7 @@ $(document).ready(function () {
             data: JSON.stringify({
                 flightId: flightId,
                 cabinType: selectedFlight ? selectedFlight.cabinType : "",
-                totalPrice: (function() { 
-                    var sub = basePrice + totals.mealCost + totals.seatCost + totals.extrasCost; 
-                    return sub + Math.round(sub * TAX_RATE); 
-                })(),
+                totalPrice: totalPrice,
                 passengers: Object.values(saved)
             }),
             success: function(response) {

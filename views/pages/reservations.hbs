@@ -10,14 +10,9 @@
             <label>Departure:</label>
             <select id="departure-airports">
                 <option value="None">None</option>
-                <option value="NAIA (Manila)">NAIA (Manila)</option>
-                <option value="IA (Albay)">BIA (Albay)</option>
-                <option value="MCIA (Cebu)">MCIA (Cebu)</option>
-                <option value="CIA (Clark)">CIA (Clark)</option>
-                <option value="BSA (Bacolod)">BSA (Bacolod)</option>
-                <option value="IIA (Iloilo)">IIA (Iloilo)</option>
-                <option value="SA (Siargao)">SA (Siargao)</option>
-                <option value="GPRA (Caticlan)">GPRA (Caticlan)</option>
+                {{#each cities}}
+                <option value="{{this.cityName}}">{{this.cityName}}</option>
+                {{/each}}
             </select>
         </div> 
 
@@ -29,15 +24,20 @@
             <label>Destination:</label>
             <select id="destination-airports">
                 <option value="None">None</option>
-                <option value="NAIA (Manila)">NAIA (Manila)</option>
-                <option value="IA (Albay)">BIA (Albay)</option>
-                <option value="MCIA (Cebu)">MCIA (Cebu)</option>
-                <option value="CIA (Clark)">CIA (Clark)</option>
-                <option value="BSA (Bacolod)">BSA (Bacolod)</option>
-                <option value="IIA (Iloilo)">IIA (Iloilo)</option>
-                <option value="SA (Siargao)">SA (Siargao)</option>
-                <option value="GPRA (Caticlan)">GPRA (Caticlan)</option>
+                {{#each cities}}
+                <option value="{{this.cityName}}">{{this.cityName}}</option>
+                {{/each}}
             </select>
+        </div>
+
+        <div class="form-group">
+            <label>Flight Number: </label>
+            <input type="text" id="flightNumber" placeholder="None">
+        </div>
+
+        <div class="form-group">
+            <label>Booking Reference: </label>
+            <input type="text" id="bookingReference" placeholder="None">
         </div>
 
         <div class="form-group">
