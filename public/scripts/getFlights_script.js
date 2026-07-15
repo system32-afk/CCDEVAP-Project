@@ -152,7 +152,7 @@ async function getFlights(filterOptions, bookingInfo) {
 
     try{
 
-        let response = await fetch(`/search-flights?${searchParams.toString()}`);
+        let response = await fetch(`../search-flights?${searchParams.toString()}`);
 
         if (!response.ok) {
             throw new Error(`error status: ${response.status}`);

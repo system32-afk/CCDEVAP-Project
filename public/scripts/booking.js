@@ -116,7 +116,8 @@ $(document).ready(function () {
         $("#summary-departure").text(flight.departure);
         $("#summary-arrival").text(flight.arrival);
         $("#summary-duration").text(flight.duration);
-        $("#summary-cabin").text(flight.cabinType);
+        $("#summary-cabin").text(flight.cabinType.replace(/_/g, " ").replace(/\b\w/g, function(c) { return c.toUpperCase(); }));
+        $("#summary-passengers").text(passengerCounts.adults + passengerCounts.children + passengerCounts.infants);
         $("#summary-base").text("₱" + basePrice.toLocaleString());
         updateSummary();
     }
@@ -190,10 +191,20 @@ $(document).ready(function () {
             $("#summary-seat").text(totals.seats.length ? totals.seats.join(", ") : "-");
         }
 
-        if (selectedMeal) {
-            $("#summary-meal").text(liveMeal.join(", "));
+        var liveMealCounts = {};
+        for (var i = 0; i < liveMeal.length; i++) {
+            liveMealCounts[liveMeal[i]] = (liveMealCounts[liveMeal[i]] || 0) + 1;
+        }
+        if (liveMeal.length) {
+            var liveMealDisplay = "";
+            var liveMealKeys = Object.keys(liveMealCounts);
+            for (var i = 0; i < liveMealKeys.length; i++) {
+                if (liveMealDisplay) { liveMealDisplay += ", "; }
+                liveMealDisplay += liveMealCounts[liveMealKeys[i]] + "x " + liveMealKeys[i];
+            }
+            $("#summary-meal").text(liveMealDisplay);
         } else {
-            $("#summary-meal").text(totals.meals.length ? totals.meals.join(", ") : "-");
+            $("#summary-meal").text("-");
         }
 
         $("#summary-baggage").text(totals.baggage + baggage);
@@ -213,7 +224,23 @@ $(document).ready(function () {
         var taxes = Math.round(subtotal * TAX_RATE);
 
         $("#summary-seat").text(totals.seats.length ? totals.seats.join(", ") : "-");
-        $("#summary-meal").text(totals.meals.length ? totals.meals.join(", ") : "-");
+        
+        if (totals.meals.length) {
+            var mealCounts = {};
+            for (var i = 0; i < totals.meals.length; i++) {
+                mealCounts[totals.meals[i]] = (mealCounts[totals.meals[i]] || 0) + 1;
+            }
+            var mealDisplay = "";
+            var mealKeys = Object.keys(mealCounts);
+            for (var i = 0; i < mealKeys.length; i++) {
+                if (mealDisplay) { mealDisplay += ", "; }
+                mealDisplay += mealCounts[mealKeys[i]] + "x " + mealKeys[i];
+            }
+            $("#summary-meal").text(mealDisplay);
+        } else {
+            $("#summary-meal").text("-");
+        }
+
         $("#summary-baggage").text(totals.baggage);
         $("#summary-priority").text(totals.priority);
         $("#summary-insurance").text(totals.insurance);
@@ -311,18 +338,23 @@ $(document).ready(function () {
             $("#err-email").hide(); 
         }
 
-        if (!$("#contact").val().trim()) {
-            $("#err-contact").show(); 
-            valid = false;
-        } else { 
-            $("#err-contact").hide(); 
-        }
+        if (currentPassenger.indexOf("infant") === -1) {
+            if (!$("#contact").val().trim()) {
+                $("#err-contact").show(); 
+                valid = false;
+            } else { 
+                $("#err-contact").hide(); 
+            }
 
-        if (!$("#passport").val().trim()) {
-            $("#err-passport").show(); 
-            valid = false;
-        } else { 
-            $("#err-passport").hide(); 
+            if (!$("#passport").val().trim()) {
+                $("#err-passport").show(); 
+                valid = false;
+            } else { 
+                $("#err-passport").hide(); 
+            }
+        } else {
+            $("#err-contact").hide();
+            $("#err-passport").hide();
         }
 
         if (!$("#nationality").val()) {
@@ -361,8 +393,8 @@ $(document).ready(function () {
                     passengerType: "infant",
                     fullName: $("#full-name").val().trim(),
                     email: $("#email").val().trim(),
-                    contact: $("#contact").val().trim(),
-                    passport: $("#passport").val().trim(),
+                    contact: null,
+                    passport: null,
                     nationality: $("#nationality").val(),
                     birthdate: $("#birthdate").val(),
                     gender: $("#gender").val(),
@@ -374,6 +406,9 @@ $(document).ready(function () {
                     insurance: false,
                     lounge: false
                 };
+
+                $("#display-name-" + currentPassenger).text($("#full-name").val().trim());
+                
                 backToList();
             } else {
                 goToStep(2);
@@ -495,54 +530,14 @@ $(document).ready(function () {
 
     // done button displays text in passenger card
     $("#btn-done").click(function() {
-        $("#display-name-" + currentPassenger).text($("#full-name").val().trim());
-        $("#display-seat-" + currentPassenger).text($("#selected-seat-display").text());
-        $("#display-meal-" + currentPassenger).text($("#summary-meal").text());
-        $("#display-baggage-" + currentPassenger).text($("#baggage-count").text());
-
-        if ($("#priority-toggle").is(":checked")) {
-            $("#display-priority-" + currentPassenger).text("Yes");
-        } else {
-            $("#display-priority-" + currentPassenger).text("No");
-        }
-
-        if ($("#insurance-toggle").is(":checked")) {
-            $("#display-insurance-" + currentPassenger).text("Yes");
-        } else {
-            $("#display-insurance-" + currentPassenger).text("No");
-        }
-
-        if ($("#lounge-toggle").is(":checked")) {
-            $("#display-lounge-" + currentPassenger).text("Yes");
-        } else {
-            $("#display-lounge-" + currentPassenger).text("No");
-        }
-
-        saved[currentPassenger] = {
-            passengerType: currentPassenger.split("-")[0],
-            fullName: $("#full-name").val().trim(),
-            email: $("#email").val().trim(),
-            contact: $("#contact").val().trim(),
-            passport: $("#passport").val().trim(),
-            nationality: $("#nationality").val(),
-            birthdate: $("#birthdate").val(),
-            gender: $("#gender").val(),
-            emergencyContact: $("#emergency-contact").val().trim(),
-            meal: $(".meal-option.selected").data("meal"),
-            seat: $("#selected-seat-display").text(),
-            baggage: parseInt($("#baggage-count").text()),
-            priority: $("#priority-toggle").is(":checked"),
-            insurance: $("#insurance-toggle").is(":checked"),
-            lounge: $("#lounge-toggle").is(":checked")
-        };
-
         var meal = $(".meal-option.selected").data("meal");
         var seat = $("#selected-seat-display").text();
         var baggage = parseInt($("#baggage-count").text());
         var priority = $("#priority-toggle").is(":checked");
         var insurance = $("#insurance-toggle").is(":checked");
         var lounge = $("#lounge-toggle").is(":checked");
-        
+        var mealDisplay = meal ? meal.charAt(0).toUpperCase() + meal.slice(1) : "-";
+
         if (seat && seat !== "None") { totals.seats.push(seat); }
         if (meal) { 
             totals.meals.push(meal.charAt(0).toUpperCase() + meal.slice(1));
@@ -554,6 +549,37 @@ $(document).ready(function () {
         if (insurance) { totals.insurance++; }
         if (lounge) { totals.lounge++; }
         totals.extrasCost += (baggage * BAGGAGE_PRICE) + (priority ? PRIORITY_PRICE : 0) + (insurance ? INSURANCE_PRICE : 0) + (lounge ? LOUNGE_PRICE : 0);
+
+        saved[currentPassenger] = {
+            passengerType: currentPassenger.split("-")[0],
+            fullName: $("#full-name").val().trim(),
+            email: $("#email").val().trim(),
+            contact: $("#contact").val().trim(),
+            passport: $("#passport").val().trim(),
+            nationality: $("#nationality").val(),
+            birthdate: $("#birthdate").val(),
+            gender: $("#gender").val(),
+            emergencyContact: $("#emergency-contact").val().trim(),
+            meal: meal,
+            seat: seat,
+            baggage: baggage,
+            priority: priority,
+            insurance: insurance,
+            lounge: lounge
+        };
+
+        $("#display-name-" + currentPassenger).text(saved[currentPassenger].fullName);
+        $("#display-seat-" + currentPassenger).text(seat !== "None" ? seat : "-");
+        $("#display-baggage-" + currentPassenger).text(baggage);
+
+        if (priority) { $("#display-priority-" + currentPassenger).text("Yes"); }
+        else { $("#display-priority-" + currentPassenger).text("No"); }
+        if (insurance) { $("#display-insurance-" + currentPassenger).text("Yes"); }
+        else { $("#display-insurance-" + currentPassenger).text("No"); }
+        if (lounge) { $("#display-lounge-" + currentPassenger).text("Yes"); }
+        else { $("#display-lounge-" + currentPassenger).text("No"); }
+         
+        $("#display-meal-" + currentPassenger).text(mealDisplay);
 
         backToList();
     });
@@ -585,7 +611,12 @@ $(document).ready(function () {
             contentType: "application/json",
             data: JSON.stringify({
                 flightId: flightId,
-                passengers: [saved["adult-1"], saved["child-1"], saved["infant-1"]]
+                cabinType: selectedFlight ? selectedFlight.cabinType : "",
+                totalPrice: (function() { 
+                    var sub = basePrice + totals.mealCost + totals.seatCost + totals.extrasCost; 
+                    return sub + Math.round(sub * TAX_RATE); 
+                })(),
+                passengers: Object.values(saved)
             }),
             success: function(response) {
                 window.location.href = "/reservations";

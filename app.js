@@ -777,36 +777,25 @@ function isAuthenticated(req, res, next) {
 
 app.post("/booking", isAuthenticated, async function(req, res) {
     try {
-        const { flightId, passengers } = req.body;
+        const { flightId, cabinType, totalPrice, passengers } = req.body;
 
         const flight = await flightModel.findById(flightId);
-
         if (!flight) {
             return res.status(404).json({ message: "Flight not found" });
         }
 
-        const passengersWithRef = passengers.map(function(p) {
-            p.bookingReference = "BK-" + Math.random().toString(36).substring(2, 10).toUpperCase();
-            p.price = 0;
-            return p;
-        });
+        const bookingRef = "BK-" + Math.random().toString(36).substring(2, 10).toUpperCase();
 
         const newBooking = new bookingModel({
-            flightNum: flight.flightNumber,
-            origin: flight.origin,
-            destination: flight.destination,
-            airline: flight.airline,
-            departureDate: flight.departureDate,
-            departureTime: flight.departureTime,
-            arrivalTime: flight.arrivalTime,
-            duration: 0,
+            bookingReference: bookingRef,
+            flight: flightId,
+            cabinType: cabinType,
             belongsToUser: req.session.userID,
-            totalPrice: 0,
-            passengers: passengersWithRef
+            totalPrice: totalPrice,
+            passengers: passengers
         });
 
         await newBooking.save();
-
         return res.status(201).json({ message: "Booking saved successfully" });
     } catch(err) {
         console.error("Booking error: ", err);
