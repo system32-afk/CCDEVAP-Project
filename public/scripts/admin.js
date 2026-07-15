@@ -21,7 +21,11 @@ const firstClassPriceField = $("#update-first_class_price-field");
 const firstClassSeatsField = $("#update-first_class_seats-field");
 
 const airlineNameField = $("#update-airlineName-field");
+const isAirlineActiveField= $("#update-isAirlineActive-field");
+let currentAirlineId  = null;
 
+const cityNameField = $("#update-cityName-field");
+let currentCityId = null;
 
 function saveFlightModal() {
     closeModal('modal-edit-flight');
@@ -54,12 +58,60 @@ function openCancelModal(flightNumber){
     openModal("modal-cancel-flight");
 }
 
-async function openUpdateAirlineModal(airlineName){
+async function openUpdateCityModal(id){
+    try{
+        currentCityId = id;
+
+        const response = await fetch(`/api/cities/${id}`);
+
+        if(!response.ok){
+            alert("Unable to load City");
+            return;
+        }
+        const city = await response.json();
+
+        cityNameField.val(city.cityName);        
+    }catch{
+        console.log(error);
+    }
+}
+
+async function updateCityInformation(){
+    var updatedCityInfo ={
+        cityName: cityNameField.val().trim()
+    };
+    const newCityName = cityNameField.val().trim();
+    try{
+        const response = await fetch(`/admin-cities/${currentCityId}`,{
+            method: "PUT",
+            headers: {
+                'Content-Type' : 'application/json'
+            }, 
+            body: JSON.stringify(updatedCityInfo)
+        });
+
+        if(response.ok){
+            alert("City updated sucessfully");
+
+            location.reload();
+            const modal = bootstrap.Modal.getInstance(document.getElementById('edit-city-modal'));
+            if(modal){
+                modal.hide();
+            }
+        }
+
+    }catch(error){
+        console.error("ERROR UPDATING CITY NAME");
+    }
+    
+
+}
+async function openUpdateAirlineModal(id){
 
     try{
-        currentAirlineName = airlineName;
+        currentAirlineId = id;
 
-        const response = await fetch(`/api/airlines/${airlineName}`);
+        const response = await fetch(`/api/airlines/${id}`);
 
         if(!response.ok){
             alert("Unable to load Airline");
@@ -68,6 +120,7 @@ async function openUpdateAirlineModal(airlineName){
         const airline = await response.json();
 
         airlineNameField.val(airline.airlineName);
+        isAirlineActiveField.val(airline.isAirlineActive);
         
     }catch{
         console.log(error);
@@ -76,14 +129,13 @@ async function openUpdateAirlineModal(airlineName){
 
 async function updateAirlineInformation(){
     var updatedAirlineInfo ={
-        airlineName: airlineNameField.val().trim()
+        airlineName: airlineNameField.val().trim(),
+        isAirlineActive: isAirlineActiveField.val().trim()
     };
-    var airlineId = $(".edit-button").data("airlineId")
 
-    const airlineName = airlineNameField.val();
-    const 
+    const newAirlineName = airlineNameField.val().trim();
     try{
-        const response  = await fetch(`/admin-airlines/${airlineId}`,{
+        const response  = await fetch(`/admin-airlines/${currentAirlineId}`,{
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -93,11 +145,14 @@ async function updateAirlineInformation(){
 
         if(response.ok){
             alert("Airline updated sucessfully");
-            const modal = bootstrap.Modal.getInstance(document.getElementById('modal-update-flight'));
+
+            location.reload();
+            const modal = bootstrap.Modal.getInstance(document.getElementById('edit-airline-modal'));
             if(modal){
                 modal.hide();
             }
         }
+
     }catch(error){
         console.error("ERROR UPDATING AIRLINE NAME");
     }
@@ -138,8 +193,7 @@ async function openUpdateModal(flightNumber){
         businessClassSeatsField.val(flight.cabin.business_class.seats);
 
         firstClassPriceField.val(flight.cabin.first_class.price);
-        firstClassSeatsField.val(flight.cabin.first_class.seats);
-
+        firstClassSeatsField.val(flight.cabin.first_class.seats);    
        
     }catch(error){
         console.log(error);
@@ -160,6 +214,22 @@ async function confirmDeactivate(){
         location.reload();
     }else{
         alert("Unable to cancel flight.");
+    }
+}
+
+async function confirmDeactivateAirline() {
+
+    const response = await fetch(
+        `/admin-airlines/${selectedAirlineId}/deactivate`,
+        {
+            method: "PATCH"
+        }
+    );
+
+    if (response.ok) {
+        location.reload();
+    } else {
+        alert("Unable to deactivate airline.");
     }
 }
 
