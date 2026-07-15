@@ -168,11 +168,10 @@ app.get('/admin-flights', isAuthenticated, async function(req,res){
     
 });
 
-app.get('/api/flights/:flightNumber', isAuthenticated, async function(req,res){
+// gets flight
+app.get('/api/flights/:id', isAuthenticated, async function(req,res){
 
-    const flight = await flightModel.findOne({
-        flightNumber: Number(req.params.flightNumber)
-    });
+    const flight = await flightModel.findById(req.params.id);
 
     if(!flight){
         return res.status(404).json({
@@ -189,23 +188,53 @@ app.get('/api/airlines', isAuthenticated, async function(req,res) {
     try{
         const airlines = await airlineModel.find({}).sort({ airlineName :1}).lean();
 
+        res.json(airlines);
+
     }catch(error){
-            console.error("Error fetching airlines", error);
-            return res.status(500).json({ message: "Server error fetching airlines"})
-        }
-    res.json(airlines);
+        console.error(error);
+        res.status(500).json({
+            message: "Server error fetching airlines"
+        });
+    }
+});
+
+// gets airline
+app.get('/api/airlines/:id', isAuthenticated, async function(req,res) {
+
+    const airline = await airlineModel.findById(req.params.id);
+
+
+    if(!airline){
+        return res.status(404).json({
+            message: "Airline not found"
+        });
+    }
+    res.json(airline);
 });
 
 // gets cities
 app.get('/api/cities', isAuthenticated, async function(req,res) {
     try{
         const cities = await cityModel.find({}).sort({ cityName: 1}).lean();
-
+        res.json(cities);
     }catch(error){
             console.error("Error fetching cities", error);
             return res.status(500).json({ message: "Server error fetching cities"})
         }
-    res.json(cities);
+
+});
+
+// gets city
+app.get('/api/cities/:id', isAuthenticated, async function(req,res) {
+    
+        const city = await cityModel.findById(req.params.id);
+
+        if(!city){
+            return res.status(404).json({
+                message: "City not found"
+            });
+        }
+    res.json(city);
 });
 
 
@@ -516,7 +545,8 @@ app.post("/admin-cities", async function(req, res){
 
 // creates airline
 app.post("/admin-airlines", async function(req, res){
-    const {airlineName} = req.body;
+    const {airlineName, isAirlineActive} = req.body;
+
 
     // checks if airline already exists
     let airline = await airlineModel.findOne({airlineName});
@@ -525,13 +555,14 @@ app.post("/admin-airlines", async function(req, res){
         }
 
         airline = new airlineModel({
-            airlineName
+            airlineName, isAirlineActive
         });
         await airline.save();
 
         res.redirect('/admin-flights');
 });
 
+// create flight
 app.post("/admin-flights", async function(req,res){
     const {flightNumber, airline,origin, destination, departureDate, departureTime, arrivalDate,
         arrivalTime, logoName, numOfLayovers, isActive, cabin} = req.body;
@@ -668,14 +699,31 @@ app.put("/saved-passengers/update/:id",isAuthenticated, async function(req,res){
 })
 
 // route that updates the document with selected flightNumber 
-app.put("/admin-flights/:flightNumber", async function(req,res){
-    const updatedFlight = await flightModel.findOneAndUpdate(
-        { flightNumber: Number(req.params.flightNumber) },
-        req.body, 
+app.put("/admin-flights/:id",isAuthenticated ,async function(req,res){
+    
+    const updatedFlight = await flightModel.findIdAndUpdate(
+        req.params.id,
         {returnDocument:"after"}
     );
-    res.jsonp(updatedFlight);
+    res.json(updatedFlight);
 })
+
+// updates airlines
+app.put("/admin-airlines/:id",isAuthenticated, async function(req,res){
+
+    const airline = await airlineModel.findByIdAndUpdate(
+        req.params.id, { $set: req.body}, { returnDocument: "after"}
+    );
+    res.json(airline);
+})
+
+app.put("/admin-cities/:id",isAuthenticated, async function(req,res){
+    const city = await cityModel.findByIdAndUpdate(
+        req.params.id, { $set: req.body},  {returnDocument:"after"}
+    );
+    res.json(city);
+})
+
 
 
 //====================================DELETE FUNCTIONS=====================
@@ -732,14 +780,12 @@ app.patch("/update-preferences",isAuthenticated, async function(req,res){
 })
 
 // soft deletes flight
-app.patch("/admin-flights/:flightNumber/deactivate", isAuthenticated, async function(req,res){
+app.patch("/admin-flights/:id/deactivate", isAuthenticated, async function(req,res){
 
     try{
-        const flightNumber = Number(req.params.flightNumber);
-    
-        
-        const flight = await flightModel.findOneAndUpdate(
-            {flightNumber: flightNumber},
+            
+        const flight = await flightModel.findByIdAndUpdate(
+            req.params.id,
             {$set: {isActive: false}},
             {returnDocument: 'after'}
         );
@@ -760,7 +806,27 @@ app.patch("/admin-flights/:flightNumber/deactivate", isAuthenticated, async func
     }
 
 });
-
+app.patch("/admin-airlines/:id/deactivate", isAuthenticated, async function(req,res){
+    try{
+        const airline = await airlineModel.findByIdAndUpdate(
+            req.params.id,
+            {$set:{isAirlineActive: false}},
+            {returnDocument: "after"}
+        );
+        if(!airline){
+            return res.status(404).json({
+                message:  "Airline not found"
+            });
+        }
+        return res.status(200).json({
+            message: "Airline deactivated successfully."
+        });
+    }catch(err){
+            return res.status(500).json({
+            error:err.message
+        }); 
+    }
+});
 
 //==========================READ OPERATIIONS=============================
 

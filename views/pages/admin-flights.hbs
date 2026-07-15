@@ -114,28 +114,32 @@
                                 <td>{{formatDate this.departureDate}}</td>
                                 <td class="table-code-highlight">{{this.departureTime}}</td>
 
-                                    {{#if (eq ../currentCabin 'economy')}}
-                                        <td>{{this.cabin.economy.label}}</td>
-                                        <td>{{this.cabin.economy.price}}</td>
-                                        <td>{{this.cabin.economy.seats}}</td>                                    
-                                    {{/if}}
-                                    {{#if (eq ../currentCabin 'premium_economy')}}
-                                        <td>{{this.cabin.premium_economy.label}}</td>
-                                        <td>{{this.cabin.premium_economy.price}}</td>
-                                        <td>{{this.cabin.premium_economy.seats}}</td>                                    
-                                    {{/if}}
-                                    {{#if (eq ../currentCabin 'business_class')}}
-                                        <td>{{this.cabin.business_class.label}}</td>
-                                        <td>{{this.cabin.business_class.price}}</td>
-                                        <td>{{this.cabin.business_class.seats}}</td>                                    
-                                    {{/if}}
-                                    {{#if (eq ../currentCabin 'first_class')}}
-                                        <td>{{this.cabin.first_class.label}}</td>
-                                        <td>{{this.cabin.first_class.price}}</td>
-                                        <td>{{this.cabin.first_class.seats}}</td>                                    
-                                    {{/if}}
-                                <td><button class="edit-button table-btn"  data-bs-toggle="modal" data-bs-target="#modal-update-flight" onclick="openUpdateModal({{this.flightNumber}})">Edit</button></td>
-                                <td><button class="cancel-button table-btn" onclick="openCancelModal({{this.flightNumber}})">Cancel</button></td>
+                                <td class="cabin-label" 
+                                data-economy="{{this.cabin.economy.label}}"
+                                data-premium_economy="{{this.cabin.premium_economy.label}}"
+                                data-business_class="{{this.cabin.business_class.label}}"
+                                data-first_class="{{this.cabin.first_class.label}}">
+                                {{this.cabin.economy.label}}
+                                </td>
+
+                                <td class="cabin-price" 
+                                data-economy="{{this.cabin.economy.price}}"
+                                data-premium_economy="{{this.cabin.premium_economy.price}}"
+                                data-business_class="{{this.cabin.business_class.price}}"
+                                data-first_class="{{this.cabin.first_class.price}}">
+                                {{this.cabin.economy.price}}
+                                </td>
+
+                                <td class="cabin-seats" 
+                                data-economy="{{this.cabin.economy.seats}}"
+                                data-premium_economy="{{this.cabin.premium_economy.seats}}"
+                                data-business_class="{{this.cabin.business_class.seats}}"
+                                data-first_class="{{this.cabin.first_class.seats}}">
+                                {{this.cabin.economy.seats}}
+                                </td>
+
+                                <td><button class="edit-button table-btn"  data-bs-toggle="modal" data-bs-target="#modal-update-flight" onclick="openUpdateModal('{{this._id}}')">Edit</button></td>
+                                <td><button class="cancel-button table-btn" data-bs-toggle="modal" data-bs-target="#modal-cancel-flight"onclick="openCancelModal({{this._id}})">Cancel</button></td>
                             </tr>
                             {{/each}}
                         </tbody>
@@ -187,27 +191,21 @@
                         <thead>
                             <tr>
                                 <th>City Name</th>
-                                <th>City Code</th>
-                                <th width="120"></th>
-                                <th width="120"></th>
+                                <th scope="col" class="text-center"></th>
+                                <th scope="col" class="text-center"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {{#each cities}}
+                            {{#each cities }}
                             <tr>
                                 <td>{{this.cityName}}</td>
                                 <td>
                                     <button class="edit-button table-btn"
-                                            onclick="openUpdateCityModal('{{this._id}}')">
+                                            data-bs-toggle="modal" data-bs-target="#edit-city-modal" onclick="openUpdateCityModal('{{this._id}}')">
                                         Edit
                                     </button>
                                 </td>
-                                <td>
-                                    <button class="cancel-button table-btn"
-                                            onclick="deleteCity('{{this._id}}')">
-                                        Delete
-                                    </button>
-                                </td>
+
                             </tr>
                             {{/each}}
                         </tbody>
@@ -218,7 +216,7 @@
             <div class="modal-footer">
                 <button class="btn btn-primary"
                         data-bs-toggle="modal"
-                        data-bs-target="#modal-add-city">
+                        data-bs-target="#create-city-modal">
                     Add City
                 </button>
             </div>
@@ -227,11 +225,7 @@
     </div>
 </div>
 {{!-- Airline Modal --}}
-<div class="modal fade" id="modal-airline"
-     data-bs-backdrop="static"
-     data-bs-keyboard="false"
-     tabindex="-1">
-
+<div class="modal fade" id="modal-airline"data-bs-backdrop="static"data-bs-keyboard="false"tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
@@ -240,10 +234,7 @@
                     Airline Management
                 </h5>
 
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal">
-                </button>
+                <button type="button"class="btn-close"data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body">
@@ -254,8 +245,9 @@
                         <thead>
                             <tr>
                                 <th>Airline Name</th>
-                                <th width="120"></th>
-                                <th width="120"></th>
+                                <th>Airline Status</th>
+                                <th scope="col" class="text-center"></th>
+                                <th scope="col" class="text-center"></th>
                             </tr>
                         </thead>
 
@@ -265,11 +257,12 @@
                             <tr>
 
                                 <td>{{this.airlineName}}</td>
+                                <td>{{this.isAirlineActive}}</td>
 
                                 <td>
                                     <button
                                         class="edit-button table-btn"
-                                        onclick="openUpdateAirlineModal('{{this._id}}')">
+                                        data-bs-toggle="modal" data-bs-target="#edit-airline-modal" onclick="openUpdateAirlineModal('{{this._id}}')">
                                         Edit
                                     </button>
                                 </td>
@@ -277,8 +270,8 @@
                                 <td>
                                     <button
                                         class="cancel-button table-btn"
-                                        onclick="deleteAirline('{{this._id}}')">
-                                        Delete
+                                        onclick="confirmDeactivateAirline('{{this._id}}')">
+                                        Cancel
                                     </button>
                                 </td>
 
@@ -297,7 +290,7 @@
                 <button
                     class="btn btn-primary"
                     data-bs-toggle="modal"
-                    data-bs-target="#modal-add-airline">
+                    data-bs-target="#create-airline-modal">
                     Add Airline
                 </button>
 
@@ -322,6 +315,129 @@
                     </div>
                 </div>
             </div>
+
+{{!-- update airline modal --}}
+
+            <div class="modal fade" id="edit-airline-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Update Airline</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/admin-airlines" method="POST" id="editAirlineForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="airlineName" class="form-label">Airline:</label>
+                                    <input type="text"  class="form-control"  name="airlineName" id="update-airlineName-field" value="{{airline.airlineName}}" required>
+                                <label for="airlineName" class="form-label">Status:</label>
+                                    <select name="isAirlineActive" id="update-isAirlineActive-field" class="form-control" value="{{airline.isAirlineActive}}" required>
+                                        <option value="true">Active</option>
+                                        <option value="false">Inactive</option>
+                                    </select>
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" onclick="updateAirlineInformation()" class="btn btn-primary">Update</button>
+                </div>
+                </div>
+            </div>
+            </div>
+{{!-- update airline modal --}}
+
+
+<!-- create city modal -->
+<div class="modal fade" id="create-city-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add City</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <form action="/admin-cities" method="POST" id="addCityForm">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="cityName" class="form-label">City:</label>
+                                <input type="text"  class="form-control"  name="cityName" id="cityName-field" required>
+                        </div>
+                    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" id="saveAirlineBtn" class="btn btn-primary">Create City</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+{{!-- create city modal --}}
+
+{{!-- update city modal --}}
+
+            <div class="modal fade" id="edit-city-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Update City</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/admin-cities" method="POST" id="editCityForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="airlineName" class="form-label">City:</label>
+                                    <input type="text"  class="form-control"  name="cityName" id="update-cityName-field" value="{{city.cityName}}" required>
+                            </div>
+                        </div>
+                    </form>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" onclick="updateCityInformation()" class="btn btn-primary">Update</button>
+                </div>
+                </div>
+            </div>
+            </div>
+{{!-- update city modal --}}
+
+<!-- create Airline modal -->
+<div class="modal fade" id="create-airline-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Airline</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <form action="/admin-airlines" method="POST" id="addAirlineForm">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="airlineName" class="form-label">Airline:</label>
+                                <input type="text"  class="form-control"  name="airlineName" id="airlineName-field" required>
+                                    <label for="airlineName" class="form-label">Status:</label>
+                                    <select name="isAirlineActive" id="isAirlineActive-field" class="form-control"required>
+                                        <option value="true">Active</option>
+                                        <option value="false">Inactive</option>
+                                    </select>
+                        </div>
+                    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" id="saveAirlineBtn" class="btn btn-primary">Create Airline</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- create Airline modal -->
             {{!-- update flight modal --}}
             <div id="modal-update-flight" class="modal fade" data-bs-backdrop="static"data-bs-keyboard="false" tabindex="-1">
                 <div class="modal-dialog modal-xl">
@@ -340,7 +456,7 @@
                                     <label for="airline" class="form-label">Airline:</label>
                                         <select name="airline" class="form-control" id="update-airline-field" required>
                                             {{#each airlines}}
-                                                    <option value="{{airlineName}}">{{airlineName}}</option>
+                                                    <option value="{{this.airlineName}}">{{airlineName}}</option>
                                                 {{/each}}
                                         </select>
                                 </div>
@@ -500,7 +616,7 @@
                         <h5 class="modal-title text-primary fw-bold">Create Flight</h5>
                     </div>
                     <div class="modal-body">
-                        <form action="/admin-flights" method="POST">
+                        <form action="/admin-flights" method="POST" onsubmit="return validateFlight()">
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="flightNumber" class="form-label">Flight Number:</label>
