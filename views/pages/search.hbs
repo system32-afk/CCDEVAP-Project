@@ -429,7 +429,12 @@
                         <label class="form-label fw-semibold">Stops</label>
                         
                         <div class="form-check mb-2">
-                            <input class="form-check-input stop-filter" type="radio" value="0" name="stop-group" id="stop-0" checked>
+                            <input class="form-check-input stop-filter" type="radio" value="any" name="stop-group" id="stop-any" checked>
+                            <label class="form-check-label" for="stop-any">Any</label>
+                        </div>
+
+                        <div class="form-check mb-2">
+                            <input class="form-check-input stop-filter" type="radio" value="0" name="stop-group" id="stop-0">
                             <label class="form-check-label" for="stop-0">Non-stop</label>
                         </div>
 
@@ -445,7 +450,7 @@
                 </div>
 
 
-
+                <button type="button" class="btn btn-primary w-100 mb-3" id="apply-all-filter">Apply filters</button>
                 <button type="button" class="btn btn-outline-danger w-100 mb-3" id="reset-all-filter">Reset all filters</button>
             </div>
         </div>

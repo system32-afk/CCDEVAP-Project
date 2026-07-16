@@ -20,7 +20,6 @@ const userSchema = new mongoose.Schema({
     nationality:{ type: String, required: true, trim: true},
     emailAddress:{ type: String, required: true, trim: true},
     sex:{ type: String, required: true, trim: true},
-    nationality:{ type: String, required: true, trim: true},
     password:{type:String, required:true},
     preferences: {
         flightStatusNotifications: { 
@@ -31,7 +30,7 @@ const userSchema = new mongoose.Schema({
             type: Boolean, 
             default: false 
         }},
-        role:{type: String, default:"customer"},
+        role:{type: String,enum:["customer", "admin"], default:"customer"},
     paymentMethods:[paymentMethodSchema]
 },
 { collection: 'users' }
