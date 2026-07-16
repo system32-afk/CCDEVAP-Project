@@ -392,7 +392,7 @@ app.get('/search', isAuthenticated, function(req,res){
     });
 });
 
-app.get('/logout',isAuthenticated ,function(req, res) {
+app.post('/logout',isAuthenticated ,function(req, res) {
     req.session.destroy((err) => {
         if (err) {
             return res.redirect('/dashboard');

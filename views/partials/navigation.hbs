@@ -35,9 +35,17 @@
                 <li><a class="dropdown-item" href="settings">
                 <i class="material-symbols-outlined">settings</i>Settings</a></li>
 
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">
-                <i class="material-symbols-outlined">logout</i>Logout</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <form action="/logout" method="POST" style="margin: 0;">
+                        <button type="submit" class="dropdown-item d-flex align-items-center"
+                            style="background: none; border: none; width: 100%;">
+                            <i class="material-symbols-outlined me-2">logout</i>Logout
+                        </button>
+                    </form>
+                </li>
             </ul>
         </li>
        
