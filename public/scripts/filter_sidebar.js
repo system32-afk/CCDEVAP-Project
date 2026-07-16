@@ -30,20 +30,22 @@ const stopFilter = $(".stop-filter");
 //reset all filters
 const FILTERRESET = $("#reset-all-filter")
 
+//apply all filters
+const APPLYFILTER = $("#apply-all-filter");
+
 FILTERRESET.on("click",function(){
     $(".airline-filter, .departure-filter").prop("checked", true);
 
-    $("input[name='stop-group']").prop("checked", true);
+    $("#stop-any").prop("checked", true);
     priceRange.val(500);
     currentPrice.text("PHP 500");
 
     SearchFlight()//reset search query
 })
 
-var FILTEREDRESULTS = [];
-
-
-
+APPLYFILTER.on("click",function(){
+    applyAllFilters();
+})
 
 
 $(document).ready(function() {
@@ -53,30 +55,18 @@ $(document).ready(function() {
 });
 
 
-// sidebarFilterBody.on("change input", function() {
-   
-//     modifyScheduleFilters();   
-
-    
-//     const filteredResults = filterFlights(searchResults); 
-    
-   
-//     renderFlights(filteredResults);
-//     console.log("Filtered Flights Array:", filteredResults);
-
-// });
 
 
 //listen to any changes in the list of airline checkboxes
 listofAirlines.on("change", function(){
     modifyAirlineFilters();
-    applyAllFilters()
+    
 })
 
 listofDeparture.on("change", function(){
     modifyScheduleFilters();
 
-    applyAllFilters()
+    
 })
 
 
@@ -87,7 +77,7 @@ resetSchedules.on("click", function(){
     evening.prop("checked", true);
     night.prop("checked", true);
     modifyScheduleFilters();
-    applyAllFilters()
+   
 })
 selectAllAirline.on("click", function(){
     palCheckbox.prop("checked", true);
@@ -96,16 +86,15 @@ selectAllAirline.on("click", function(){
     cathPacCheckbox.prop("checked", true);
 
     modifyAirlineFilters();
-
-    applyAllFilters()
 })
+
 priceRange.on("input",function(){
     var value = Number($(this).val());
 
     
     currentPrice.text(`PHP ${value.toLocaleString()}`);
 
-    applyAllFilters()
+   
 })
 openSidebarBtn.on("click",function(){
    initSidebarPriceFilter(searchResults);
@@ -237,8 +226,15 @@ function filterPrice(flights){
 
 function filterStops(flights){
 
-    var stops = Number( $("input[name='stop-group']:checked").val() );
+    var stops =  $("input[name='stop-group']:checked").val();
+    console.log("STOPS: ", stops);
 
+    //user has no stops preference
+    if (stops === "any"){
+        return flights;
+    }
+    
+    stops = Number(stops); //make it a number
     return flights.filter(flight =>{
 
 
@@ -268,15 +264,23 @@ function applyAllFilters() {
     temporaryList = filterAirilines(temporaryList);
 
     
-    // temporaryList = filterSchedules(temporaryList);
+    temporaryList = filterSchedules(temporaryList);
 
-    // temporaryList = filterPrice(temporaryList);
+    temporaryList = filterPrice(temporaryList);
 
-    // temporaryList = filterStops(temporaryList);
+    temporaryList = filterStops(temporaryList);
    
-    FILTEREDRESULTS = temporaryList;
+    //if there is a sorting preference
+    if(currentSortOption){
+        console.log("sorted and filtered");
 
-   console.log(FILTEREDRESULTS);
-    renderFlights(FILTEREDRESULTS);
+        console.log("sorting option: ",currentSortOption);
+        const sortedAndFiltered = sortArray(currentSortOption,"ascending",temporaryList);
+         renderFlights(sortedAndFiltered);
+         return;
+    }
+
+   console.log(temporaryList);
+    renderFlights(temporaryList);
 }
 

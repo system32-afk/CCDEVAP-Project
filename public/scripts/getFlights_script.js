@@ -42,10 +42,10 @@ flightsContainer.on("click",".view-details", function(){
 });
 
 
-let currentSortOption = null;
+var currentSortOption = null;
 sortBy.on("click", function(){
     var selected = $(this).val();
-    console.log("clicked sort options!");
+
     if(!hasSearched){
         this.checked = false;
         alert("Please search for flights before sorting!");
@@ -58,11 +58,11 @@ sortBy.on("click", function(){
             currentSortOption = null;
             renderFlightsUI(); //reset selections
 
-            console.log("currentSelect: ", currentSortOption, "just selected: ",selected)
+           
     }else if (selected != currentSortOption && hasSearched){
         currentSortOption = selected;
 
-        sortFlights(selected);
+        applyAllFilters()
     }
 })
 

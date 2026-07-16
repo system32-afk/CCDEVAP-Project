@@ -1,14 +1,9 @@
-// var flightsDB = null;
-
-// $(document).ready(function() {
-//flight database
-// flightsDB = getFlightsDatabase();
-// });
 
 
 
 
-function sortArray(criteria,type,array){
+
+function sortArray(criteria,type = "ascending",array){
 
     var a,b;
     
@@ -35,7 +30,7 @@ function sortArray(criteria,type,array){
     if (type === "descending"){
         return sortedArray.reverse();
     }
-    console.log(sortedArray);
+    
     return sortedArray;
 }
 
