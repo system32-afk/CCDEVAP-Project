@@ -218,6 +218,44 @@ $(document).ready(function () {
 
     loadFlightDetails();
 
+    var ROWS = 10;
+    var PREMIUM_ROWS = [1, 2];
+    var COLS = ["A", "B", "C", "D", "E", "F"];
+
+    function buildSeatRows(occupied, seatClass) {
+        var html = "";
+        for (var r = 1; r <= ROWS; r++) {
+            html += '<div class="d-flex align-items-center gap-1 mb-1">';
+            html += '<div class="seat-row-label text-muted small fw-bold">' + r + '</div>';
+            for (var i = 0; i < COLS.length; i++) {
+                var label = r + COLS[i];
+                var isPremium = PREMIUM_ROWS.indexOf(r) !== -1;
+                var isOccupied = occupied.indexOf(label) !== -1;
+                var status = isOccupied ? "Occupied" : (isPremium ? "Premium" : "Available");
+                var cls = seatClass + (isPremium ? " premium" : " available") + (isOccupied ? " occupied" : "");
+                html += '<div class="seat-cell"><div class="' + cls + '" data-seat="' + label + '" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat ' + label + ' - ' + status + '"></div></div>';
+                if (i === 2) html += '<div class="seat-aisle"></div>';
+            }
+            html += '</div>';
+        }
+        return html;
+    }
+
+    function loadSeatMap(flightIdToUse, cabinType, containerId, seatClass) {
+        $.getJSON("/occupied-seats", { flightId: flightIdToUse, cabinType: cabinType })
+            .done(function(data) {
+                $("#" + containerId).append(buildSeatRows(data.occupiedSeats || [], seatClass));
+                $('[data-bs-toggle="tooltip"]').tooltip();
+            });
+    }
+
+    if (selectedFlight) {
+        loadSeatMap(flightId, selectedFlight.cabinType, "departure-seat-map", "seat");
+    }
+    if (isRoundTrip && selectedReturn) {
+        loadSeatMap(returnFlightId, selectedReturn.cabinType, "return-seat-map", "rt-seat");
+    }
+
     // hides all steps except the current step number
     function goToStep(n) {
         $(".passenger-step").hide();
@@ -238,10 +276,27 @@ $(document).ready(function () {
         $(".inline-validation").hide();
     }
 
+    function syncLocalSeatLocks() {
+        $(".seat.local-lock").removeClass("occupied local-lock");
+        $(".rt-seat.local-lock").removeClass("occupied local-lock");
+
+        for (var key in saved) {
+            if (saved[key] && saved[key].seat && saved[key].seat !== "None") {
+                $(".seat[data-seat='" + saved[key].seat + "']").addClass("occupied local-lock");
+            }
+        }
+        for (var rkey in returnSaved) {
+            if (returnSaved[rkey] && returnSaved[rkey].seat && returnSaved[rkey].seat !== "None") {
+                $(".rt-seat[data-seat='" + returnSaved[rkey].seat + "']").addClass("occupied local-lock");
+            }
+        }
+    }
+
     // hides the passenger form and shows the passenger list again
     function backToList() {
         currentPassenger = null;
         resetForm();
+        syncLocalSeatLocks();   // <-- add this line
         updateSummary();
         $("#passenger-form").hide();
         $("#passenger-list, #outside-buttons").show();
@@ -442,9 +497,11 @@ $(document).ready(function () {
             if (s.meal) {
                 $(".meal-option[data-meal='" + s.meal + "']").addClass("selected");
             }
+            
             if (s.seat) {
                 $(".seat[data-seat='" + s.seat + "']").addClass("selected"); $("#selected-seat-display").text(s.seat);
             }
+            $(".seat[data-seat='" + s.seat + "']").removeClass("occupied local-lock");
             
             $("#baggage-count").text(s.baggage);
             $("#priority-toggle").prop("checked", s.priority);
@@ -507,6 +564,8 @@ $(document).ready(function () {
             if (rs.seat) {
                 $(".rt-seat[data-seat='" + rs.seat + "']").addClass("selected"); $("#rt-selected-seat-display").text(rs.seat);
             }
+            $(".rt-seat[data-seat='" + rs.seat + "']").removeClass("occupied local-lock");
+            
 
             $("#rt-baggage-count").text(rs.baggage);
             $("#rt-priority-toggle").prop("checked", rs.priority);
@@ -653,9 +712,11 @@ $(document).ready(function () {
                 if (isRoundTrip && selectedReturn) {
                     rtInfantPrice = Math.round(selectedReturn.ticketPrice * 0.25);
                 }
-                var infantSubtotal = depInfantPrice + rtInfantPrice;
-                var infantTax = Math.round(infantSubtotal * TAX_RATE);
-                var infantTotal = infantSubtotal + infantTax;
+                var depInfantTax = Math.round(depInfantPrice * TAX_RATE);
+                var depInfantTotal = depInfantPrice + depInfantTax;
+
+                var rtInfantTax = Math.round(rtInfantPrice * TAX_RATE);
+                var rtInfantTotal = rtInfantPrice + rtInfantTax;
 
                 saved[currentPassenger] = {
                     passengerType: "infant",
@@ -669,7 +730,7 @@ $(document).ready(function () {
                     emergencyContact: $("#emergency-contact").val().trim(),
                     meal: null, seat: null, baggage: 0,
                     priority: false, insurance: false, lounge: false,
-                    price: infantTotal
+                    price: depInfantTotal
                 };
 
                 // infant round trip
@@ -685,12 +746,12 @@ $(document).ready(function () {
                         emergencyContact: saved[currentPassenger].emergencyContact,
                         meal: null, seat: null, baggage: 0,
                         priority: false, insurance: false, lounge: false,
-                        price: infantTotal
+                        price: rtInfantTotal
                     };
                 }
 
                 $("#display-name-" + currentPassenger).text(saved[currentPassenger].fullName);
-                $("#display-price-" + currentPassenger).text("₱" + infantTotal.toLocaleString());
+                $("#display-price-" + currentPassenger).text("₱" + (depInfantTotal + rtInfantTotal).toLocaleString());
                 backToList();
             } else {
                 goToStep(2);
@@ -716,7 +777,7 @@ $(document).ready(function () {
     });
 
     // departure seat selection
-    $(".seat").click(function() {
+    $("#departure-seat-map").on("click", ".seat", function() {
         if (!$(this).hasClass("occupied")) {
             $(".seat").removeClass("selected");
             $(this).addClass("selected");
@@ -783,7 +844,7 @@ $(document).ready(function () {
     });
 
     // return seat selection (roundtrip only)
-    $(".rt-seat").click(function() {
+    $("#return-seat-map").on("click", ".rt-seat", function() {
         if (!$(this).hasClass("occupied")) {
             $(".rt-seat").removeClass("selected");
             $(this).addClass("selected");
