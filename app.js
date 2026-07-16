@@ -743,6 +743,13 @@ app.put("/admin-reservations/passenger/:passengerId/status",isAuthenticated, isA
         }
 
         const passenger = booking.passengers.id(req.params.passengerId);
+
+        if (passenger.status !== "Cancelled" && normalizedStatus === "Cancelled") {
+            await flightModel.findByIdAndUpdate(booking.flight, {
+                $inc: { [`cabin.${booking.cabinType}.seats`]: 1 }
+            });
+        }
+
         passenger.status = normalizedStatus;
         await booking.save();
 
@@ -752,7 +759,7 @@ app.put("/admin-reservations/passenger/:passengerId/status",isAuthenticated, isA
     }
 });
 
-app.put("/reservations/passenger/:passengerId/status", isAuthenticated, isAdmin, async function(req, res){
+app.put("/reservations/passenger/:passengerId/status", isAuthenticated, async function(req, res){
     try {
         const { status } = req.body;
 
@@ -770,6 +777,13 @@ app.put("/reservations/passenger/:passengerId/status", isAuthenticated, isAdmin,
         }
 
         const passenger = booking.passengers.id(req.params.passengerId);
+
+        if (passenger.status !== "Cancelled" && status === "Cancelled") {
+            await flightModel.findByIdAndUpdate(booking.flight, {
+                $inc: { [`cabin.${booking.cabinType}.seats`]: 1 }
+            });
+        }
+
         passenger.status = status;
         await booking.save();
 
@@ -937,6 +951,10 @@ app.post("/booking", isAuthenticated, async function(req, res) {
             return res.status(404).json({ message: "Departure flight not found" });
         }
 
+        if (flight.cabin[cabinType].seats < passengers.length) {
+            return res.status(409).json({ message: "Not enough seats available on departure flight" });
+        }
+
         const bookingRef = "BK-" + Math.random().toString(36).substring(2, 10).toUpperCase();
 
         const newBooking = new bookingModel({
@@ -950,10 +968,18 @@ app.post("/booking", isAuthenticated, async function(req, res) {
 
         await newBooking.save();
 
+        await flightModel.findByIdAndUpdate(flightId, {
+            $inc: { [`cabin.${cabinType}.seats`]: -passengers.length }
+        });
+
         if (returnFlightId) {
             const returnFlight = await flightModel.findById(returnFlightId);
             if (!returnFlight) {
                 return res.status(404).json({ message: "Return flight not found" });
+            }
+
+            if (returnFlight.cabin[cabinType].seats < returnPassengers.length) {
+                return res.status(409).json({ message: "Not enough seats available on return flight" });
             }
 
             const returnRef = "BK-" + Math.random().toString(36).substring(2, 10).toUpperCase();
@@ -968,11 +994,41 @@ app.post("/booking", isAuthenticated, async function(req, res) {
             });
 
             await returnBooking.save();
+
+            await flightModel.findByIdAndUpdate(returnFlightId, {
+                $inc: { [`cabin.${cabinType}.seats`]: -returnPassengers.length }
+            });
         }
 
         return res.status(201).json({ message: "Booking saved successfully" });
     } catch(err) {
         console.error("Booking error: ", err);
         return res.status(500).json({ error: err.message });
+    }
+});
+
+app.get("/occupied-seats", isAuthenticated, async function(req, res) {
+    try {
+        const { flightId, cabinType } = req.query;
+
+        const bookings = await bookingModel.find({
+            flight: flightId,
+            cabinType: cabinType,
+            "passengers.status": "Confirmed"
+        }).lean();
+
+        const occupiedSeats = [];
+        bookings.forEach(booking => {
+            booking.passengers.forEach(passenger => {
+                if (passenger.status === "Confirmed" && passenger.seat) {
+                    occupiedSeats.push(passenger.seat);
+                }
+            });
+        });
+
+        res.status(200).json({ occupiedSeats });
+    } catch (err) {
+        console.error("Error fetching occupied seats:", err);
+        res.status(500).json({ error: err.message });
     }
 });
