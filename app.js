@@ -14,7 +14,6 @@ const userModel = require('./models/user_model.js');
 const flightModel = require('./models/flight_model.js');
 const airlineModel = require('./models/airline_model.js');
 const cityModel = require('./models/city_model.js');
-const reservationModel = require('./models/reservation_model.js')
 const savedPassengerModel = require('./models/savedPassenger_Model.js');
 const travelHistoryModel = require('./models/TravelHistory_model.js');
 const bookingModel = require('./models/booking_model.js');
@@ -832,9 +831,9 @@ app.patch("/admin-airlines/:id/deactivate", isAuthenticated, async function(req,
 
 app.get("/reservations-data", isAuthenticated, async function(req, res){
     try{
-        var reservations = await reservationModel.find({
+        var reservations = await bookingModel.find({
             belongsToUser: req.session.userID
-        }).lean();
+        }).populate('flight').lean();
 
         return res.status(200).json(reservations);
     }catch(err){
@@ -845,7 +844,7 @@ app.get("/reservations-data", isAuthenticated, async function(req, res){
 
 app.get("/admin-reservations-data", isAuthenticated, async function(req, res){
     try{
-        var reservations = await reservationModel.find({}).lean();
+        var reservations = await bookingModel.find({}).populate('flight').lean();
         return res.status(200).json(reservations);
     }catch(err){
         console.error("Error fetching all reservations:", err);
