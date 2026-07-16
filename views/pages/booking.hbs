@@ -11,6 +11,8 @@
 <div class="container my-5">
 
     <input type="hidden" id="flight-id" value="{{flightId}}">
+    <!-- flight id passed from server -->
+    <input type="hidden" id="return-flight-id" value="{{returnFlightId}}">
 
     <div class="row g-4">
         <div class="col-lg-9">
@@ -18,7 +20,7 @@
             <!-- Passenger Cards List -->
             <div id="passenger-list" class="row row-cols-1 row-cols-md-3 g-3">
 
-                <!-- Dyanmic Cards -->
+                <!-- Dynamic Cards -->
 
             </div>
 
@@ -107,11 +109,11 @@
                     </div>
                 </div>
 
-                <!-- Meal Selection -->
+                <!-- Departure Meal Selection -->
                 <div class="passenger-step" id="passenger-step-2">
                     <div class="card form-card">
                         <div class="card-body">
-                            <h5 class="card-title">Meal Selection</h5>
+                            <h5 class="card-title">Departure - Meal Selection</h5>
                             <hr>
                             <div class="row g-3">
                                 <div class="col-md-4">
@@ -191,11 +193,11 @@
                     </div>
                 </div>
 
-                <!-- Seat Selection -->
+                <!-- Departure Seat Selection -->
                 <div class="passenger-step" id="passenger-step-3">
                     <div class="card form-card">
                         <div class="card-body">
-                            <h5 class="card-title">Seat Selection</h5>
+                            <h5 class="card-title">Departure - Seat Selection</h5>
                             <hr>
                             <div class="d-flex gap-3 flex-wrap mb-3 justify-content-center">
                                 <div class="d-flex align-items-center gap-1">
@@ -236,24 +238,24 @@
 
                                     <div class="d-flex align-items-center gap-1 mb-1">
                                         <div class="seat-row-label text-muted small fw-bold">1</div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="1A" data-premium="true" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1A - Premium"></div></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="1B" data-premium="true" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1B - Premium"></div></div>
-                                        <div class="seat-cell"><div class="seat premium occupied" data-seat="1C" data-premium="true" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1C - Occupied"></div></div>
+                                        <div class="seat-cell"><div class="seat premium" data-seat="1A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1A - Premium"></div></div>
+                                        <div class="seat-cell"><div class="seat premium" data-seat="1B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1B - Premium"></div></div>
+                                        <div class="seat-cell"><div class="seat premium occupied" data-seat="1C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1C - Occupied"></div></div>
                                         <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="1D" data-premium="true" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1D - Premium"></div></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="1E" data-premium="true" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1E - Premium"></div></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="1F" data-premium="true" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1F - Premium"></div></div>
+                                        <div class="seat-cell"><div class="seat premium" data-seat="1D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1D - Premium"></div></div>
+                                        <div class="seat-cell"><div class="seat premium" data-seat="1E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1E - Premium"></div></div>
+                                        <div class="seat-cell"><div class="seat premium" data-seat="1F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1F - Premium"></div></div>
                                     </div>
 
                                     <div class="d-flex align-items-center gap-1 mb-1">
                                         <div class="seat-row-label text-muted small fw-bold">2</div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="2A" data-premium="true" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2A - Premium"></div></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="2B" data-premium="true" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2B - Premium"></div></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="2C" data-premium="true" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2C - Premium"></div></div>
+                                        <div class="seat-cell"><div class="seat premium" data-seat="2A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2A - Premium"></div></div>
+                                        <div class="seat-cell"><div class="seat premium" data-seat="2B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2B - Premium"></div></div>
+                                        <div class="seat-cell"><div class="seat premium" data-seat="2C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2C - Premium"></div></div>
                                         <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="seat premium occupied" data-seat="2D" data-premium="true" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2D - Occupied"></div></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="2E" data-premium="true" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2E - Premium"></div></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="2F" data-premium="true" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2F - Premium"></div></div>
+                                        <div class="seat-cell"><div class="seat premium occupied" data-seat="2D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2D - Occupied"></div></div>
+                                        <div class="seat-cell"><div class="seat premium" data-seat="2E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2E - Premium"></div></div>
+                                        <div class="seat-cell"><div class="seat premium" data-seat="2F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2F - Premium"></div></div>
                                     </div>
 
                                     <div class="d-flex align-items-center gap-1 mb-1 mt-2">
@@ -354,14 +356,13 @@
                         <button id="btn-back-3" class="btn btn-outline-secondary">Back</button>
                         <button id="btn-next-3" class="btn btn-primary">Next</button>
                     </div>
-                    
                 </div>
 
-                <!-- Extra Services -->
+                <!-- Departure Extra Services -->
                 <div class="passenger-step" id="passenger-step-4">
                     <div class="card form-card">
                         <div class="card-body">
-                            <h5 class="card-title">Extra Services</h5>
+                            <h5 class="card-title">Departure - Extra Services</h5>
                             <hr>
                             <div class="row g-3">
                                 <div class="col-md-6">
@@ -439,6 +440,342 @@
 
                     <div class="mt-3">
                         <button id="btn-back-4" class="btn btn-outline-secondary">Back</button>
+                        <!-- for one way this acts as done, for roundtrip it goes to step 5 -->
+                        <button id="btn-next-4" class="btn btn-primary">Next</button>
+                    </div>
+                </div>
+
+                <!-- Return Meal Selection (roundtrip) -->
+                <div class="passenger-step" id="passenger-step-5">
+                    <div class="card form-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Return - Meal Selection</h5>
+                            <hr>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="card rt-meal-option" data-meal="standard">
+                                        <div class="card-body">
+                                            <p class="option-name">Standard</p>
+                                            <hr>
+                                            <p class="option-desc">A balanced meal with meat, rice, and vegetables.</p>
+                                            <p class="option-cost mb-0">Included</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="card rt-meal-option" data-meal="vegetarian">
+                                        <div class="card-body">
+                                            <p class="option-name">Vegetarian</p>
+                                            <hr>
+                                            <p class="option-desc">Plant-based meal with no meat or seafood.</p>
+                                            <p class="option-cost mb-0">+₱150</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="card rt-meal-option" data-meal="vegan">
+                                        <div class="card-body">
+                                            <p class="option-name">Vegan</p>
+                                            <hr>
+                                            <p class="option-desc">100% plant-based, no animal products whatsoever.</p>
+                                            <p class="option-cost mb-0">+₱200</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="card rt-meal-option" data-meal="halal">
+                                        <div class="card-body">
+                                            <p class="option-name">Halal</p>
+                                            <hr>
+                                            <p class="option-desc">Prepared in accordance with Islamic dietary laws.</p>
+                                            <p class="option-cost mb-0">+₱100</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="card rt-meal-option" data-meal="kosher">
+                                        <div class="card-body">
+                                            <p class="option-name">Kosher</p>
+                                            <hr>
+                                            <p class="option-desc">Prepared in accordance with Jewish dietary laws.</p>
+                                            <p class="option-cost mb-0">+₱350</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="card rt-meal-option" data-meal="gluten-free">
+                                        <div class="card-body">
+                                            <p class="option-name">Gluten-Free</p>
+                                            <hr>
+                                            <p class="option-desc">No gluten-containing ingredients, suitable for celiac.</p>
+                                            <p class="option-cost mb-0">+₱300</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="text-danger inline-validation" id="err-rt-meal">Please select a meal.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <button id="btn-back-5" class="btn btn-outline-secondary">Back</button>
+                        <button id="btn-next-5" class="btn btn-primary">Next</button>
+                    </div>
+                </div>
+
+                <!-- Return Seat Selection (roundtrip) -->
+                <div class="passenger-step" id="passenger-step-6">
+                    <div class="card form-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Return - Seat Selection</h5>
+                            <hr>
+                            <div class="d-flex gap-3 flex-wrap mb-3 justify-content-center">
+                                <div class="d-flex align-items-center gap-1">
+                                    <span class="seat-legend available"></span>
+                                    <p class="passenger-detail">Available</p>
+                                </div>
+                                <div class="d-flex align-items-center gap-1">
+                                    <span class="seat-legend occupied"></span>
+                                    <p class="passenger-detail">Occupied</p>
+                                </div>
+                                <div class="d-flex align-items-center gap-1">
+                                    <span class="seat-legend selected"></span>
+                                    <p class="passenger-detail">Selected</p>
+                                </div>
+                                <div class="d-flex align-items-center gap-1">
+                                    <span class="seat-legend premium"></span>
+                                    <p class="passenger-detail">Premium (+500)</p>
+                                </div>
+                            </div>
+
+                            <p class="option-desc text-center">Selected Return Seat: <span class="option-name" id="rt-selected-seat-display">None</span></p>
+
+                            <div class="d-flex justify-content-center">
+                                <div class="seat-map">
+                                    <p class="option-desc seat-select text-center">FRONT OF THE PLANE</p>
+                                    <hr>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label"></div>
+                                        <div class="seat-cell text-muted small fw-bold">A</div>
+                                        <div class="seat-cell text-muted small fw-bold">B</div>
+                                        <div class="seat-cell text-muted small fw-bold">C</div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell text-muted small fw-bold">D</div>
+                                        <div class="seat-cell text-muted small fw-bold">E</div>
+                                        <div class="seat-cell text-muted small fw-bold">F</div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">1</div>
+                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="1A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1A - Premium"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="1B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1B - Premium"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat premium occupied" data-seat="1C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1C - Occupied"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="1D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1D - Premium"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="1E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1E - Premium"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="1F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1F - Premium"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">2</div>
+                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="2A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2A - Premium"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="2B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2B - Premium"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="2C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2C - Premium"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="rt-seat premium occupied" data-seat="2D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2D - Occupied"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="2E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2E - Premium"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="2F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2F - Premium"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1 mt-2">
+                                        <div class="seat-row-label text-muted small fw-bold">3</div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="3A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3A - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat occupied" data-seat="3B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3B - Occupied"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="3C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3C - Available"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="3D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3D - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="3E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3E - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="3F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3F - Available"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">4</div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="4A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4A - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="4B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4B - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="4C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4C - Available"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="rt-seat occupied" data-seat="4D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4D - Occupied"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="4E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4E - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="4F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4F - Available"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">5</div>
+                                        <div class="seat-cell"><div class="rt-seat occupied" data-seat="5A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5A - Occupied"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="5B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5B - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="5C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5C - Available"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="5D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5D - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="5E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5E - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="5F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5F - Available"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">6</div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="6A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6A - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="6B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6B - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="6C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6C - Available"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="6D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6D - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat occupied" data-seat="6E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6E - Occupied"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="6F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6F - Available"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">7</div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="7A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7A - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="7B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7B - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="7C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7C - Available"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="7D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7D - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="7E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7E - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="7F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7F - Available"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">8</div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="8A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8A - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="8B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8B - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="8C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8C - Available"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="8D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8D - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="8E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8E - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="8F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8F - Available"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">9</div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="9A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9A - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="9B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9B - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="9C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9C - Available"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="9D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9D - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="9E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9E - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="9F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9F - Available"></div></div>
+                                    </div>
+
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <div class="seat-row-label text-muted small fw-bold">10</div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="10A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10A - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="10B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10B - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="10C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10C - Available"></div></div>
+                                        <div class="seat-aisle"></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="10D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10D - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="10E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10E - Available"></div></div>
+                                        <div class="seat-cell"><div class="rt-seat available" data-seat="10F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10F - Available"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="text-danger inline-validation text-center" id="err-rt-seat">Please select a return seat.</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <button id="btn-back-6" class="btn btn-outline-secondary">Back</button>
+                        <button id="btn-next-6" class="btn btn-primary">Next</button>
+                    </div>
+                </div>
+
+                <!-- Return Extra Services (roundtrip) -->
+                <div class="passenger-step" id="passenger-step-7">
+                    <div class="card form-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Return - Extra Services</h5>
+                            <hr>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="card extra-service-card h-100"
+                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                        data-bs-title="Add up to 3 extra bags, 20kg each.">
+                                        <div class="card-body d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <p class="option-name">Additional Baggage</p>
+                                                <hr>
+                                                <p class="option-cost">+₱300 per bag</p>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <button id="rt-baggage-minus" class="btn btn-outline-secondary btn-sm">−</button>
+                                                <span id="rt-baggage-count">0</span>
+                                                <button id="rt-baggage-plus" class="btn btn-outline-secondary btn-sm">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="card extra-service-card h-100"
+                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                        data-bs-title="Board the plane before general passengers.">
+                                        <div class="card-body d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <p class="option-name">Priority Boarding</p>
+                                                <hr>
+                                                <p class="option-cost">+₱250</p>
+                                            </div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="rt-priority-toggle">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="card extra-service-card h-100"
+                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                        data-bs-title="Coverage for delays, cancellations, and medical.">
+                                        <div class="card-body d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <p class="option-name">Travel Insurance</p>
+                                                <hr>
+                                                <p class="option-cost">+₱400</p>
+                                            </div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="rt-insurance-toggle">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="card extra-service-card h-100"
+                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                        data-bs-title="Access to premium airport lounge before your flight.">
+                                        <div class="card-body d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <p class="option-name">Lounge Access</p>
+                                                <hr>
+                                                <p class="option-cost">+₱600</p>
+                                            </div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="rt-lounge-toggle">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <button id="btn-back-7" class="btn btn-outline-secondary">Back</button>
                         <button id="btn-done" class="btn btn-primary">Done</button>
                     </div>
                 </div>
@@ -448,8 +785,8 @@
             <!-- Outside Buttons -->
             <div id="outside-buttons">
                 <div class="mt-3">
-                    <button id="btn-back-5" class="btn btn-outline-secondary">Search Flights</button>
-                    <button id="btn-next-5" class="btn btn-primary">Confirm</button>
+                    <button id="btn-search" class="btn btn-outline-secondary">Search Flights</button>
+                    <button id="btn-confirm" class="btn btn-primary">Confirm</button>
                 </div>
             </div>
 
@@ -462,8 +799,8 @@
                     <h5 class="card-title">Booking Summary</h5>
                     <hr>
 
-                    <!-- Flight Details -->
-                    <p class="summary-section-label">Flight Details</p>
+                    <!-- Departure Flight Details -->
+                    <p class="summary-section-label">Departure Flight</p>
 
                     <div class="d-flex justify-content-between mb-1">
                         <p class="summary-section-detail text-muted">Flight</p>
@@ -490,10 +827,44 @@
                         <p class="passenger-detail" id="summary-duration">-</p>
                     </div>
 
+                    <!-- Return Flight Details (roundtrip) -->
+                    <div id="return-flight-details" style="display:none;">
+                        <hr>
+                        <p class="summary-section-label">Return Flight</p>
+
+                        <div class="d-flex justify-content-between mb-1">
+                            <p class="summary-section-detail text-muted">Flight</p>
+                            <p class="passenger-detail" id="summary-return-flight">-</p>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-1">
+                            <p class="summary-section-detail text-muted">Route</p>
+                            <p class="passenger-detail" id="summary-return-route">-</p>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-1">
+                            <p class="summary-section-detail text-muted">Departure</p>
+                            <p class="passenger-detail" id="summary-return-departure">-</p>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-1">
+                            <p class="summary-section-detail text-muted">Arrival</p>
+                            <p class="passenger-detail" id="summary-return-arrival">-</p>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-1">
+                            <p class="summary-section-detail text-muted">Duration</p>
+                            <p class="passenger-detail" id="summary-return-duration">-</p>
+                        </div>
+                    </div>
+
+                    <hr>
+
                     <div class="d-flex justify-content-between mb-1">
                         <p class="summary-section-detail text-muted">Cabin Class</p>
                         <p class="passenger-detail" id="summary-cabin">-</p>
                     </div>
+
                     <div class="d-flex justify-content-between mb-1">
                         <p class="summary-section-detail text-muted">Passengers</p>
                         <p class="passenger-detail" id="summary-passengers">-</p>
@@ -580,6 +951,24 @@
                         <span class="summary-total-label">Total</span>
                         <span class="summary-total-value" id="summary-total"></span>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmBookingModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Booking</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Passenger details cannot be edited after confirming. Please double check all details before proceeding.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Go Back</button>
+                    <button type="button" id="btn-confirm-booking" class="btn btn-primary">Confirm Booking</button>
                 </div>
             </div>
         </div>

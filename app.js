@@ -264,9 +264,10 @@ app.get('/admin-users',isAuthenticated ,function(req,res){
 
 
 app.get('/booking', isAuthenticated, function(req, res) {
-    res.render('pages/booking', {
+        res.render('pages/booking', {
         title: "Bookings",
         flightId: req.query.flightId,
+        returnFlightId: req.query.returnFlightId || "",
         pageScripts: `
             <script src="../scripts/sessionStorage.js"></script>
             <script src="../scripts/booking.js"></script>
@@ -567,12 +568,6 @@ app.post("/admin-flights", async function(req,res){
     const {flightNumber, airline,origin, destination, departureDate, departureTime, arrivalDate,
         arrivalTime, logoName, numOfLayovers, isActive, cabin} = req.body;
 
-    // CHECKS IF FLIGHT ALREADY EXISTS
-    let flight = await flightModel.findOne({flightNumber});
-    if(flight) {
-        return res.redirect('/admin-flights');
-    }
-
     flight = new flightModel({
         flightNumber, 
         airline,
@@ -870,11 +865,11 @@ function isAuthenticated(req, res, next) {
 
 app.post("/booking", isAuthenticated, async function(req, res) {
     try {
-        const { flightId, cabinType, totalPrice, passengers } = req.body;
+        const { flightId, returnFlightId, cabinType, totalPrice, returnTotalPrice, passengers, returnPassengers } = req.body;
 
         const flight = await flightModel.findById(flightId);
         if (!flight) {
-            return res.status(404).json({ message: "Flight not found" });
+            return res.status(404).json({ message: "Departure flight not found" });
         }
 
         const bookingRef = "BK-" + Math.random().toString(36).substring(2, 10).toUpperCase();
@@ -889,6 +884,27 @@ app.post("/booking", isAuthenticated, async function(req, res) {
         });
 
         await newBooking.save();
+
+        if (returnFlightId) {
+            const returnFlight = await flightModel.findById(returnFlightId);
+            if (!returnFlight) {
+                return res.status(404).json({ message: "Return flight not found" });
+            }
+
+            const returnRef = "BK-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+
+            const returnBooking = new bookingModel({
+                bookingReference: returnRef,
+                flight: returnFlightId,
+                cabinType: cabinType,
+                belongsToUser: req.session.userID,
+                totalPrice: returnTotalPrice,
+                passengers: returnPassengers
+            });
+
+            await returnBooking.save();
+        }
+
         return res.status(201).json({ message: "Booking saved successfully" });
     } catch(err) {
         console.error("Booking error: ", err);
