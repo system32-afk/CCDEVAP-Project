@@ -765,7 +765,7 @@ app.put("/reservations/passenger/:passengerId/status", isAuthenticated, isAdmin,
             return res.status(404).json({ message: "Passenger not found" });
         }
 
-        if (booking.belongsToUser !== req.session.userID) {
+        if (String(booking.belongsToUser) !== String(req.session.userID)) {
             return res.status(403).json({ message: "You do not have permission to modify this reservation." });
         }
 
