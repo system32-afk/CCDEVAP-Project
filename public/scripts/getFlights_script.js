@@ -290,7 +290,7 @@ async function lockInFlight(flightID){
             
             // save departure flight and show return flights
             sessionStorage.setItem("selected_departure", JSON.stringify({
-                id: chosenFlight.id,
+                id: chosenFlight._id,
                 flightNum: chosenFlight.flightNumber,
                 airline: chosenFlight.airline,
                 departure: chosenFlight.departureTime,
@@ -308,7 +308,7 @@ async function lockInFlight(flightID){
         }else{ 
             // one way flight
             sessionStorage.setItem("selected_flight", JSON.stringify({
-                id: chosenFlight.id,
+                id: chosenFlight._id,
                 flightNum: chosenFlight.flightNumber,
                 airline: chosenFlight.airline,
                 departure: chosenFlight.departureTime,
@@ -330,7 +330,7 @@ async function lockInFlight(flightID){
 
         // save return flight
         sessionStorage.setItem("selected_return", JSON.stringify({
-            id: chosenFlight.id,
+            id: chosenFlight._id,
             flightNum: chosenFlight.flightNumber,
             airline: chosenFlight.airline,
             departure: chosenFlight.departureTime,
@@ -343,7 +343,8 @@ async function lockInFlight(flightID){
             departureDate: getBookingInfo().returnDate
         }));
 
-        window.location.href = "/booking?flightId=" + chosenFlight._id;
+        var depId = JSON.parse(sessionStorage.getItem("selected_departure")).id;
+        window.location.href = "/booking?flightId=" + depId + "&returnFlightId=" + chosenFlight._id;
     }
 }
 

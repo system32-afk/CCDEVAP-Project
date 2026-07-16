@@ -318,3 +318,83 @@ label {
     font-size: 90%;
     user-select: none;
 }
+
+/* Return Trip Seats */
+.rt-seat {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px 6px 1px 1px;
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+.rt-seat.available { 
+    background-color: #d4e3ff; 
+    border: 2px solid #a0bcee; 
+}
+
+.rt-seat.available:hover { 
+    transform: scale(1.15); 
+    background-color: #b0caff; 
+}
+
+.rt-seat.premium { 
+    background-color: #fff3cd; 
+    border: 2px solid #f0b400; 
+}
+
+.rt-seat.premium:hover { 
+    transform: scale(1.15); 
+    background-color: #ffe08a; 
+}
+
+.rt-seat.occupied { 
+    background-color: #e0e0e0; 
+    border: 2px solid #aaa; 
+    cursor: not-allowed; 
+}
+
+.rt-seat.occupied:hover { transform: none; }
+
+.rt-seat.premium.occupied { 
+    background-color: #e0e0e0; 
+    border: 2px solid #aaa; 
+    cursor: not-allowed; 
+}
+
+.rt-seat.premium.occupied:hover { transform: none; }
+
+.rt-seat.selected { 
+    background-color: #2E5EAA; 
+    border: 2px solid #1a3d7a; 
+}
+
+.rt-seat.selected:hover { 
+    background-color: #2E5EAA; 
+    border: 2px solid #1a3d7a; 
+}
+
+.rt-seat.premium.selected { 
+    background-color: #d4a000; 
+    border: 2px solid #a07800; 
+}
+
+.rt-seat.premium.selected:hover { 
+    background-color: #d4a000; 
+    border: 2px solid #a07800; 
+}
+
+/* Return Trip Meal Options */
+.rt-meal-option {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.rt-meal-option:hover {
+    transform: scale(1.05);
+}
+
+.rt-meal-option.selected {
+    border-color: #2E5EAA;
+    background: #e8effe;
+}
