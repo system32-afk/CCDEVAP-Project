@@ -231,8 +231,25 @@ $(document).ready(function () {
                 var label = r + COLS[i];
                 var isPremium = PREMIUM_ROWS.indexOf(r) !== -1;
                 var isOccupied = occupied.indexOf(label) !== -1;
-                var status = isOccupied ? "Occupied" : (isPremium ? "Premium" : "Available");
-                var cls = seatClass + (isPremium ? " premium" : " available") + (isOccupied ? " occupied" : "");
+
+                var status = "Available";
+                if (isOccupied) {
+                    status = "Occupied";
+                } else if (isPremium) {
+                    status = "Premium";
+                }
+
+                var cls = seatClass;
+                if (isPremium) {
+                    cls += " premium";
+                } else {
+                    cls += " available";
+                }
+
+                if (isOccupied) {
+                    cls += " occupied";
+                }
+                
                 html += '<div class="seat-cell"><div class="' + cls + '" data-seat="' + label + '" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat ' + label + ' - ' + status + '"></div></div>';
                 if (i === 2) html += '<div class="seat-aisle"></div>';
             }
