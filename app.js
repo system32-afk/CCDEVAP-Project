@@ -95,7 +95,7 @@ app.get('/register', function(req,res){
             `});
 })
 
-app.get('/home', isAuthenticated, async function(req, res) {
+app.get('/home', isAuthenticated, isUser, async function(req, res) {
     
     try{
         var currentUser = await userModel.findById(req.session.userID);
@@ -268,7 +268,7 @@ app.get('/admin-users',isAuthenticated , isAdmin, function(req,res){
 });
 
 
-app.get('/booking', isAuthenticated, function(req, res) {
+app.get('/booking', isAuthenticated,isUser, function(req, res) {
         res.render('pages/booking', {
         title: "Bookings",
         flightId: req.query.flightId,
@@ -280,7 +280,7 @@ app.get('/booking', isAuthenticated, function(req, res) {
     });
 });
 
-app.get('/profile', isAuthenticated , async function(req,res){
+app.get('/profile', isAuthenticated ,isUser, async function(req,res){
     var user = await userModel.findById(req.session.userID).lean();
     var savedPassenger = await savedPassengerModel.find({belong_to_user:req.session.userID})
     console.log("Sending user to template:", user);
@@ -302,7 +302,7 @@ app.get('/profile', isAuthenticated , async function(req,res){
 });
 
 
-app.get("/saved-passengers",isAuthenticated, async function(req,res) {
+app.get("/saved-passengers",isAuthenticated, isUser, async function(req,res) {
     try{
 
         console.log("Session User ID:", req.session.userID);
@@ -326,7 +326,7 @@ app.get("/saved-passengers/edit/:id", isAuthenticated, async function(req,res){
     }
 })
 
-app.get("/paymentMethods", isAuthenticated, async function(req,res){
+app.get("/paymentMethods", isAuthenticated,isUser, async function(req,res){
     try{
         var user = await userModel.findById(req.session.userID);
 
@@ -343,7 +343,7 @@ app.get("/paymentMethods", isAuthenticated, async function(req,res){
     }
 })
 
-app.get("/travel-history", isAuthenticated, async function(req,res) {
+app.get("/travel-history", isAuthenticated,isUser, async function(req,res) {
     try{
         var history = await travelHistoryModel.find({belongs_to_user: req.session.userID});
 
@@ -357,7 +357,7 @@ app.get("/travel-history", isAuthenticated, async function(req,res) {
     }
 })
 
-app.get('/reservations', isAuthenticated, async function(req,res){
+app.get('/reservations', isAuthenticated, isUser, async function(req,res){
     const cities = await cityModel.find({}).sort({ cityName: 1 }).lean();
 
     res.render('pages/reservations',{
@@ -372,7 +372,7 @@ app.get('/reservations', isAuthenticated, async function(req,res){
     });
 });
 
-app.get('/search', isAuthenticated, function(req,res){
+app.get('/search', isAuthenticated,isUser, function(req,res){
     res.render('pages/search',{
         title: "Search",
         layout:"main", 
@@ -402,7 +402,7 @@ app.post('/logout',isAuthenticated ,function(req, res) {
     });
 });
 
-app.get("/search-flights",isAuthenticated, async function(req,res){
+app.get("/search-flights",isAuthenticated, isUser, async function(req,res){
     
 
     try{
@@ -487,7 +487,7 @@ app.get("/search-flights",isAuthenticated, async function(req,res){
  
 })
 
-app.get("/flight-info",isAuthenticated, async function(req,res){
+app.get("/flight-info",isAuthenticated, isUser, async function(req,res){
     try{
         let {flightID} = req.query; 
 
@@ -898,7 +898,7 @@ app.patch("/admin-airlines/:id/deactivate", isAuthenticated, isAdmin, async func
 
 //==========================READ OPERATIIONS=============================
 
-app.get("/reservations-data", isAuthenticated, async function(req, res){
+app.get("/reservations-data", isAuthenticated,isUser, async function(req, res){
     try{
         var reservations = await bookingModel.find({
             belongsToUser: req.session.userID
@@ -941,9 +941,16 @@ function isAdmin(req,res, next){
     return res.redirect("/home");
 }
 
+function isUser(req,res, next){
+    if(req.session.role === "user"){
+        return next();
+    }
+    return res.redirect("/admin-dashboard");
+}
+
 //========================== FLIGHT BOOKING =============================
 
-app.post("/booking", isAuthenticated, async function(req, res) {
+app.post("/booking", isAuthenticated, isUser, async function(req, res) {
     try {
         const { flightId, returnFlightId, cabinType, totalPrice, returnTotalPrice, passengers, returnPassengers } = req.body;
 
@@ -1008,7 +1015,7 @@ app.post("/booking", isAuthenticated, async function(req, res) {
     }
 });
 
-app.get("/occupied-seats", isAuthenticated, async function(req, res) {
+app.get("/occupied-seats", isAuthenticated,isUser, async function(req, res) {
     try {
         const { flightId, cabinType } = req.query;
 
