@@ -15,17 +15,19 @@ function sortArray(criteria,type,array){
     var sortedArray = array.slice().sort((a,b) => {
 
         if (criteria === "ticketPrice"){
-            a = a.ticketPrice;
-            b = b.ticketPrice
+            let cabinType = Object.keys(a.cabin).find(key => key !== '_id'); // find the cabin type name, exclude the _id
+            a = a.cabin?.[cabinType]?.price;
+            b = b.cabin?.[cabinType]?.price;
             return a - b;
         }else if (criteria ==="departure"){
-            a = a.Departure;
-            b = b.Departure;
+            a = a.departureTime;
+            b = b.departureTime;
             return a.localeCompare(b);
         }else if (criteria === "duration"){
-            a = a.durationMinutes;
-            b = b.durationMinutes;
-            return a - b;
+            let durationA = calculateFlightDuration(a.departureTime,a.arrivalTime);
+            let durationB = calculateFlightDuration(b.departureTime,b.arrivalTime);
+            
+            return durationA - durationB;
         }
         return 0;
     }); 
@@ -33,7 +35,7 @@ function sortArray(criteria,type,array){
     if (type === "descending"){
         return sortedArray.reverse();
     }
-    
+    console.log(sortedArray);
     return sortedArray;
 }
 

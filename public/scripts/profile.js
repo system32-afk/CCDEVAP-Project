@@ -573,7 +573,7 @@ function checkAddCardButtonVisibility(cards) {
     if (activeCards.length >= 3) {
         addPaymentContainer.hide();
     } else {
-        addPaymentContainer.show();
+        addPaymentContainer.show();  
     }
 }
 
