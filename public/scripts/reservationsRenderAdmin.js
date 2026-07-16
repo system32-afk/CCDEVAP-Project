@@ -14,6 +14,7 @@ function renderReservations(list) {
 
             tbody.innerHTML += createAdminReservationRow(reservation, passenger);
             tbody.innerHTML += showFullAdminReservationModal(reservation, passenger);
+            tbody.innerHTML += createEditSeatModal(reservation, passenger);
         }
     });
 }
@@ -21,7 +22,9 @@ function renderReservations(list) {
 // Creates a table row for a reservation
 function createAdminReservationRow(reservation, passenger) {
     const modalId = `modal-${reservation.bookingReference}-${passenger.seat}`;
+    const editModalId = `modal-edit-${reservation.bookingReference}-${passenger.seat}`;
     const status = passenger.status.toLowerCase();
+    const isCancelled = passenger.status === "Cancelled";
 
     return `
     <tr>
@@ -37,7 +40,7 @@ function createAdminReservationRow(reservation, passenger) {
             </select>
         </td>
         <td><button class="view-button" onclick="openModal('${modalId}')">View Details</button></td>
-        <td><button class="edit-button" onclick="openModal('${modalId}')">Edit</button></td>
+        <td><button class="edit-button" ${isCancelled ? "disabled" : ""} onclick="openEditSeatModal('${editModalId}', '${passenger._id}')">Edit</button></td>
     </tr>
     `;
 }
