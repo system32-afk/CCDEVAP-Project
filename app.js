@@ -564,12 +564,6 @@ app.post("/admin-flights", async function(req,res){
     const {flightNumber, airline,origin, destination, departureDate, departureTime, arrivalDate,
         arrivalTime, logoName, numOfLayovers, isActive, cabin} = req.body;
 
-    // CHECKS IF FLIGHT ALREADY EXISTS
-    let flight = await flightModel.findOne({flightNumber});
-    if(flight) {
-        return res.redirect('/admin-flights');
-    }
-
     flight = new flightModel({
         flightNumber, 
         airline,
