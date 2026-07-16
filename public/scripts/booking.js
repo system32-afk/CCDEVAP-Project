@@ -3,9 +3,6 @@ $(document).ready(function () {
     // stores which passenger is currently being edited
     let currentPassenger = null;
 
-    var chosenMeal = null;
-    var chosenSeat = null;
-
     var totals = {
         seats: [],
         meals: [],
@@ -88,9 +85,7 @@ $(document).ready(function () {
                     "<p class='passenger-detail'>Additional Baggage: <span id='display-baggage-" + id + "'>-</span></p>" +
                     "<p class='passenger-detail'>Priority Boarding: <span id='display-priority-" + id + "'>-</span></p>" +
                     "<p class='passenger-detail'>Travel Insurance: <span id='display-insurance-" + id + "'>-</span></p>" +
-                    "<p class='passenger-detail'>Lounge Access: <span id='display-lounge-" + id + "'>-</span></p>";
-                    "<hr>" +
-                    "<p class='passenger-detail fw-bold'>Total: <span id='display-price-" + id + "'>-</span></p>"
+                    "<p class='passenger-detail'>Lounge Access: <span id='display-lounge-" + id + "'>-</span></p>"
         }
 
         return "<div class='col'>" +
@@ -101,7 +96,10 @@ $(document).ready(function () {
                     "<p class='passenger-detail'>Name: <span id='display-name-" + id + "'>-</span></p>" +
                     extras +
                     "<hr>" +
-                    "<p class='passenger-detail fw-bold'>Total: <span id='display-price-" + id + "'>-</span></p>"
+                    "<div>" +
+                        "<span class='summary-total-label'>Total: </span>" +
+                        "<span class='summary-total-value ' id='display-price-" + id +"'>-</span>" +
+                    "</div>" +
                 "</div>" +
             "</div>";
     }
