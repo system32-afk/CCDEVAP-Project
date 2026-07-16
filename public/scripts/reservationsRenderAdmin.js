@@ -1,19 +1,24 @@
-
+// Displays all reservations in the admin table
 function renderReservations(list) {
     const tbody = document.getElementById("reservationAdminContainer");
-    if (!tbody) return; // this page has no admin reservation table, nothing to render
+
+    // Stop if the table isn't on the current page
+    if (!tbody) return;
 
     tbody.innerHTML = "";
 
     list.forEach(reservation => {
+        // Create a row and its matching modal for each passenger
         for (let i = 0; i < reservation.passengers.length; i++) {
             const passenger = reservation.passengers[i];
+
             tbody.innerHTML += createAdminReservationRow(reservation, passenger);
             tbody.innerHTML += showFullAdminReservationModal(reservation, passenger);
         }
     });
 }
 
+// Creates a table row for a reservation
 function createAdminReservationRow(reservation, passenger) {
     const modalId = `modal-${reservation.bookingReference}-${passenger.seat}`;
     const status = passenger.status.toLowerCase();
@@ -37,6 +42,7 @@ function createAdminReservationRow(reservation, passenger) {
     `;
 }
 
+// Creates the full reservation details shown in the admin modal
 function showFullAdminReservationModal(reservation, passenger) {
     const modalId = `modal-${reservation.bookingReference}-${passenger.seat}`;
 
@@ -89,8 +95,11 @@ function showFullAdminReservationModal(reservation, passenger) {
                 <div class="form-group">
                     <label>Flight Duration</label>
                     <p>${formatDuration(calculateMinutesForDuration(
-                        reservation.flight.departureDate, reservation.flight.departureTime,
-                        reservation.flight.arrivalDate, reservation.flight.arrivalTime))}</p>
+                        reservation.flight.departureDate,
+                        reservation.flight.departureTime,
+                        reservation.flight.arrivalDate,
+                        reservation.flight.arrivalTime
+                    ))}</p>
                 </div>
 
                 <div class="form-group">
