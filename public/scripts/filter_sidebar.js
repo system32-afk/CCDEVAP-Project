@@ -40,7 +40,7 @@ FILTERRESET.on("click",function(){
     SearchFlight()//reset search query
 })
 
-var searchResults = "";
+var FILTEREDRESULTS = [];
 
 
 
@@ -53,27 +53,30 @@ $(document).ready(function() {
 });
 
 
-sidebarFilterBody.on("change input", function() {
+// sidebarFilterBody.on("change input", function() {
    
-    modifyScheduleFilters();   
+//     modifyScheduleFilters();   
 
     
-    const filteredResults = filterFlights(searchResults); 
+//     const filteredResults = filterFlights(searchResults); 
     
    
-    renderFlights(filteredResults);
-    console.log("Filtered Flights Array:", filteredResults);
+//     renderFlights(filteredResults);
+//     console.log("Filtered Flights Array:", filteredResults);
 
-});
+// });
+
+
 //listen to any changes in the list of airline checkboxes
 listofAirlines.on("change", function(){
     modifyAirlineFilters();
+    applyAllFilters()
 })
 
 listofDeparture.on("change", function(){
     modifyScheduleFilters();
 
-    
+    applyAllFilters()
 })
 
 
@@ -84,6 +87,7 @@ resetSchedules.on("click", function(){
     evening.prop("checked", true);
     night.prop("checked", true);
     modifyScheduleFilters();
+    applyAllFilters()
 })
 selectAllAirline.on("click", function(){
     palCheckbox.prop("checked", true);
@@ -92,24 +96,32 @@ selectAllAirline.on("click", function(){
     cathPacCheckbox.prop("checked", true);
 
     modifyAirlineFilters();
+
+    applyAllFilters()
 })
-
-
-
 priceRange.on("input",function(){
     var value = Number($(this).val());
 
     
     currentPrice.text(`PHP ${value.toLocaleString()}`);
+
+    applyAllFilters()
 })
 openSidebarBtn.on("click",function(){
-   initSidebarPriceFilter(sortFlights("ticketPrice",false));
+   initSidebarPriceFilter(searchResults);
 })
-
 
 
 function initSidebarPriceFilter(flights){
+    FILTEREDRESULTS = searchResults;
 
+
+
+    if (filter_options.airline != "any") {
+    $(".airline-filter").attr("disabled", true); 
+    } else {
+        $(".airline-filter").attr("disabled", false);  
+    }
     
     //fail safe
     if (!flights || flights.length === 0) {
@@ -118,7 +130,15 @@ function initSidebarPriceFilter(flights){
         return;
     }
 
-    var highestPrice = Number(flights.at(-1).ticketPrice);
+    var prices = flights.map(flight => {
+        const cabinTypes = flight.cabin;
+
+        const classKey = Object.keys(cabinTypes).find(key => key !== '_id');
+        return cabinTypes[classKey]?.price;
+    });
+
+    
+    var highestPrice = Math.max(...prices);
     priceRange.attr("max",highestPrice);
     
     priceLimitDisplay.text(`PHP ${highestPrice.toLocaleString()}`);
@@ -160,25 +180,25 @@ function modifyScheduleFilters(){
 }
 
 
-
-
-function filterFlights(flights = searchResults){
-    console.log("search result in function: ", flights)
-   var airlines = airlineFilters;
-   var schedules = departureSchedules;
-   var price = Number(priceRange.val());
-   var stops = Number( $("input[name='stop-group']:checked").val() );
-
-   console.log("airlines: ",airlines);
-    return flights.filter(flight =>{
-
-
+function filterAirilines(flights){
+     
+    var airlines = airlineFilters;
+   
+    return flights.filter(flight => {
         if (airlines.length > 0 && !airlines.includes(flight.airline)) {
             return false;
         }
+        return true;
+    });
 
+}
+
+function filterSchedules(flights){
+    var schedules = departureSchedules;
+
+    return flights.filter(flight =>{
         if (schedules.length > 0) {
-            const hour = parseInt(flight.Departure.split(":")[0]); // parses "14:30" -> 14
+            const hour = parseInt(flight.departureTime.split(":")[0]); // parses "14:30" -> 14
             let matchSchedule = false;
 
             if (schedules.includes("morning") && hour >= 6 && hour < 12){
@@ -194,17 +214,36 @@ function filterFlights(flights = searchResults){
                 matchSchedule = true;
             }
 
-            if (!matchSchedule) return false; // Skip if it doesnt match any checked timeframe
+            if (!matchSchedule){
+                return false; // Skip if it doesnt match any checked timeframe
+            }
+
         }
+     return true;
+    })
+}
 
-
+function filterPrice(flights){
+    var price = Number(priceRange.val());
+    return flights.filter(flight =>{
         if(Number(flight.ticketPrice) > price){
             return false;
         }
+     return true;
+    })
 
-        
+    
+}
+
+function filterStops(flights){
+
+    var stops = Number( $("input[name='stop-group']:checked").val() );
+
+    return flights.filter(flight =>{
+
+
         if (stops === 2) {
-           
+        
             if (flight.numOfLayovers < stops) {
                 return false;
             }
@@ -215,16 +254,29 @@ function filterFlights(flights = searchResults){
             }
         }
 
+
      return true;
     })
-
-    
 }
 
 
+function applyAllFilters() {
+    // always start fresh from the original search results
+    let temporaryList = searchResults;
 
+    
+    temporaryList = filterAirilines(temporaryList);
 
+    
+    // temporaryList = filterSchedules(temporaryList);
 
+    // temporaryList = filterPrice(temporaryList);
 
+    // temporaryList = filterStops(temporaryList);
+   
+    FILTEREDRESULTS = temporaryList;
 
+   console.log(FILTEREDRESULTS);
+    renderFlights(FILTEREDRESULTS);
+}
 
