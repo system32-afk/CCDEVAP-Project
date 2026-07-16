@@ -1051,7 +1051,7 @@ function isAdmin(req,res, next){
 }
 
 function isUser(req,res, next){
-    if(req.session.role === "user"){
+    if(req.session.role === "customer"){
         return next();
     }
     return res.redirect("/admin-dashboard");
@@ -1124,7 +1124,7 @@ app.post("/booking", isAuthenticated, isUser, async function(req, res) {
     }
 });
 
-app.get("/occupied-seats", isAuthenticated,isUser, async function(req, res) {
+app.get("/occupied-seats", isAuthenticated, async function(req, res) {
     try {
         const { flightId, cabinType } = req.query;
 
