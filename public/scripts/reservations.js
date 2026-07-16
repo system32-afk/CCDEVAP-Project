@@ -233,3 +233,219 @@ function resetSearch() {
     document.getElementById("searchAndSortForm").reset();
     renderReservations(reservations);
 }
+
+// Seat-edit modal logic, extracted from the seat-selection step of the
+// booking flow (booking.hbs / booking.js) and adapted to edit a single
+// passenger's seat on an already-made reservation.
+
+// Same layout constants as the booking flow's seat map
+const EDIT_SEAT_ROWS = 10;
+const EDIT_PREMIUM_ROWS = [1, 2];
+const EDIT_SEAT_COLS = ["A", "B", "C", "D", "E", "F"];
+
+// Creates the seat-editing modal for a single passenger, extracted from the
+// seat-selection step used in the booking flow (booking.hbs / booking.js).
+// Shared by both the customer (reservationsRender.js) and admin
+// (reservationsRenderAdmin.js) pages, so the endpoint is picked based on
+// whichever page is currently open.
+function createEditSeatModal(reservation, passenger) {
+    const editModalId = `modal-edit-${reservation.bookingReference}-${passenger.seat}`;
+    const seatMapId = `edit-seat-map-${passenger._id}`;
+    const displayId = `edit-selected-seat-${passenger._id}`;
+    const errId = `edit-seat-err-${passenger._id}`;
+    const isAdminPage = window.location.pathname.startsWith("/admin");
+    const endpointBase = isAdminPage ? "/admin-reservations" : "/reservations";
+
+    return `
+    <div id="${editModalId}" class="modal-overlay" onclick="whenUserClicksOutside(event, '${editModalId}')">
+        <div class="modal-content-box">
+            <span class="modal-close-btn" onclick="closeModal('${editModalId}')">
+                <img src="/images/close_gray_x.png">
+            </span>
+
+            <div class="reservation-card">
+                <h5 class="card-title">Change Seat &mdash; ${passenger.fullName}</h5>
+                <hr>
+
+                <div class="d-flex gap-3 flex-wrap mb-3 justify-content-center">
+                    <div class="d-flex align-items-center gap-1">
+                        <span class="seat-legend available"></span>
+                        <p class="passenger-detail">Available</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                        <span class="seat-legend occupied"></span>
+                        <p class="passenger-detail">Occupied</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                        <span class="seat-legend selected"></span>
+                        <p class="passenger-detail">Selected</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                        <span class="seat-legend premium"></span>
+                        <p class="passenger-detail">Premium (+${formatPrice(500)})</p>
+                    </div>
+                </div>
+
+                <p class="option-desc text-center">Selected Seat: <span class="option-name" id="${displayId}">${passenger.seat || "None"}</span></p>
+
+                <div class="d-flex justify-content-center">
+                    <div class="seat-map"
+                         id="${seatMapId}"
+                         data-passenger-id="${passenger._id}"
+                         data-current-seat="${passenger.seat || ""}"
+                         data-flight-id="${reservation.flight._id}"
+                         data-cabin-type="${reservation.cabinType}"
+                         data-endpoint-base="${endpointBase}">
+                        <p class="option-desc seat-select text-center">FRONT OF THE PLANE</p>
+                        <hr>
+                        <div class="d-flex align-items-center gap-1 mb-1">
+                            <div class="seat-row-label"></div>
+                            <div class="seat-cell text-muted small fw-bold">A</div>
+                            <div class="seat-cell text-muted small fw-bold">B</div>
+                            <div class="seat-cell text-muted small fw-bold">C</div>
+                            <div class="seat-aisle"></div>
+                            <div class="seat-cell text-muted small fw-bold">D</div>
+                            <div class="seat-cell text-muted small fw-bold">E</div>
+                            <div class="seat-cell text-muted small fw-bold">F</div>
+                        </div>
+                        <!-- rows injected by seatEditModal.js -->
+                    </div>
+                </div>
+
+                <p class="text-danger inline-validation text-center" id="${errId}" style="display:none;">Please select a seat.</p>
+
+                <div class="options-group mt-3">
+                    <button class="edit-button" onclick="saveNewSeat('${passenger._id}')">Save Seat</button>
+                    <button class="cancel-button" onclick="closeModal('${editModalId}')">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+}
+
+// Builds the seat grid rows for a seat-edit modal.
+// The passenger's own current seat is shown as "selected" rather than
+// "occupied", since /occupied-seats reports it as taken by them.
+function buildEditSeatRows(occupied, currentSeat) {
+    let html = "";
+
+    for (let r = 1; r <= EDIT_SEAT_ROWS; r++) {
+        html += '<div class="d-flex align-items-center gap-1 mb-1">';
+        html += '<div class="seat-row-label text-muted small fw-bold">' + r + '</div>';
+
+        for (let i = 0; i < EDIT_SEAT_COLS.length; i++) {
+            const label = r + EDIT_SEAT_COLS[i];
+            const isPremium = EDIT_PREMIUM_ROWS.indexOf(r) !== -1;
+            const isCurrent = label === currentSeat;
+            const isOccupied = !isCurrent && occupied.indexOf(label) !== -1;
+
+            let status = "Available";
+            if (isCurrent) status = "Your current seat";
+            else if (isOccupied) status = "Occupied";
+            else if (isPremium) status = "Premium";
+
+            let cls = "seat";
+            cls += isPremium ? " premium" : " available";
+            if (isOccupied) cls += " occupied";
+            if (isCurrent) cls += " selected";
+
+            html += '<div class="seat-cell"><div class="' + cls + '" data-seat="' + label + '" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat ' + label + ' - ' + status + '"></div></div>';
+            if (i === 2) html += '<div class="seat-aisle"></div>';
+        }
+
+        html += '</div>';
+    }
+
+    return html;
+}
+
+// Opens the seat-edit modal for a passenger and loads its seat map
+// the first time it's opened.
+function openEditSeatModal(modalId, passengerId) {
+    openModal(modalId);
+
+    const container = document.getElementById(`edit-seat-map-${passengerId}`);
+    if (container) loadEditSeatMap(container);
+}
+
+// Fetches occupied seats for the reservation's flight/cabin and renders
+// the seat grid. Only runs once per modal open (cached after first load).
+async function loadEditSeatMap(container) {
+    if (container.dataset.loaded === "true") return;
+
+    const flightId = container.dataset.flightId;
+    const cabinType = container.dataset.cabinType;
+    const currentSeat = container.dataset.currentSeat;
+
+    try {
+        const response = await fetch(`/occupied-seats?flightId=${encodeURIComponent(flightId)}&cabinType=${encodeURIComponent(cabinType)}`);
+        if (!response.ok) throw new Error("Failed to load seat map");
+
+        const data = await response.json();
+        container.innerHTML += buildEditSeatRows(data.occupiedSeats || [], currentSeat);
+        container.dataset.loaded = "true";
+
+        if (typeof $ !== "undefined") {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        }
+    } catch (err) {
+        console.error("Error loading seat map:", err);
+    }
+}
+
+// Handles clicking a seat inside any seat-edit modal
+document.addEventListener("click", function (event) {
+    const cell = event.target.closest(".seat");
+    if (!cell) return;
+
+    const container = cell.closest(".seat-map[data-passenger-id]");
+    if (!container) return; // not one of the seat-edit maps
+
+    if (cell.classList.contains("occupied")) return;
+
+    container.querySelectorAll(".seat").forEach(seat => seat.classList.remove("selected"));
+    cell.classList.add("selected");
+
+    const passengerId = container.dataset.passengerId;
+
+    const display = document.getElementById(`edit-selected-seat-${passengerId}`);
+    if (display) display.textContent = cell.dataset.seat;
+
+    const err = document.getElementById(`edit-seat-err-${passengerId}`);
+    if (err) err.style.display = "none";
+});
+
+// Saves the newly selected seat back to the server
+async function saveNewSeat(passengerId) {
+    const container = document.getElementById(`edit-seat-map-${passengerId}`);
+    if (!container) return;
+
+    const selected = container.querySelector(".seat.selected");
+    if (!selected) {
+        const err = document.getElementById(`edit-seat-err-${passengerId}`);
+        if (err) err.style.display = "block";
+        return;
+    }
+
+    const newSeat = selected.dataset.seat;
+    const endpointBase = container.dataset.endpointBase;
+    const modalOverlay = container.closest(".modal-overlay");
+
+    try {
+        const response = await fetch(`${endpointBase}/passenger/${passengerId}/seat`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ seat: newSeat })
+        });
+
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.message || "Failed to update seat");
+
+        if (modalOverlay) closeModal(modalOverlay.id);
+        await loadReservations();
+    } catch (err) {
+        console.error("Error updating seat:", err);
+        alert(err.message || "Something went wrong updating the seat. Please try again.");
+    }
+}

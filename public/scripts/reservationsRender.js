@@ -10,6 +10,7 @@ function renderReservations(list) {
         for (let i = 0; i < reservation.passengers.length; i++) {
             container.innerHTML += createReservationCard(reservation, reservation.passengers[i]);
             container.innerHTML += showFullReservationCard(reservation, reservation.passengers[i]);
+            container.innerHTML += createEditSeatModal(reservation, reservation.passengers[i]);
         }
     });
 }
@@ -42,7 +43,7 @@ function createReservationCard(reservation, passenger) {
 
                 <div class="options-group">
                     <button class="view-button" onclick="openModal('${modalId}')">View Details</button>
-                    <button class="edit-button" onclick="openModal('${editModalId}')">Edit</button>
+                    <button class="edit-button" ${isCancelled ? "disabled" : ""} onclick="openEditSeatModal('${editModalId}', '${passenger._id}')">Edit</button>
                     <button class="cancel-button" ${isCancelled ? "disabled" : ""} onclick="requestCancelReservation('${passenger._id}', '${passenger.status}')">Cancel</button>
                 </div>
     </div>
