@@ -107,7 +107,7 @@ body, html {
     color: white;
     border-radius: 20px;
     padding: 10px;
-    width: 150px;
+    width: 200px;
     margin-right: 20px;
     font-weight: bold;
 }
@@ -117,7 +117,7 @@ body, html {
     color: white;
     border-radius: 20px;
     padding: 10px;
-    width: 150px;
+    width: 200px;
     margin-right: 20px;
     font-weight: bold;
 }
@@ -187,7 +187,7 @@ body, html {
 }
 
 .search-container input {
-    width: 180px;
+    width: 125px;
     padding: 12px ;
     font-family: 'IBM Plex Mono', monospace;
     font-weight: 400;
@@ -222,8 +222,8 @@ body, html {
 .dotted-line-arrow-down-img {
     width:60px;
     height:60px;
-    margin-left:180px;
-    margin-bottom:20px;
+    margin-left:35px;
+    margin-bottom:30px;
 }
 
 #swapBtn{

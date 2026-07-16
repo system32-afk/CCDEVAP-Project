@@ -37,6 +37,77 @@
 
         <main class="admin-content">
             <h1 class="admin-title"><strong>RESERVATION MANAGEMENT</strong></h1>
+
+            <div class="search-container">
+                <form id="searchAndSortForm">
+                <div class="form-group">
+                    <label>Departure:</label>
+                    <select id="departure-airports">
+                        <option value="None">None</option>
+                        {{#each cities}}
+                        <option value="{{this.cityName}}">{{this.cityName}}</option>
+                        {{/each}}
+                    </select>
+                </div> 
+
+                <button type="button" id="swapBtn" onclick="swapLocations()">
+                    <img src="/images/swap-icon.avif">
+                </button>
+
+                <div class="form-group">
+                    <label>Destination:</label>
+                    <select id="destination-airports">
+                        <option value="None">None</option>
+                        {{#each cities}}
+                        <option value="{{this.cityName}}">{{this.cityName}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Flight Number: </label>
+                    <input type="text" id="flightNumber" placeholder="None">
+                </div>
+
+                <div class="form-group">
+                    <label>Booking Reference: </label>
+                    <input type="text" id="bookingReference" placeholder="None">
+                </div>
+
+                <div class="form-group">
+                    <label class="departure-date">Departure Date:</label>
+                    <input id="departureDate" type="date">
+                </div>
+
+                <div class="form-group">
+                    <label>Sort By:</label>
+                    <select id="sortBy">
+                        <option value="">None</option>
+                        <option value="dateAsc">Departure Date: Oldest First</option>
+                        <option value="dateDesc">Departure Date: Newest First</option>
+                        <option value="priceAsc">Price: Lowest First</option>
+                        <option value="priceDesc">Price: Highest First</option>
+                        <option value="flightAsc">Flight Duration: Shortest First</option>
+                        <option value="flightDesc">Flight Duration: Longest First</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Status:</label>
+                    <select id="statusFilter">
+                        <option value="">All</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+
+                </form>
+            </div>
+            
+            <div class="search-flight">
+                <button class="btn btn-primary" id="sortReservations">Search Reservations</a>
+            </div><br>
                 
             <div class="analytics-table-card">
                 <div class="table-responsive">
@@ -47,6 +118,7 @@
                                 <th scope="col">Passenger Name</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Status</th>
+                                <th scope="col"></th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -60,15 +132,23 @@
         <div id="modalContainer">
             {{!-- reservation detail modals get injected here by reservationsRenderAdmin.js --}}
         </div>
+
+        <!-- Cancellation of Reservation Modal -->
+        <div id="modal-cancel" class="modal-overlay">
+            <div class="modal-content-box-small">
+                <h2>CHANGE STATUS OF RESERVATION</h2>
+                <p id="modal-cancel-message">
+                    <!-- Message is dynamic -->
+                </p>
+
+                <div class="options-group">
+                    <button class="cancellation-modal-yes-btn" onclick="confirmStatusChange()">Yes, Change Status</button>
+                    <button class="cancellation-modal-no-btn" onclick="cancelStatusChange()">No, Keep Status</button>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     </div>
 </div>
-
-<script>
-    $(document).ready(function() {
-        $("#navbar").load("navigation", function() {
-            $("#nav-home").addClass("active");
-        });
-    });
-</script>

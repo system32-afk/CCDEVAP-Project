@@ -70,12 +70,10 @@
 
         </form>
     </div>
-        
 
-    </div>
-        <div class="search-flight">
-            <button class="btn btn-primary" id="sortReservations">Search Reservations</a>
-        </div><br>
+    <div class="search-flight">
+        <button class="btn btn-primary" id="sortReservations">Search Reservations</a>
+    </div><br>
 
     <!-- Reservation Cards -->
 
@@ -83,17 +81,20 @@
 
     <div id="reservationContainer"></div>
 
+    <!-- This uses an invisible character just to activate the spacer -->
+    <div class="vertical-spacer">ㅤ</div>
+
     <!-- Cancellation of Reservation Modal -->
     <div id="modal-cancel" class="modal-overlay">
         <div class="modal-content-box-small">
-            <h2>CANCELLATION OF RESERVATION</h3>
-            <p">
+            <h2>CANCELLATION OF RESERVATION</h2>
+            <p id="modal-cancel-message">
                 Proceed with cancelling this reservation?
             </p>
 
             <div class="options-group">
-                <button class="cancellation-modal-yes-btn" onclick="closeModal('modal-cancel')">Yes, Cancel Reservation</button>
-                <button class="cancellation-modal-no-btn" onclick="closeModal('modal-cancel')">No, Keep Reservation</button>
+                <button class="cancellation-modal-yes-btn" onclick="confirmStatusChange()">Yes, Cancel Reservation</button>
+                <button class="cancellation-modal-no-btn" onclick="cancelStatusChange()">No, Keep Reservation</button>
             </div>
         </div>
     </div>
@@ -102,7 +103,7 @@
     <div id="modal-edit-save" class="modal-overlay">
         <div class="modal-content-box-small">
             <h2>SAVE CHANGES</h3>
-            <p">
+            <p>
                 Proceed with updated changes?
             </p>
 
@@ -113,118 +114,5 @@
         </div>
     </div>
 
-    <!-- Edit Reservation Modal -->
-    <div id="modal-edit" class="modal-overlay">
-        <div class="modal-content-box-small">
-            <h2>EDIT RESERVATION</h2>
-            
-            <form class="modal-form-grid" id="editReservationForm">
-                <div class="form-group">
-                    <label for="edit-flight-passenger-name">Passenger Name</label>
-                    <input type="text" id="edit-flight-passenger-name" placeholder="Juan Mario F. Reyes">
-                </div>
-
-                <div class="form-group">
-                    <label for="statusFilter">Status</label>
-                    <select id="statusFilter">
-                        <option value="None">None</option>
-                        <option value="Confirmed">Confirmed</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Cancelled">Cancelled</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="edit-flight-number">Flight Number</label>
-                    <input type="text" id="edit-flight-number" placeholder="Ex. PR-2032">
-                </div>
-
-                <div class="form-group">
-                    <label for="edit-flight-airline">Airline</label>
-                    <select id="edit-flight-airline" value="None">
-                        <option value="None">None</option>
-                        <option value="Philippine Airlines (PAL)">Philippine Airlines (PAL)</option>
-                        <option value="Cebu Pacific (CP)">Cebu Pacific (CP)</option>
-                        <option value="Cathay Pacific (CP)">Cathay Pacific (CP)</option>
-                        <option value="Air Asia (AA)">Air Asia (AA)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="edit-flight-booking-number">Booking Reference</label>
-                    <input type="text" id="edit-flight-booking-number" placeholder="Ex. BK-3927">
-                </div>
-
-                <div class="form-group">
-                    <label for="edit-flight-date">Departure Date</label>
-                    <input type="date" id="edit-flight-date">
-                </div>
-
-                <div class="form-group grid-col-2">
-                    <label for="edit-flight-departure-time">Departure Time</label>
-                    <input type="time" id="edit-flight-departure-time">
-                </div>
-
-                <div class="form-group">
-                    <label for="edit-flight-origin">Origin Airport</label>
-                    <select id="edit-flight-airline" value="None">
-                        <option value="None">None</option>
-                        <option value="NAIA (Manila)">NAIA (Manila)</option>
-                        <option value="IA (Albay)">BIA (Albay)</option>
-                        <option value="MCIA (Cebu)">MCIA (Cebu)</option>
-                        <option value="CIA (Clark)">CIA (Clark)</option>
-                        <option value="BSA (Bacolod)">BSA (Bacolod)</option>
-                        <option value="IIA (Iloilo)">IIA (Iloilo)</option>
-                        <option value="SA (Siargao)">SA (Siargao)</option>
-                        <option value="GPRA (Caticlan)">GPRA (Caticlan)</option>
-                    </select>
-                </div>
-
-                <div class="form-group grid-col-2">
-                    <label for="edit-flight-arrival-time">Arrival Time</label>
-                    <input type="time" id="edit-flight-arrival-time">
-                </div>
-
-                <div class="form-group">
-                    <label for="edit-flight-destination">Destination Airport</label>
-                    <select id="edit-flight-destination" value="None">
-                        <option value="None">None</option>
-                        <option value="NAIA (Manila)">NAIA (Manila)</option>
-                        <option value="IA (Albay)">BIA (Albay)</option>
-                        <option value="MCIA (Cebu)">MCIA (Cebu)</option>
-                        <option value="CIA (Clark)">CIA (Clark)</option>
-                        <option value="BSA (Bacolod)">BSA (Bacolod)</option>
-                        <option value="IIA (Iloilo)">IIA (Iloilo)</option>
-                        <option value="SA (Siargao)">SA (Siargao)</option>
-                        <option value="GPRA (Caticlan)">GPRA (Caticlan)</option>
-                    </select>
-                </div>
-
-
-                <div class="form-group grid-col-2">
-                    <label for="edit-flight-duration">Duration (mins)</label>
-                    <input type="number" id="edit-flight-duration" placeholder="Ex. 180">
-                </div>
-
-                <div class="form-group">
-                    <label for="edit-flight-price">Price (PHP)</label>
-                    <input type="number" id="edit-flight-price" placeholder="12,350.50">
-                </div>
-            </form>
-
-            <div class="options-group">
-                <button class="save-button" onclick="saveChangesModal('modal-edit-save')">Save Changes</button>
-                <button class="cancel-button" onclick="closeModal('modal-edit')">Cancel</button>
-            </div>
-        </div>
-    </div>
-
     </main>
 
-<!-- Navbar -->
-    <div style="height:300px"></div>
-    <script>
-        $("#navbar").load("navigation.hbs", function() {
-            $("#nav-home").addClass("active");
-        });
-    </script>
