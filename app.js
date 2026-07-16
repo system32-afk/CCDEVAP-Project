@@ -752,7 +752,7 @@ app.put("/admin-reservations/passenger/:passengerId/status",isAuthenticated, isA
     }
 });
 
-app.put("/reservations/passenger/:passengerId/status", isAuthenticated, isAdmin, async function(req, res){
+app.put("/reservations/passenger/:passengerId/status", isAuthenticated, async function(req, res){
     try {
         const { status } = req.body;
 
