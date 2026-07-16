@@ -357,7 +357,7 @@ app.get("/travel-history", isAuthenticated, async function(req,res) {
     }
 })
 
-app.get('/reservations', async function(req,res){
+app.get('/reservations', isAuthenticated, async function(req,res){
     const cities = await cityModel.find({}).sort({ cityName: 1 }).lean();
 
     res.render('pages/reservations',{
