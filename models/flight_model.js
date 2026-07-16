@@ -5,12 +5,12 @@ const mongoose = require('mongoose');
 const cabinSchema = new mongoose.Schema({
     economy:{
         price:{type: Number, required: true, min:0},
-        seats:{type: Number, required: true, min:0},
+        seats:{type: Number, required: true,min:60, max:60},
         label:{type: String, default: 'Economy'}
         },
     premium_economy:{
         price:{type: Number, required: true, min:0},
-        seats:{type: Number, required: true, min:0},
+        seats:{type: Number, required: true, min:60, max:60},
         label:{type: String, default: 'Premium Economy'}       
     },
     business_class:{
@@ -20,7 +20,7 @@ const cabinSchema = new mongoose.Schema({
     },
     first_class:{
         price:{type: Number, required: true, min:0},
-        seats:{type: Number, required: true, min:0},
+        seats:{type: Number, required: true, min:60, max:60},
         label:{type: String, default: 'First Class'}
     }
         

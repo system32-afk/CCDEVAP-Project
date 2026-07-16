@@ -105,7 +105,10 @@ async function updateCityInformation(){
         if(response.ok){
             alert("City updated sucessfully");
 
-            location.reload();
+            const row = document.getElementById(`city-row${currentCityId}`);
+
+            row.querySelector(".city-name").textContent= updatedCityInfo.cityName;
+            
             const modal = bootstrap.Modal.getInstance(document.getElementById('edit-city-modal'));
             if(modal){
                 modal.hide();
@@ -158,8 +161,12 @@ async function updateAirlineInformation(){
 
         if(response.ok){
             alert("Airline updated sucessfully");
+            const row = document.getElementById(`airline-row${currentAirlineId}`);
 
-            location.reload();
+                row.querySelector(".airline-name").textContent = updatedAirlineInfo.airlineName;
+
+                row.querySelector(".airline-status").textContent = updatedAirlineInfo.isAirlineActive;
+
             const modal = bootstrap.Modal.getInstance(document.getElementById('edit-airline-modal'));
             if(modal){
                 modal.hide();
@@ -281,6 +288,7 @@ async function updateFlightInformation(){
     };
 
     try{
+        console.log(currentFlightId);
         const response = await fetch(`/admin-flights/${currentFlightId}`, {
             method: "PUT",
             headers: {
@@ -291,13 +299,40 @@ async function updateFlightInformation(){
 
         if(response.ok){
             alert("Flight updated successfully");
+
+            const row = document.getElementById(`flight-rows${currentFlightId}`);
+console.log(row);
+            row.querySelector(".airline").textContent = updatedFlightInfo.airline;
+            row.querySelector(".origin").textContent = updatedFlightInfo.origin;
+            row.querySelector(".destination").textContent = updatedFlightInfo.destination;
+            row.querySelector(".departureDate").textContent = updatedFlightInfo.departureDate;
+            row.querySelector(".departureTime").textContent = updatedFlightInfo.departureTime;
+
+            const cabinPrice = row.querySelector(".cabin-price");
+            const cabinSeats = row.querySelector(".cabin-seats");
+
+            // Update the stored data
+            cabinPrice.dataset.economy = updatedFlightInfo.cabin.economy.price;
+            cabinSeats.dataset.economy = updatedFlightInfo.cabin.economy.seats;
+
+            cabinPrice.dataset.premium_economy = updatedFlightInfo.cabin.premium_economy.price;
+            cabinSeats.dataset.premium_economy = updatedFlightInfo.cabin.premium_economy.seats;
+
+            cabinPrice.dataset.business_class = updatedFlightInfo.cabin.business_class.price;
+            cabinSeats.dataset.business_class = updatedFlightInfo.cabin.business_class.seats;
+
+            cabinPrice.dataset.first_class = updatedFlightInfo.cabin.first_class.price;
+            cabinSeats.dataset.first_class = updatedFlightInfo.cabin.first_class.seats;
+
+            applyFilter();
+
             const modal = bootstrap.Modal.getInstance(document.getElementById('modal-update-flight'));
             if (modal) {
                 modal.hide();
             }
         }
     }catch(error){
-        console.error("ERROR UPDATING FLIGHT DETAILS");
+        console.error("ERROR UPDATING FLIGHT DETAILS", error);
     }
 
 }

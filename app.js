@@ -705,8 +705,9 @@ app.put("/saved-passengers/update/:id",isAuthenticated, async function(req,res){
 // route that updates the document with selected flightNumber 
 app.put("/admin-flights/:id", isAuthenticated, isAdmin,async function(req,res){
     
-    const updatedFlight = await flightModel.findIdAndUpdate(
+    const updatedFlight = await flightModel.findByIdAndUpdate(
         req.params.id,
+       req.body,
         {returnDocument:"after"}
     );
     res.json(updatedFlight);
