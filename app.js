@@ -21,6 +21,7 @@ const bookingModel = require('./models/booking_model.js');
 //DATABASE CONNECTION
 const {connectToMongoDB} = require('./conn.js'); 
 const { ReturnDocument } = require('mongodb');
+const e = require('express');
 
 connectToMongoDB((err) =>{
     if (err){
@@ -100,6 +101,7 @@ app.get('/home', isAuthenticated, async function(req, res) {
         var currentUser = await userModel.findById(req.session.userID);
         res.render("pages/index", {
         title: "Online Airline Ticketing System",
+        isAdmin: req.session.role === "admin",
         pageScripts: `
             <script src="../scripts/sessionStorage.js" defer></script>
             <script src="../scripts/index_searchFlight.js" defer></script>
@@ -112,9 +114,10 @@ app.get('/home', isAuthenticated, async function(req, res) {
     
 });
 
-app.get('/admin-dashboard', isAuthenticated,function(req,res){
+app.get('/admin-dashboard', isAuthenticated, isAdmin, function(req,res){
     res.render('pages/admin-dashboard',{
         title: "Admin Dashboard",
+        isAdmin: req.session.role === "admin",
         pageScripts: `
             <script src="../scripts/reservations.js" defer></script>
             <script src="../scripts/utilities/load_navbar_script.js" defer></script>
@@ -122,7 +125,7 @@ app.get('/admin-dashboard', isAuthenticated,function(req,res){
     });
 });
 
-app.get('/admin-flights', isAuthenticated, async function(req,res){
+app.get('/admin-flights', isAuthenticated, isAdmin, async function(req,res){
 
     const currentCabin = req.query.cabin || 'economy';
       let sortField = {};
@@ -155,6 +158,7 @@ app.get('/admin-flights', isAuthenticated, async function(req,res){
     res.render('pages/admin-flights',{
         title: "Admin Flights",
         flights: flights,
+        isAdmin: req.session.role === "admin",
         airlines,
         cities,
         currentCabin:currentCabin,
@@ -238,9 +242,10 @@ app.get('/api/cities/:id', isAuthenticated, async function(req,res) {
 
 
 
-app.get('/admin-reservations', isAuthenticated,function(req,res){
+app.get('/admin-reservations', isAuthenticated, isAdmin, function(req,res){
     res.render('pages/admin-reservations',{
         title: "Admin Reservations",
+        isAdmin: req.session.role === "admin",
         pageScripts: `
             <script src="/scripts/reservationModal.js" defer></script>
             <script src="/scripts/reservationsRenderAdmin.js" defer></script>
@@ -251,9 +256,10 @@ app.get('/admin-reservations', isAuthenticated,function(req,res){
     });
 });
 
-app.get('/admin-users',isAuthenticated ,function(req,res){
+app.get('/admin-users',isAuthenticated , isAdmin, function(req,res){
     res.render('pages/admin-users',{
         title: "Admin Users",
+        isAdmin: req.session.role === "admin",
         pageScripts: `
             <script src="../scripts/reservations.js" defer></script>
             <script src="../scripts/utilities/load_navbar_script.js" defer></script>
@@ -524,7 +530,7 @@ app.post("/register",async  function(req,res){
 });
 
 // create city
-app.post("/admin-cities", async function(req, res){
+app.post("/admin-cities",isAuthenticated, isAdmin, async function(req, res){
     const {cityName} = req.body;
 
     // checks if city already exists
@@ -542,7 +548,7 @@ app.post("/admin-cities", async function(req, res){
 });
 
 // creates airline
-app.post("/admin-airlines", async function(req, res){
+app.post("/admin-airlines",isAuthenticated, isAdmin, async function(req, res){
     const {airlineName, isAirlineActive} = req.body;
 
 
@@ -561,7 +567,7 @@ app.post("/admin-airlines", async function(req, res){
 });
 
 // create flight
-app.post("/admin-flights", async function(req,res){
+app.post("/admin-flights",isAuthenticated, isAdmin, async function(req,res){
     const {flightNumber, airline,origin, destination, departureDate, departureTime, arrivalDate,
         arrivalTime, logoName, numOfLayovers, isActive, cabin} = req.body;
 
@@ -602,14 +608,19 @@ app.post("/login", async function(req,res){
 
     req.session.userID = user._id;
     req.session.isLoggedIn = true;
+    req.session.role = user.role;
     
     req.session.save((err) => {
         if(err){
-            console.errow("Session save error:", err);
+            console.log("Session save error:", err);
+        } else{
+            if(user.role === "admin"){
+                res.redirect("/admin-dashboard");
+        
         }else{
             res.redirect("/home");
         }
-        
+        }
     })
 });
 
@@ -691,7 +702,7 @@ app.put("/saved-passengers/update/:id",isAuthenticated, async function(req,res){
 })
 
 // route that updates the document with selected flightNumber 
-app.put("/admin-flights/:id",isAuthenticated ,async function(req,res){
+app.put("/admin-flights/:id", isAuthenticated, isAdmin,async function(req,res){
     
     const updatedFlight = await flightModel.findIdAndUpdate(
         req.params.id,
@@ -701,7 +712,7 @@ app.put("/admin-flights/:id",isAuthenticated ,async function(req,res){
 })
 
 // updates airlines
-app.put("/admin-airlines/:id",isAuthenticated, async function(req,res){
+app.put("/admin-airlines/:id",isAuthenticated, isAdmin, async function(req,res){
 
     const airline = await airlineModel.findByIdAndUpdate(
         req.params.id, { $set: req.body}, { returnDocument: "after"}
@@ -709,14 +720,14 @@ app.put("/admin-airlines/:id",isAuthenticated, async function(req,res){
     res.json(airline);
 })
 
-app.put("/admin-cities/:id",isAuthenticated, async function(req,res){
+app.put("/admin-cities/:id",isAuthenticated, isAdmin, async function(req,res){
     const city = await cityModel.findByIdAndUpdate(
         req.params.id, { $set: req.body},  {returnDocument:"after"}
     );
     res.json(city);
 })
 
-app.put("/admin-reservations/passenger/:passengerId/status", isAuthenticated, async function(req, res){
+app.put("/admin-reservations/passenger/:passengerId/status",isAuthenticated, isAdmin, async function(req, res){
     try {
         const { status } = req.body;
         const normalizedStatus = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
@@ -740,7 +751,7 @@ app.put("/admin-reservations/passenger/:passengerId/status", isAuthenticated, as
     }
 });
 
-app.put("/reservations/passenger/:passengerId/status", isAuthenticated, async function(req, res){
+app.put("/reservations/passenger/:passengerId/status", isAuthenticated, isAdmin, async function(req, res){
     try {
         const { status } = req.body;
 
@@ -821,7 +832,7 @@ app.patch("/update-preferences",isAuthenticated, async function(req,res){
 })
 
 // soft deletes flight
-app.patch("/admin-flights/:id/deactivate", isAuthenticated, async function(req,res){
+app.patch("/admin-flights/:id/deactivate", isAuthenticated, isAdmin, async function(req,res){
 
     try{
             
@@ -847,7 +858,7 @@ app.patch("/admin-flights/:id/deactivate", isAuthenticated, async function(req,r
     }
 
 });
-app.patch("/admin-airlines/:id/deactivate", isAuthenticated, async function(req,res){
+app.patch("/admin-airlines/:id/deactivate", isAuthenticated, isAdmin, async function(req,res){
     try{
         const airline = await airlineModel.findByIdAndUpdate(
             req.params.id,
@@ -884,7 +895,7 @@ app.get("/reservations-data", isAuthenticated, async function(req, res){
     }
 });
 
-app.get("/admin-reservations-data", isAuthenticated, async function(req, res){
+app.get("/admin-reservations-data", isAuthenticated, isAdmin, async function(req, res){
     try{
         var reservations = await bookingModel.find({}).populate('flight').lean();
         return res.status(200).json(reservations);
@@ -905,6 +916,13 @@ function isAuthenticated(req, res, next) {
     
     // session is invalid or doesn't exist
     res.redirect('/login');
+}
+
+function isAdmin(req,res, next){
+    if(req.session.role === "admin"){
+        return next();
+    }
+    return res.redirect("/home");
 }
 
 //========================== FLIGHT BOOKING =============================
