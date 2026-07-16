@@ -13,6 +13,13 @@
         <li class="nav-item">
         <a class="nav-link " href="admin-dashboard">Admin Panel</a>
         </li>   
+        <li>
+            <form action="/logout" method="POST" style="margin: 0;">
+                <a id="logout" class="btn btn-white mt-1 text-decoration-none" type="submit">
+               Logout
+                </a>
+                    </form>
+                </li>
     {{else}}   
         <li class="nav-item">
         <a id="nav-home" class="nav-link" aria-current="page" href="home">Home</a>
