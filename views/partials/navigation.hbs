@@ -9,6 +9,11 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
+    {{#if isAdmin}}
+        <li class="nav-item">
+        <a class="nav-link " href="admin-dashboard">Admin Panel</a>
+        </li>   
+    {{else}}   
         <li class="nav-item">
         <a id="nav-home" class="nav-link" aria-current="page" href="home">Home</a>
         </li>
@@ -35,10 +40,7 @@
                 <i class="material-symbols-outlined">logout</i>Logout</a></li>
             </ul>
         </li>
-        {{#if isAdmin}}
-        <li class="nav-item">
-        <a class="nav-link " href="admin-dashboard">Admin Panel</a>
-        </li>         
+       
         {{/if}}   
     </ul>
     </div>
