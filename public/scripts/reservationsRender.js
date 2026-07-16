@@ -23,7 +23,7 @@ function createReservationCard(reservation, passenger) {
 
     return `
     <div class="reservation-card">
-        <img src="${getAirlineLogo(reservation.flight.airline)}" class="card-airline-logo" alt="${reservation.flight.airline} Logo">
+        <img src="/images/${reservation.flight.logoName}.png" class="card-airline-logo" alt="${reservation.flight.airline}">
                 <div class="flight-subheader">
                     <h2 class="flight-title">
                         ${reservation.flight.origin}
@@ -62,7 +62,7 @@ function showFullReservationCard(reservation, passenger) {
             </span>
             
             <div class="reservation-card">
-                <img src="${getAirlineLogo(reservation.flight.airline)}" class="full-card-airline-logo" alt="${reservation.flight.airline} Logo">
+                <img src="/images/${reservation.flight.logoName}.png" class="full-card-airline-logo" alt="${reservation.flight.airline}">
                 
                 <div class="flight-header">
                     <div class="flight-subheader">

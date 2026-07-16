@@ -21,7 +21,6 @@ function saveChangesModal() {
     openModal('modal-edit-save');
 }
 
-// Stores the current status change until the user confirms it
 let pendingStatusChange = null;
 
 // Handles status changes made from the admin page
@@ -45,9 +44,7 @@ function updateReservationStatus(selectElement, passengerId) {
     openModal("modal-cancel");
 }
 
-// Starts the cancellation process for a reservation
 function requestCancelReservation(passengerId, currentStatus) {
-    // No need to continue if it's already cancelled
     if (currentStatus === "Cancelled") return;
 
     pendingStatusChange = {
@@ -66,7 +63,6 @@ function requestCancelReservation(passengerId, currentStatus) {
 
 // Cancels the pending status change
 function cancelStatusChange() {
-    // Restore the previous value if it came from the admin dropdown
     if (pendingStatusChange && pendingStatusChange.selectElement) {
         pendingStatusChange.selectElement.value = pendingStatusChange.previousStatus;
     }
@@ -75,7 +71,6 @@ function cancelStatusChange() {
     closeModal("modal-cancel");
 }
 
-// Applies the status change after confirmation
 async function confirmStatusChange() {
     if (!pendingStatusChange) return;
 
@@ -95,8 +90,13 @@ async function confirmStatusChange() {
             selectElement.classList.remove(getStatusClass(selectElement.dataset.currentStatus));
             selectElement.classList.add(getStatusClass(newStatus));
             selectElement.dataset.currentStatus = newStatus;
+
+            const row = selectElement.closest("tr");
+            const editButton = row?.querySelector(".edit-button");
+            if (editButton) {
+                editButton.disabled = newStatus === "cancelled";
+            }
         } else {
-            // Reload the reservation list for the customer page
             await loadReservations();
         }
     } catch (err) {
