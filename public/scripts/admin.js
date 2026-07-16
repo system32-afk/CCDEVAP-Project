@@ -68,6 +68,7 @@ function openCancelModal(id){
     currentFlightId = id;
     openModal("modal-cancel-flight");
 }
+// displays the data of the document with the selected city id
 
 async function openUpdateCityModal(id){
     try{
@@ -86,7 +87,7 @@ async function openUpdateCityModal(id){
         console.log(error);
     }
 }
-
+// PUTS the updated information in the document of the selected city
 async function updateCityInformation(){
     var updatedCityInfo ={
         cityName: cityNameField.val().trim()
@@ -117,6 +118,7 @@ async function updateCityInformation(){
     
 
 }
+// displays the data of the document with the selected airline id
 async function openUpdateAirlineModal(id){
 
     try{
@@ -137,7 +139,7 @@ async function openUpdateAirlineModal(id){
         console.log(error);
     }
 }
-
+// PUTS the updated information in the document of the selected airline
 async function updateAirlineInformation(){
     var updatedAirlineInfo ={
         airlineName: airlineNameField.val().trim(),
@@ -168,6 +170,7 @@ async function updateAirlineInformation(){
         console.error("ERROR UPDATING AIRLINE NAME");
     }
 }
+// displays the data of the document with the selected flight id
 async function openUpdateModal(id){
 
     try{
@@ -211,7 +214,7 @@ async function openUpdateModal(id){
     }
 
 }
-
+// soft deletes flights
 async function confirmDeactivate(){
 
     const response = await fetch(
@@ -227,7 +230,7 @@ async function confirmDeactivate(){
         alert("Unable to cancel flight.");
     }
 }
-
+// soft deletes airline
 async function confirmDeactivateAirline() {
 
     const response = await fetch(
@@ -243,7 +246,7 @@ async function confirmDeactivateAirline() {
         alert("Unable to deactivate airline.");
     }
 }
-
+// PUTS the updated information to the selected flight
 async function updateFlightInformation(){
     var updatedFlightInfo = {
         airline: airlineField.val().trim(),
