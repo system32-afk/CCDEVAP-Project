@@ -101,6 +101,7 @@ maxPriceInput.on("change", function(){
 
 const applyFilter = $("#apply-filter");
 
+
 applyFilter.on("click", () =>{
     SearchFlight()
 }); 

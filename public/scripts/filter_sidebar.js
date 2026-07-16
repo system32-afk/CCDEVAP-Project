@@ -9,11 +9,7 @@ const openSidebarBtn = $("#open-filter-sidebar-btn");
 
 // Airline filters components
 const airlineFilters = [];
-const palCheckbox = $("#filter-PAL");
-const airsiaCheckbox = $("#filter-AirAsia");
-const cebPacCheckbox = $("#filter-CebPac");
-const cathPacCheckbox = $("#filter-CathPac");
-const listofAirlines = $(".airline-filter");
+const airlinesFilterGroup = $(".airlines-filter-group");
 
 // Departure filter components
 const departureSchedules = [];
@@ -33,6 +29,17 @@ const FILTERRESET = $("#reset-all-filter")
 //apply all filters
 const APPLYFILTER = $("#apply-all-filter");
 
+//FLAGS for tracking
+var isAirlineDisabled = false;
+var isPriceDisabled = false;
+var isScheduleDisabled = false;
+var isStopsDisabled = false;
+
+
+
+
+
+
 FILTERRESET.on("click",function(){
     $(".airline-filter, .departure-filter").prop("checked", true);
 
@@ -47,21 +54,58 @@ APPLYFILTER.on("click",function(){
     applyAllFilters();
 })
 
+async function loadFilterAirlines() {
+    try {
+        const response = await fetch("/api/airlines");
+        const data = await response.json();
 
-$(document).ready(function() {
+        let airlines = data;
+        
+        // Clear old list items
+        airlinesFilterGroup.empty();
+
+        airlines.forEach(airline => {
+            let airlineName = airline.airlineName || airline.name;
+            // Generate clean IDs (e.g. "filter-Philippine-Airlines")
+            let airlineValue = airline.airlineCode || airlineName;
+            let elementId = `filter-${airlineValue.replace(/\s+/g, '-')}`;
+
+            const checkboxHtml = `
+                <div class="form-check mb-2">
+                    <input class="form-check-input airline-filter" type="checkbox" value="${airlineValue}" id="${elementId}" checked>
+                    <label class="form-check-label" for="${elementId}">
+                        ${airlineName}
+                    </label>
+                </div>
+            `;
+            airlinesFilterGroup.append(checkboxHtml);
+        });
+
+        // initialize state arrays now that inputs exist
+        modifyAirlineFilters();
+
+    } catch (err) {
+        console.error("Failed to fetch and render dynamic airlines:", err);
+    }
+}
+
+$(async function(){
  showSidebarBtn()
  modifyAirlineFilters();
  modifyScheduleFilters()
+
+ //load the list of airlines into the checkbox
+await loadFilterAirlines()
+
 });
 
 
 
 
 //listen to any changes in the list of airline checkboxes
-listofAirlines.on("change", function(){
+airlinesFilterGroup.on("change", ".airline-filter", function(){
     modifyAirlineFilters();
-    
-})
+});
 
 listofDeparture.on("change", function(){
     modifyScheduleFilters();
@@ -80,13 +124,9 @@ resetSchedules.on("click", function(){
    
 })
 selectAllAirline.on("click", function(){
-    palCheckbox.prop("checked", true);
-    cebPacCheckbox.prop("checked", true);
-    airsiaCheckbox.prop("checked", true);
-    cathPacCheckbox.prop("checked", true);
-
+    $(".airline-filter").prop("checked", true);
     modifyAirlineFilters();
-})
+});
 
 priceRange.on("input",function(){
     var value = Number($(this).val());
@@ -105,11 +145,31 @@ function initSidebarPriceFilter(flights){
     FILTEREDRESULTS = searchResults;
 
 
-
+    //disables airline filter if user has prefered airline
     if (filter_options.airline != "any") {
-    $(".airline-filter").attr("disabled", true); 
+        isAirlineDisabled = true;
+        $(".airline-filter").attr("disabled", true); 
+        selectAllAirline.attr("disabled",true)
     } else {
+        isAirlineDisabled = false;
         $(".airline-filter").attr("disabled", false);  
+        selectAllAirline.attr("disabled",false)
+    }
+
+    if(filter_options.isDirectFlight){
+        isStopsDisabled = true;
+        stopFilter.attr("disabled", true); 
+    }else{
+        isStopsDisabled = false;
+        stopFilter.attr("disabled", false); 
+    }
+
+    if(filter_options.maxPrice !== 0){
+        isPriceDisabled = true;
+        priceRange.attr("disabled", true);
+    }else{
+        isPriceDisabled = false;
+        priceRange.attr("disabled", false);
     }
     
     //fail safe
@@ -153,6 +213,7 @@ function modifyAirlineFilters() {
             airlineFilters.push($(this).val());
         });
 
+        console.log("SELECTED AIRLINES ",airlineFilters);
        
     }
 
