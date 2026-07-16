@@ -55,23 +55,6 @@ function getStatusClass(status) {
     return status.toLowerCase();
 }
 
-// Paths for the airlines
-const airlineLogos = {
-    "Philippine Airlines": "/images/PAL.png",
-    "Cebu Pacific": "/images/CebuPac.png",
-    "AirAsia": "/images/AirAsia.png",
-    "Cathay Pacific": "/images/CathPac.png",
-    "Singapore Airlines": "/images/SingaporeAirlinesLogo.png",
-    "Japan Airlines": "/images/JapanAirlinesLogo.png",
-    "Qantas Airways": "/images/QantasAirwaysLogo.png",
-    "Air France": "/images/AirFranceLogo.png"
-};
-
-// Returns the airline logo based on its name
-function getAirlineLogo(airline) {
-    return airlineLogos[airline] || "/images/airline-logo.png";
-}
-
 // Loads all reservations from the server
 async function loadReservations() {
     try {
@@ -99,9 +82,8 @@ function swapLocations() {
     destination.value = swap;
 }
 
-// Applies the selected filters and sorting
+// filtering and sorting
 function searchReservations() {
-    // Make a copy so the original list isn't changed
     let filteredReservations = [...reservations];
 
     filteredReservations = filterReservations(filteredReservations);
@@ -110,7 +92,6 @@ function searchReservations() {
     renderReservations(filteredReservations);
 }
 
-// Filters the reservation list based on the search fields
 function filterReservations(list) {
     const departure = document.getElementById("departure-airports").value;
     const destination = document.getElementById("destination-airports").value;
@@ -153,7 +134,6 @@ function filterReservations(list) {
     });
 }
 
-// Sorts the reservation list based on the selected option
 function sortReservations(list) {
     const sort = document.getElementById("sortBy").value;
 
@@ -228,26 +208,10 @@ function sortReservations(list) {
     return list;
 }
 
-// Clears all search fields and shows every reservation again
-function resetSearch() {
-    document.getElementById("searchAndSortForm").reset();
-    renderReservations(reservations);
-}
-
-// Seat-edit modal logic, extracted from the seat-selection step of the
-// booking flow (booking.hbs / booking.js) and adapted to edit a single
-// passenger's seat on an already-made reservation.
-
-// Same layout constants as the booking flow's seat map
 const EDIT_SEAT_ROWS = 10;
 const EDIT_PREMIUM_ROWS = [1, 2];
 const EDIT_SEAT_COLS = ["A", "B", "C", "D", "E", "F"];
 
-// Creates the seat-editing modal for a single passenger, extracted from the
-// seat-selection step used in the booking flow (booking.hbs / booking.js).
-// Shared by both the customer (reservationsRender.js) and admin
-// (reservationsRenderAdmin.js) pages, so the endpoint is picked based on
-// whichever page is currently open.
 function createEditSeatModal(reservation, passenger) {
     const editModalId = `modal-edit-${reservation.bookingReference}-${passenger.seat}`;
     const seatMapId = `edit-seat-map-${passenger._id}`;
@@ -290,12 +254,12 @@ function createEditSeatModal(reservation, passenger) {
 
                 <div class="d-flex justify-content-center">
                     <div class="seat-map"
-                         id="${seatMapId}"
-                         data-passenger-id="${passenger._id}"
-                         data-current-seat="${passenger.seat || ""}"
-                         data-flight-id="${reservation.flight._id}"
-                         data-cabin-type="${reservation.cabinType}"
-                         data-endpoint-base="${endpointBase}">
+                        id="${seatMapId}"
+                        data-passenger-id="${passenger._id}"
+                        data-current-seat="${passenger.seat || ""}"
+                        data-flight-id="${reservation.flight._id}"
+                        data-cabin-type="${reservation.cabinType}"
+                        data-endpoint-base="${endpointBase}">
                         <p class="option-desc seat-select text-center">FRONT OF THE PLANE</p>
                         <hr>
                         <div class="d-flex align-items-center gap-1 mb-1">
@@ -324,9 +288,6 @@ function createEditSeatModal(reservation, passenger) {
     `;
 }
 
-// Builds the seat grid rows for a seat-edit modal.
-// The passenger's own current seat is shown as "selected" rather than
-// "occupied", since /occupied-seats reports it as taken by them.
 function buildEditSeatRows(occupied, currentSeat) {
     let html = "";
 
@@ -360,8 +321,6 @@ function buildEditSeatRows(occupied, currentSeat) {
     return html;
 }
 
-// Opens the seat-edit modal for a passenger and loads its seat map
-// the first time it's opened.
 function openEditSeatModal(modalId, passengerId) {
     openModal(modalId);
 
@@ -369,8 +328,6 @@ function openEditSeatModal(modalId, passengerId) {
     if (container) loadEditSeatMap(container);
 }
 
-// Fetches occupied seats for the reservation's flight/cabin and renders
-// the seat grid. Only runs once per modal open (cached after first load).
 async function loadEditSeatMap(container) {
     if (container.dataset.loaded === "true") return;
 
@@ -394,13 +351,12 @@ async function loadEditSeatMap(container) {
     }
 }
 
-// Handles clicking a seat inside any seat-edit modal
 document.addEventListener("click", function (event) {
     const cell = event.target.closest(".seat");
     if (!cell) return;
 
     const container = cell.closest(".seat-map[data-passenger-id]");
-    if (!container) return; // not one of the seat-edit maps
+    if (!container) return; 
 
     if (cell.classList.contains("occupied")) return;
 
@@ -416,7 +372,6 @@ document.addEventListener("click", function (event) {
     if (err) err.style.display = "none";
 });
 
-// Saves the newly selected seat back to the server
 async function saveNewSeat(passengerId) {
     const container = document.getElementById(`edit-seat-map-${passengerId}`);
     if (!container) return;
