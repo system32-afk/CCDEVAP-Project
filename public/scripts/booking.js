@@ -1468,6 +1468,12 @@ $(document).ready(function () {
             }),
             success: function(response) {
                 window.removeEventListener("beforeunload", beforeUnloadHandler);
+
+                sessionStorage.removeItem("selected_flight");
+                sessionStorage.removeItem("selected_departure");
+                sessionStorage.removeItem("selected_return");
+                sessionStorage.removeItem("booking_info");
+
                 window.location.href = "/reservations";
             },
             error: function(err) {
