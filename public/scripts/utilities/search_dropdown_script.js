@@ -1,7 +1,22 @@
-const cities = 
-['Manila', 'Albay', 'Cebu', 'Clark', 'Bacolod','Iloilo',
-'Siargao','Caticlan'
-];
+let cities = [];
+
+async function loadCities() {
+    try {
+
+        const response = await fetch("/api/cities");
+
+        const data = await response.json();
+
+        cities = data.map(city => city.cityName);
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+$(document).ready(function () {
+    loadCities();
+});
 
 //hides all dropdown lists when the user clicks outside of the input fields
 $(document).on('click', function(event) {
