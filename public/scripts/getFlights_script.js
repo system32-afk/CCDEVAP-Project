@@ -67,6 +67,16 @@ sortBy.on("click", function(){
 })
 
 
+
+/**
+ * Sorts the flights based on the user preference and renders the sorted list of flights
+ * * It passes the search results to an algorithm that sorts it and returns it to this function
+ * *to be rendered
+ * @async
+ * @function SearchFlight
+ * @param {sortBy|String} sortBy - the sorting preference of the user.
+ * @throws {Error} Throws an error if the HTTP response status is not OK.
+ */
 async function sortFlights(sortBy){
     
 
@@ -100,7 +110,15 @@ async function sortFlights(sortBy){
     
 
 }
-//handles flight options logic / UI
+
+
+
+/**
+ * Handles the UI changes for the booking
+ * * the UI changes based on state of the search whether one-way or roundtrip flights
+ * @async
+ * @function renderFlightsUI
+ */
 async function renderFlightsUI(){
     var flightsToRender = "";
 
@@ -127,7 +145,14 @@ async function renderFlightsUI(){
    
 };
 
-//filters the flights based on advance search optiions and booking
+/**
+ * Fetches the flights based on the user's booking information and advance search parameters
+ * * Assigns the returned list of flights SearchResult for sorting and filtering
+ * @async
+ * @param {filterOptions|Object} filterOptions - the advance search parameters of the user.
+ * @param {bookingInfo|Object} bookingInfo - the booking information of the user
+ * @function getFlights
+ */
 async function getFlights(filterOptions, bookingInfo) {
     
     var searchParams = new URLSearchParams({
@@ -161,7 +186,13 @@ async function getFlights(filterOptions, bookingInfo) {
 }
 
 
-//renders the flight cards
+
+/**
+ * Renders the list of flights into cards
+ * @async
+ * @param {flightsArray|Array} flightsArray - The array of flights to be rendered
+ * @function renderFlights
+ */
 function renderFlights(flightsArray){
     flightsContainer.empty();
     var cards = "";
@@ -263,14 +294,19 @@ function renderFlights(flightsArray){
 
 }
 
-//select flight
+/**
+ * Stores selected flight of the user in the browser's session storage.
+ * @async
+ * @param {flightID|String} flightID - The ID of the selected flight
+ * @function lockInFlight
+ */
 async function lockInFlight(flightID){
     var chosenFlight = await getFlightData(flightID);
     var selectedCabinType = getBookingInfo().cabinType;
     var bookingInfo = getBookingInfo();
     var totalPassengers = parseInt(bookingInfo.passengers.adults) + parseInt(bookingInfo.passengers.children) + parseInt(bookingInfo.passengers.infants);
     var tripType = getBookingInfo().tripType;
-
+    console.log("TRIP-TYPE: ",tripType);
     // var {outboundTrip, returnTrip} = trips
 
     console.log(totalPassengers)
@@ -348,6 +384,14 @@ async function lockInFlight(flightID){
     }
 }
 
+
+
+/**
+ * Renders the additional info of the selected flight
+ * @async
+ * @param {flightID|String} flightID - The ID of the selected flight
+ * @function sideBarInfo
+ */
 async function sideBarInfo(flightID) {
     if(!flightID) {
         console.error("Could not find flight matching ID: " + flightID);
@@ -423,7 +467,12 @@ async function sideBarInfo(flightID) {
 }
 
 
-
+/**
+ * Gets details of the selected flight from the database
+ * @async
+ * @param {ID|String} ID - The ID of the selected flight
+ * @function getFlightData
+ */
 async function getFlightData(ID){
     try{
 

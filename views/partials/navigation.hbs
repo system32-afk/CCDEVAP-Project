@@ -13,6 +13,12 @@
         <li class="nav-item">
         <a class="nav-link " href="admin-dashboard">Admin Panel</a>
         </li>   
+        <li>
+            <form action="/logout" method="POST">
+                <button id="logout" type="submit" class="btn btn-white mt-1 text-decoration-none bg-none b-none ">
+                    Logout
+                </button>
+            </form>
     {{else}}   
         <li class="nav-item">
         <a id="nav-home" class="nav-link" aria-current="page" href="home">Home</a>
@@ -35,9 +41,16 @@
                 <li><a class="dropdown-item" href="settings">
                 <i class="material-symbols-outlined">settings</i>Settings</a></li>
 
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">
-                <i class="material-symbols-outlined">logout</i>Logout</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <form action="/logout" method="POST" >
+                        <button type="submit" class="dropdown-item d-flex align-items-center bg-none b-none w-100">
+                            <i class="material-symbols-outlined me-2">logout</i>Logout
+                        </button>
+                    </form>
+                </li>
             </ul>
         </li>
        

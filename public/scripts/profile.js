@@ -104,7 +104,10 @@ saveChanges.on("click", ()=>{
 
 })
 
-
+/**
+* Loads the information from the UserInformation object into the fields
+* @function loadInformation
+*/
 function loadInformation(){
 
     if (!userInformation) return;
@@ -120,6 +123,13 @@ function loadInformation(){
     fullNameDisplay.text(`${userInformation.Fname} ${userInformation.Lname}`)
 }
 
+/**
+ * Asynchronously sends off the new user information to the server
+ * and then reloads the UI to reflect new user information
+ * @async
+ * @function updateUserInformation
+ * @throws {Error} Throws an error if the HTTP response status is not OK.
+ */
 async function updateUserInformation(){
      var updatedInformation = {
             Fname: FnameField.val().trim(),
@@ -148,7 +158,7 @@ async function updateUserInformation(){
 
         loadInformation();
     }catch (error) {
-        console.error("there was an error getting your information: ", error);
+        console.error("there was an error updating your information: ", error);
     }
 
 
@@ -226,6 +236,17 @@ passengerForm.on("submit", (event)=>{
 
 })
 
+
+/**
+ * Asynchronously fetches saved passengers from the server and renders them 
+ * into the passenger list container.
+ * * If no passengers are found, a placeholder message is displayed.
+ * * If the fetch request fails, an error message is printed to the console 
+ * an error state is displayed in the UI.
+ * @async
+ * @function loadSavedPassengers
+ * @throws {Error} Throws an error if the HTTP response status is not OK.
+ */
 async function loadSavedPassengers() {
     passengerList.empty();
 
@@ -274,6 +295,16 @@ async function loadSavedPassengers() {
     }
 }
 
+
+/**
+ * Asynchronously submits passenger information to the server.
+ * * This function retrieves passenger form data from the UI, determines whether
+ * to perform a create (POST) or update (PUT) operation based on the presence of 
+ * an edit ID, sends the request, and reloads the passenger list upon success
+ * @async
+ * @function submitPassengerInfo
+ * @throws {Error} Throws an error if the HTTP request fails.
+ */
 async function submitPassengerInfo() {
     
     const editId = $("#edit-passenger-id").val();
@@ -285,7 +316,7 @@ async function submitPassengerInfo() {
     const sex = $("#passenger-sex").val();
     const DOB = $("#passenger-DOB").val();
     const nationality = $("#passenger-nationality").val();
-    const mobileNum = $("#passenger-mobile-number").val().toString();
+    var mobileNum = $("#passenger-mobile-number").val().toString();
     const email = $("#passenger-email").val();
 
     // remove leading 0s if ever user puts a 0
@@ -342,6 +373,14 @@ async function submitPassengerInfo() {
     }
 }
 
+/**
+ * Asynchronously fetches a specific passenger's details by ID from the server
+ * and populates the corresponding form fields for editing.
+ * @async
+ * @function editPassengerInfo
+ * @param {string|number} ID - The ID of the passenger to be edited.
+ * @throws {Error} Throws an error if the HTTP response status is not OK.
+ */
 async function editPassengerInfo(ID) {
     try {
         // fetch the target passenger profile from the server
@@ -372,6 +411,16 @@ async function editPassengerInfo(ID) {
     }
 }
 
+
+/**
+ * Asynchronously deletes a specific passenger by ID from the server.
+ * * This function sends a DELETE request to the backend. Upon a successful response,
+ * it logs the success and triggers a reload of the UI passenger list.
+ * @async
+ * @function removePassenger
+ * @param {string|number} ID - The ID of the passenger to be removed.
+ * @throws {Error} Throws an error if the HTTP response status is not OK.
+ */
 async function removePassenger(ID) {
     try {
         let response = await fetch(`/saved-passengers/delete/${ID}`, {
@@ -435,6 +484,15 @@ cardContainer.on("click", ".remove-card-btn", function(){
     bootstrap.Modal.getOrCreateInstance(deleteConfirmationModal[0]).show();
 })
 
+/**
+ * Asynchronously fetches the user's saved payment methods from the server, 
+ * determines their network styling, and renders them dynamically in a grid.
+ * manages the "Add Card" button visibility, and injects stylized card components 
+ * (Visa, Mastercard, or generic) into the card container.
+ * @async
+ * @function loadCards
+ * @throws {Error} Throws an error if the HTTP response status is not OK.
+ */
 async function loadCards() {
     $("#payment-methods-grid .dynamic-card-col").remove(); 
     
@@ -448,7 +506,6 @@ async function loadCards() {
             throw new Error(`error status: ${response.status}`);
         }
 
-       
         let savedPaymentMethods = await response.json();
 
         
@@ -482,7 +539,7 @@ async function loadCards() {
                             <small>${card.expDate}</small>
                         </div>
                     </div>
-                   
+
                     <button class="btn btn-sm btn-danger remove-card-btn w-50 mt-2" data-id="${card._id}">Remove</button>
                 </div>
             </div>`;
@@ -497,6 +554,20 @@ async function loadCards() {
     }
 }
 
+
+/**
+ * Asynchronously fetches the user's saved payment methods from the server, 
+ * determines their network styling, and renders them dynamically in a grid.
+ * manages the "Add Card" button visibility, and injects stylized card components 
+ * (Visa, Mastercard, or generic) into the card container.
+ * @async
+ * @function addCard
+ * @param {cardHolder|String} cardHolder - the name of the card holder
+ * @param {cardNumber|Number} cardNumber - the card number
+ * @param {expDate|String} expDate - the expiry date of the card
+ * @param {cvv|String} cvv - the cvv of the card
+ * @throws {Error} Throws an error if the HTTP response status is not OK.
+ */
 async function addCard(cardHolder, cardNumber, expDate, cvv){
 
     var storedCardNumber = cardNumber.toString();
@@ -535,6 +606,15 @@ async function addCard(cardHolder, cardNumber, expDate, cvv){
     }
 }
 
+
+/**
+ * Asynchronously deletes a card payment method from the server, 
+ * Sends a DELETE request to the server containing the ID of the card to be deleted
+ * @async
+ * @function removePaymentMethod
+ * @param {ID|String} ID - the ID of the card
+ * @throws {Error} Throws an error if the HTTP response status is not OK.
+ */
 async function removePaymentMethod(ID) {
     if (!ID) {
         console.error("Cannot delete card, card doesn't exist");
@@ -560,9 +640,17 @@ async function removePaymentMethod(ID) {
         console.log("failed to delete card from server");
         console.error(error);
     }
-} 5
+}
 
-
+/**
+ * Checks if the amount of cards is equal to the limit of cards (3) 
+ * * if the number of cards the user has inputted is equal to the limit
+ * * the button to add more cards is hidden
+ * @async
+ * @function checkAddCardButtonVisibility
+ * @param {ID|String} ID - the ID of the card
+ * @throws {Error} Throws an error if the HTTP response status is not OK.
+ */
 function checkAddCardButtonVisibility(cards) {
    
     const activeCards = cards; 
@@ -586,6 +674,15 @@ toTravelHistory.on("click", () =>{
     loadTravelHistory();
 })
 
+
+/**
+ * Asynchronously fetches the travel history of the user
+ * * Once fetched, it will load the travel history into accordions.
+ * * If the user has no travel history, a message will display that they have no travel history
+ * @async
+ * @function loadTravelHistory
+ * @throws {Error} Throws an error if the HTTP response status is not OK.
+ */
 async function loadTravelHistory(){
     accordionContainer.empty();
 

@@ -247,6 +247,11 @@ body, html {
     
 }
 
+#logout{
+    font-family: 'IBM Plex Mono', monospace;
+
+}
+
 @media (max-width: 783px) {
     .hero-banner { padding: 50px 20px; }
     .search-container form { flex-direction: column; }

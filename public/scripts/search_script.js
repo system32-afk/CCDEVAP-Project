@@ -15,14 +15,6 @@ tripType.on("click", function(){
 })
 
 
-// //debugging. show booking_info data
-// console.log(JSON.stringify(booking_info, null, 2));
-// //debugging
-// if (!booking_info) {
-//     console.error("No booking info found in sessionStorage");
-// }
-
-
 
 //load data
 $(function(){
@@ -73,7 +65,12 @@ searchFlightButton.on("click", () =>  {
 })
 
 
-
+/**
+ * Asynchronously searches for flights. it stores the user's booking preference in
+ * the browser's session, to be referenced in bookings and the search parameter
+ * @async
+ * @function SearchFlight
+ */
 async function SearchFlight(){
 
     var origin = booking_info.originCity;
