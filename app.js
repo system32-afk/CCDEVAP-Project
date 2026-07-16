@@ -357,7 +357,6 @@ app.get('/reservations', async function(req,res){
         title: "Reservations",
         cities,
         pageScripts: `
-            <script src="/scripts/editReservation.js" defer></script>
             <script src="/scripts/reservationModal.js" defer></script>
             <script src="/scripts/reservationsRender.js" defer></script>
             <script src="/scripts/reservations.js" defer></script>
@@ -723,7 +722,56 @@ app.put("/admin-cities/:id",isAuthenticated, async function(req,res){
     res.json(city);
 })
 
+app.put("/admin-reservations/passenger/:passengerId/status", isAuthenticated, async function(req, res){
+    try {
+        const { status } = req.body;
+        const normalizedStatus = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
 
+        if (!["Confirmed", "Cancelled"].includes(normalizedStatus)) {
+            return res.status(400).json({ message: "Invalid status value" });
+        }
+
+        const booking = await bookingModel.findOne({ "passengers._id": req.params.passengerId });
+        if (!booking) {
+            return res.status(404).json({ message: "Passenger not found" });
+        }
+
+        const passenger = booking.passengers.id(req.params.passengerId);
+        passenger.status = normalizedStatus;
+        await booking.save();
+
+        res.status(200).json({ message: "passenger status updated successfully" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.put("/reservations/passenger/:passengerId/status", isAuthenticated, async function(req, res){
+    try {
+        const { status } = req.body;
+
+        if (status !== "Cancelled") {
+            return res.status(400).json({ message: "Users may only cancel a reservation." });
+        }
+
+        const booking = await bookingModel.findOne({ "passengers._id": req.params.passengerId });
+        if (!booking) {
+            return res.status(404).json({ message: "Passenger not found" });
+        }
+
+        if (booking.belongsToUser !== req.session.userID) {
+            return res.status(403).json({ message: "You do not have permission to modify this reservation." });
+        }
+
+        const passenger = booking.passengers.id(req.params.passengerId);
+        passenger.status = status;
+        await booking.save();
+
+        res.status(200).json({ message: "passenger status updated successfully" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 //====================================DELETE FUNCTIONS=====================
 app.delete("/saved-passengers/delete/:id", isAuthenticated, async function (req, res){
