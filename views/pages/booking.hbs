@@ -221,10 +221,9 @@
                             <p class="option-desc text-center">Selected Seat: <span class="option-name" id="selected-seat-display">None</span></p>
 
                             <div class="d-flex justify-content-center">
-                                <div class="seat-map">
+                                <div class="seat-map" id="departure-seat-map">
                                     <p class="option-desc seat-select text-center">FRONT OF THE PLANE</p>
                                     <hr>
-
                                     <div class="d-flex align-items-center gap-1 mb-1">
                                         <div class="seat-row-label"></div>
                                         <div class="seat-cell text-muted small fw-bold">A</div>
@@ -235,116 +234,7 @@
                                         <div class="seat-cell text-muted small fw-bold">E</div>
                                         <div class="seat-cell text-muted small fw-bold">F</div>
                                     </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">1</div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="1A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1A - Premium"></div></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="1B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1B - Premium"></div></div>
-                                        <div class="seat-cell"><div class="seat premium occupied" data-seat="1C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1C - Occupied"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="1D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1D - Premium"></div></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="1E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1E - Premium"></div></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="1F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1F - Premium"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">2</div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="2A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2A - Premium"></div></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="2B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2B - Premium"></div></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="2C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2C - Premium"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="seat premium occupied" data-seat="2D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2D - Occupied"></div></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="2E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2E - Premium"></div></div>
-                                        <div class="seat-cell"><div class="seat premium" data-seat="2F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2F - Premium"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1 mt-2">
-                                        <div class="seat-row-label text-muted small fw-bold">3</div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="3A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3A - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat occupied" data-seat="3B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3B - Occupied"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="3C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="3D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3D - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="3E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3E - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="3F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3F - Available"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">4</div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="4A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4A - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="4B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4B - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="4C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="seat occupied" data-seat="4D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4D - Occupied"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="4E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4E - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="4F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4F - Available"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">5</div>
-                                        <div class="seat-cell"><div class="seat occupied" data-seat="5A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5A - Occupied"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="5B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5B - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="5C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="5D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5D - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="5E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5E - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="5F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5F - Available"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">6</div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="6A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6A - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="6B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6B - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="6C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="6D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6D - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat occupied" data-seat="6E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6E - Occupied"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="6F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6F - Available"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">7</div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="7A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7A - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="7B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7B - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="7C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="7D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7D - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="7E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7E - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="7F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7F - Available"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">8</div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="8A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8A - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="8B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8B - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="8C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="8D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8D - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="8E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8E - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="8F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8F - Available"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">9</div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="9A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9A - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="9B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9B - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="9C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="9D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9D - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="9E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9E - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="9F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9F - Available"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">10</div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="10A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10A - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="10B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10B - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="10C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="10D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10D - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="10E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10E - Available"></div></div>
-                                        <div class="seat-cell"><div class="seat available" data-seat="10F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10F - Available"></div></div>
-                                    </div>
+                                    <!-- rows injected by JS -->
                                 </div>
                             </div>
 
@@ -557,10 +447,9 @@
                             <p class="option-desc text-center">Selected Return Seat: <span class="option-name" id="rt-selected-seat-display">None</span></p>
 
                             <div class="d-flex justify-content-center">
-                                <div class="seat-map">
+                                <div class="seat-map" id="return-seat-map">
                                     <p class="option-desc seat-select text-center">FRONT OF THE PLANE</p>
                                     <hr>
-
                                     <div class="d-flex align-items-center gap-1 mb-1">
                                         <div class="seat-row-label"></div>
                                         <div class="seat-cell text-muted small fw-bold">A</div>
@@ -571,116 +460,7 @@
                                         <div class="seat-cell text-muted small fw-bold">E</div>
                                         <div class="seat-cell text-muted small fw-bold">F</div>
                                     </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">1</div>
-                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="1A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1A - Premium"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="1B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1B - Premium"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat premium occupied" data-seat="1C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1C - Occupied"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="1D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1D - Premium"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="1E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1E - Premium"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="1F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 1F - Premium"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">2</div>
-                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="2A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2A - Premium"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="2B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2B - Premium"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="2C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2C - Premium"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="rt-seat premium occupied" data-seat="2D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2D - Occupied"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="2E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2E - Premium"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat premium" data-seat="2F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 2F - Premium"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1 mt-2">
-                                        <div class="seat-row-label text-muted small fw-bold">3</div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="3A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3A - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat occupied" data-seat="3B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3B - Occupied"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="3C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="3D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3D - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="3E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3E - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="3F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 3F - Available"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">4</div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="4A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4A - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="4B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4B - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="4C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="rt-seat occupied" data-seat="4D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4D - Occupied"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="4E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4E - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="4F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 4F - Available"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">5</div>
-                                        <div class="seat-cell"><div class="rt-seat occupied" data-seat="5A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5A - Occupied"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="5B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5B - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="5C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="5D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5D - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="5E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5E - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="5F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 5F - Available"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">6</div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="6A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6A - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="6B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6B - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="6C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="6D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6D - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat occupied" data-seat="6E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6E - Occupied"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="6F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 6F - Available"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">7</div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="7A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7A - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="7B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7B - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="7C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="7D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7D - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="7E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7E - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="7F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 7F - Available"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">8</div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="8A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8A - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="8B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8B - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="8C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="8D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8D - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="8E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8E - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="8F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 8F - Available"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">9</div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="9A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9A - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="9B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9B - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="9C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="9D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9D - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="9E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9E - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="9F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 9F - Available"></div></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center gap-1 mb-1">
-                                        <div class="seat-row-label text-muted small fw-bold">10</div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="10A" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10A - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="10B" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10B - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="10C" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10C - Available"></div></div>
-                                        <div class="seat-aisle"></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="10D" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10D - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="10E" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10E - Available"></div></div>
-                                        <div class="seat-cell"><div class="rt-seat available" data-seat="10F" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Seat 10F - Available"></div></div>
-                                    </div>
+                                    <!-- rows injected by JS -->
                                 </div>
                             </div>
 
