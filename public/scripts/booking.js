@@ -175,7 +175,7 @@ $(document).ready(function () {
 
     loadPassengerCards();
 
-    // loads the sidebar flight details from sessionStorage
+    // loads the sidebar flight details from session storage
     function loadFlightDetails() {
         var flight = selectedFlight;
 
@@ -313,7 +313,7 @@ $(document).ready(function () {
     function backToList() {
         currentPassenger = null;
         resetForm();
-        syncLocalSeatLocks();   // <-- add this line
+        syncLocalSeatLocks();
         updateSummary();
         $("#passenger-form").hide();
         $("#passenger-list, #outside-buttons").show();

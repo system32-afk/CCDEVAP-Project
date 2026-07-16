@@ -59,7 +59,7 @@ airlineDropdown.on("click", ".airline-row", function() {
     var selectedAirline = $(this).data("airline");
     
     filter_options.airline = selectedAirline;
-    airlineField.text(text); // Updates the main button text to show the selection
+    airlineField.text(text);
     
     console.log("Selected Airline Value:", filter_options.airline);
 });

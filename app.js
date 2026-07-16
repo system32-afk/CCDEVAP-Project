@@ -1007,7 +1007,7 @@ app.patch("/admin-airlines/:id/deactivate", isAuthenticated, isAdmin, async func
 
 //==========================READ OPERATIIONS=============================
 
-app.get("/reservations-data", isAuthenticated,isUser, async function(req, res){
+app.get("/reservations-data", isAuthenticated, async function(req, res){
     try{
         var reservations = await bookingModel.find({
             belongsToUser: req.session.userID

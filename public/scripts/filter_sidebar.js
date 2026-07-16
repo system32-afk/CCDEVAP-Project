@@ -47,10 +47,13 @@ FILTERRESET.on("click",function(){
     priceRange.val(500);
     currentPrice.text("PHP 500");
 
-    SearchFlight()//reset search query
+    renderFlights(searchResults)//reset search query
 })
 
 APPLYFILTER.on("click",function(){
+    console.log("APPLY FILTER CLICKED");
+
+    
     applyAllFilters();
 })
 
@@ -60,19 +63,18 @@ async function loadFilterAirlines() {
         const data = await response.json();
 
         let airlines = data;
-        
-        // Clear old list items
+       
         airlinesFilterGroup.empty();
 
         airlines.forEach(airline => {
-            let airlineName = airline.airlineName || airline.name;
-            // Generate clean IDs (e.g. "filter-Philippine-Airlines")
-            let airlineValue = airline.airlineCode || airlineName;
-            let elementId = `filter-${airlineValue.replace(/\s+/g, '-')}`;
+            let airlineName = airline.airlineName;
+           
+            
+            let elementId = `filter-${airlineName.replace(/\s+/g, '-')}`;
 
             const checkboxHtml = `
                 <div class="form-check mb-2">
-                    <input class="form-check-input airline-filter" type="checkbox" value="${airlineValue}" id="${elementId}" checked>
+                    <input class="form-check-input airline-filter" type="checkbox" value="${airlineName}" id="${elementId}" checked>
                     <label class="form-check-label" for="${elementId}">
                         ${airlineName}
                     </label>
@@ -273,22 +275,32 @@ function filterSchedules(flights){
     })
 }
 
-function filterPrice(flights){
-    var price = Number(priceRange.val());
-    return flights.filter(flight =>{
-        if(Number(flight.ticketPrice) > price){
-            return false;
-        }
-     return true;
-    })
 
-    
+//filters flights cheaper than the limit
+function filterPrice(flights) {
+    const maxPriceLimit = Number(priceRange.val());
+    const selectedCabinClass = getBookingInfo().cabinType;
+
+    return flights.filter(flight => {
+        const flightCabins = flight.cabin;
+        
+        
+        let chosenCabin = flightCabins[selectedCabinClass];
+        
+        if (!chosenCabin) {
+            const fallbackKey = Object.keys(flightCabins).find(key => key !== '_id');
+            chosenCabin = flightCabins[fallbackKey];
+        }
+
+        const flightPrice = Number(chosenCabin?.price);
+        return flightPrice >= maxPriceLimit;
+    });
 }
 
 function filterStops(flights){
 
     var stops =  $("input[name='stop-group']:checked").val();
-    console.log("STOPS: ", stops);
+    
 
     //user has no stops preference
     if (stops === "any"){
@@ -316,23 +328,32 @@ function filterStops(flights){
     })
 }
 
-
 function applyAllFilters() {
-    // always start fresh from the original search results
     let temporaryList = searchResults;
-
     
-    temporaryList = filterAirilines(temporaryList);
 
-    
+    if (!isAirlineDisabled) {
+        temporaryList = filterAirilines(temporaryList);
+    }
+   
     temporaryList = filterSchedules(temporaryList);
+    
+    
+    if (!isPriceDisabled) { 
+        temporaryList = filterPrice(temporaryList);
+        
+    }
+    
 
-    temporaryList = filterPrice(temporaryList);
-
-    temporaryList = filterStops(temporaryList);
+    if (!isStopsDisabled) {
+        temporaryList = filterStops(temporaryList);
+    }
+    
    
     //if there is a sorting preference
     if(currentSortOption){
+        console.log("TEMPORARY LIST",temporaryList)
+        console.log("SEARCH RESULTS111111",searchResults)
         console.log("sorted and filtered");
 
         console.log("sorting option: ",currentSortOption);
@@ -341,7 +362,7 @@ function applyAllFilters() {
          return;
     }
 
-   console.log(temporaryList);
+   console.log("temporaryList");
     renderFlights(temporaryList);
 }
 

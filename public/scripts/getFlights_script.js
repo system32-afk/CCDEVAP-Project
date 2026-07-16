@@ -177,6 +177,8 @@ async function getFlights(filterOptions, bookingInfo) {
             throw new Error(`error status: ${response.status}`);
         }
         searchResults = await response.json();
+
+        console.log("SEARCH RESULTS ",searchResults)
         return searchResults;
 
     }catch(error){
