@@ -18,6 +18,7 @@ function renderReservations(list) {
 function createReservationCard(reservation, passenger) {
     const modalId = `modal-${reservation.bookingReference}-${passenger.seat}`;
     const editModalId = `modal-edit-${reservation.bookingReference}-${passenger.seat}`;
+    const isCancelled = passenger.status === "Cancelled";
 
     return `
     <div class="reservation-card">
@@ -42,7 +43,7 @@ function createReservationCard(reservation, passenger) {
                 <div class="options-group">
                     <button class="view-button" onclick="openModal('${modalId}')">View Details</button>
                     <button class="edit-button" onclick="openModal('${editModalId}')">Edit</button>
-                    <button class="cancel-button" onclick="requestCancelReservation('${passenger._id}', '${passenger.status}')">Cancel</button>
+                    <button class="cancel-button" ${isCancelled ? "disabled" : ""} onclick="requestCancelReservation('${passenger._id}', '${passenger.status}')">Cancel</button>
                 </div>
     </div>
     `;

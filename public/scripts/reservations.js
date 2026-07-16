@@ -62,7 +62,9 @@ const airlineLogos = {
     "AirAsia": "/images/AirAsia.png",
     "Cathay Pacific": "/images/CathPac.png",
     "Singapore Airlines": "/images/SingaporeAirlinesLogo.png",
-    "Japan Airlines": "/images/JapanAirlinesLogo.png"
+    "Japan Airlines": "/images/JapanAirlinesLogo.png",
+    "Qantas Airways": "/images/QantasAirwaysLogo.png",
+    "Air France": "/images/AirFranceLogo.png"
 };
 
 // Returns the airline logo based on its name
@@ -122,6 +124,7 @@ function filterReservations(list) {
             return false;
         }
 
+        // Filter for Destination
         if (destination !== "None" && reservation.flight.destination !== destination) {
             return false;
         }
@@ -131,15 +134,17 @@ function filterReservations(list) {
             return false;
         }
 
-        // At least one passenger should match the selected status
+        // Checks each passenger's status
         if (status && !reservation.passengers.some(passenger => passenger.status === status)) {
             return false;
         }
 
+        // Filter for Flight Number
         if (flightNumber && reservation.flight.flightNumber !== Number(flightNumber)) {
             return false;
         }
 
+        // Filter for Booking Reference
         if (bookingReference && reservation.bookingReference !== bookingReference) {
             return false;
         }
