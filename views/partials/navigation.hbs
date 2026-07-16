@@ -14,12 +14,11 @@
         <a class="nav-link " href="admin-dashboard">Admin Panel</a>
         </li>   
         <li>
-            <form action="/logout" method="POST" style="margin: 0;">
-                <a id="logout" class="btn btn-white mt-1 text-decoration-none" type="submit">
-               Logout
-                </a>
-                    </form>
-                </li>
+            <form action="/logout" method="POST">
+                <button id="logout" type="submit" class="btn btn-white mt-1 text-decoration-none bg-none b-none ">
+                    Logout
+                </button>
+            </form>
     {{else}}   
         <li class="nav-item">
         <a id="nav-home" class="nav-link" aria-current="page" href="home">Home</a>
@@ -46,9 +45,8 @@
                     <hr class="dropdown-divider">
                 </li>
                 <li>
-                    <form action="/logout" method="POST" style="margin: 0;">
-                        <button type="submit" class="dropdown-item d-flex align-items-center"
-                            style="background: none; border: none; width: 100%;">
+                    <form action="/logout" method="POST" >
+                        <button type="submit" class="dropdown-item d-flex align-items-center bg-none b-none w-100">
                             <i class="material-symbols-outlined me-2">logout</i>Logout
                         </button>
                     </form>
