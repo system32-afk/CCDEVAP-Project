@@ -171,7 +171,7 @@ async function getFlights(filterOptions, bookingInfo) {
 
     try{
 
-        let response = await fetch(`/search-flights?${searchParams.toString()}`);
+        let response = await fetch(`/search/search-flights?${searchParams.toString()}`);
 
         if (!response.ok) {
             throw new Error(`error status: ${response.status}`);
@@ -480,7 +480,7 @@ async function getFlightData(ID){
 
         let searchParams = new URLSearchParams({flightID:ID})
 
-        let response = await fetch(`../flight-info?${searchParams.toString()}`);
+        let response = await fetch(`/search/flight-info?${searchParams.toString()}`);
 
         if (!response.ok) {
             throw new Error(`error status: ${response.status}`);

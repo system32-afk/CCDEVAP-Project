@@ -60,7 +60,7 @@ async function loadReservations() {
     try {
         // Check if we're on the admin page
         const isAdminPage = window.location.pathname.startsWith("/admin");
-        const endpoint = isAdminPage ? "/admin-reservations-data" : "/reservations-data";
+        const endpoint = isAdminPage ? "/admin/admin-reservations-data" : "/reservations/reservations-data";
 
         const response = await fetch(endpoint);
         if (!response.ok) throw new Error("Failed to fetch reservations");
@@ -336,7 +336,7 @@ async function loadEditSeatMap(container) {
     const currentSeat = container.dataset.currentSeat;
 
     try {
-        const response = await fetch(`/occupied-seats?flightId=${encodeURIComponent(flightId)}&cabinType=${encodeURIComponent(cabinType)}`);
+        const response = await fetch(`/api/occupied-seats?flightId=${encodeURIComponent(flightId)}&cabinType=${encodeURIComponent(cabinType)}`);
         if (!response.ok) throw new Error("Failed to load seat map");
 
         const data = await response.json();
@@ -387,6 +387,11 @@ async function saveNewSeat(passengerId) {
     const endpointBase = container.dataset.endpointBase;
     const modalOverlay = container.closest(".modal-overlay");
 
+    //**
+    // TODO: FIX THIS
+    // What on earth is endpointbase? I can't debug; Can't change seats till this gets fixed
+    // 
+    //  */
     try {
         const response = await fetch(`${endpointBase}/passenger/${passengerId}/seat`, {
             method: "PUT",

@@ -10,6 +10,7 @@ const savedPassengers = new mongoose.Schema({
     nationality:{ type: String, required: true, trim: true},
     emailAddress:{ type: String, required: true, trim: true},
     sex:{ type: String, required: true, trim: true},
+    ageClass:{ type: String, required: true, trim: true},
     nationality:{ type: String, required: true, trim: true},
   
 },{ collection: 'savedPassengers' }

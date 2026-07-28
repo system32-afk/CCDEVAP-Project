@@ -52,7 +52,7 @@ function requestCancelReservation(passengerId, currentStatus) {
         passengerId,
         previousStatus: currentStatus,
         newStatus: "Cancelled",
-        endpoint: `/reservations/passenger/${passengerId}/status`
+        endpoint: `/reservation/passenger/${passengerId}/status`
     };
 
     const message = document.getElementById("modal-cancel-message");

@@ -94,7 +94,7 @@ async function updateCityInformation(){
     };
     const newCityName = cityNameField.val().trim();
     try{
-        const response = await fetch(`/admin-cities/${currentCityId}`,{
+        const response = await fetch(`/admin/admin-cities/${currentCityId}`,{
             method: "PUT",
             headers: {
                 'Content-Type' : 'application/json'
@@ -151,7 +151,7 @@ async function updateAirlineInformation(){
 
     const newAirlineName = airlineNameField.val().trim();
     try{
-        const response  = await fetch(`/admin-airlines/${currentAirlineId}`,{
+        const response  = await fetch(`/admin/admin-airlines/${currentAirlineId}`,{
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -225,7 +225,7 @@ async function openUpdateModal(id){
 async function confirmDeactivate(){
 
     const response = await fetch(
-        `/admin-flights/${currentFlightId}/deactivate`,
+        `/admin/admin-flights/${currentFlightId}/deactivate`,
         {
             method: "PATCH"
         }
@@ -241,7 +241,7 @@ async function confirmDeactivate(){
 async function confirmDeactivateAirline() {
 
     const response = await fetch(
-        `/admin-airlines/${currentAirlineId}/deactivate`,
+        `/admin/admin-airlines/${currentAirlineId}/deactivate`,
         {
             method: "PATCH"
         }
@@ -289,7 +289,7 @@ async function updateFlightInformation(){
 
     try{
         console.log(currentFlightId);
-        const response = await fetch(`/admin-flights/${currentFlightId}`, {
+        const response = await fetch(`/admin/admin-flights/${currentFlightId}`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'

@@ -144,7 +144,7 @@ async function updateUserInformation(){
 
     try{
 
-        let response = await fetch(application/json, {
+        let response = await fetch("/profile/update", {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json' 
@@ -155,7 +155,7 @@ async function updateUserInformation(){
         if (!response.ok) {
             throw new Error(`error status: ${response.status}`);
         }
-
+        userInformation = {...updatedInformation};
         loadInformation();
     }catch (error) {
         console.error("there was an error updating your information: ", error);
@@ -252,7 +252,7 @@ async function loadSavedPassengers() {
 
     try {
         
-        let response = await fetch("/saved-passengers");
+        let response = await fetch("/profile/saved-passengers");
         
         
         if (!response.ok) {
@@ -339,7 +339,7 @@ async function submitPassengerInfo() {
     };
 
     // determine url and method dynamically based on edit state
-    var url = editId ? `/saved-passengers/update/${editId}` : `/saved-passengers/add`;
+    var url = editId ? `/profile/saved-passengers/update/${editId}` : `/profile/saved-passengers/add`;
     var method = editId ? "PUT" : "POST";
 
     try {
@@ -384,7 +384,7 @@ async function submitPassengerInfo() {
 async function editPassengerInfo(ID) {
     try {
         // fetch the target passenger profile from the server
-        let response = await fetch(`/saved-passengers/edit/${ID}`);
+        let response = await fetch(`/profile/saved-passengers/edit/${ID}`);
 
         if (!response.ok) {
             throw new Error(`error status: ${response.status}`);
@@ -423,7 +423,7 @@ async function editPassengerInfo(ID) {
  */
 async function removePassenger(ID) {
     try {
-        let response = await fetch(`/saved-passengers/delete/${ID}`, {
+        let response = await fetch(`/profile/saved-passengers/delete/${ID}`, {
             method: "DELETE"
         });
 
@@ -499,7 +499,7 @@ async function loadCards() {
     
     try {
         
-        let response = await fetch("/paymentMethods");
+        let response = await fetch("/profile/paymentMethods");
 
         
         if (!response.ok) {
@@ -590,7 +590,7 @@ async function addCard(cardHolder, cardNumber, expDate, cvv){
 
     
     try{
-        let response = await fetch("/add-payment",{
+        let response = await fetch("/profile/add-payment",{
             method: "POST",
             headers:{'Content-Type':'application/json'},
             body: JSON.stringify(newCard)
@@ -622,7 +622,7 @@ async function removePaymentMethod(ID) {
     }
 
     try {
-        let response = await fetch(`/delete-payment/${ID}`, {
+        let response = await fetch(`/profile/delete-payment/${ID}`, {
             method: "DELETE"
         });
 
@@ -688,7 +688,7 @@ async function loadTravelHistory(){
 
     try{
 
-        let response = await fetch("/travel-history");
+        let response = await fetch("/profile/travel-history");
         
         if (!response.ok) {
             throw new Error(`error status: ${response.status}`);

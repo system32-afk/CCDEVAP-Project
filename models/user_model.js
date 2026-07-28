@@ -38,13 +38,6 @@ const userSchema = new mongoose.Schema({
 
 
 
-async function getUserByID(userID) {
-    return await db.collection("users").find({user_id:userID}).toArray();
-}
-
-async function createUser(params) {
-    
-}
 
 
 module.exports  = mongoose.model('users',userSchema);

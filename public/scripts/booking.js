@@ -259,7 +259,7 @@ $(document).ready(function () {
     }
 
     function loadSeatMap(flightIdToUse, cabinType, containerId, seatClass) {
-        $.getJSON("/occupied-seats", { flightId: flightIdToUse, cabinType: cabinType })
+        $.getJSON("/api/occupied-seats", { flightId: flightIdToUse, cabinType: cabinType })
             .done(function(data) {
                 $("#" + containerId).append(buildSeatRows(data.occupiedSeats || [], seatClass));
                 $('[data-bs-toggle="tooltip"]').tooltip();
