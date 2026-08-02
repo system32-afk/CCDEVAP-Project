@@ -200,7 +200,7 @@ app.post("/login", async function(req,res){
             console.log("Session save error:", err);
         } else{
             if(user.role === "admin"){
-                res.redirect("/admin-dashboard");
+                res.redirect("/admin");
         
         }else{
             res.redirect("/home");

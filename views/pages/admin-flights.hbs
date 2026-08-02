@@ -322,7 +322,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/admin-airlines" method="POST" id="editAirlineForm">
+                    <form action="/admin/admin-airlines" method="POST" id="editAirlineForm">
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="airlineName" class="form-label">Airline:</label>
@@ -356,7 +356,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-            <form action="/admin-cities" method="POST" id="addCityForm">
+            <form action="/admin/admin-cities" method="POST" id="addCityForm">
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="cityName" class="form-label">City:</label>
@@ -384,7 +384,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/admin-cities" method="POST" id="editCityForm">
+                    <form action="/admin/admin-cities" method="POST" id="editCityForm">
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="airlineName" class="form-label">City:</label>
@@ -412,7 +412,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-            <form action="/admin-airlines" method="POST" id="addAirlineForm">
+            <form action="/admin/admin-airlines" method="POST" id="addAirlineForm">
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="airlineName" class="form-label">Airline:</label>
@@ -434,7 +434,8 @@
   </div>
 </div>
 <!-- create Airline modal -->
-            {{!-- update flight modal --}}
+
+{{!-- update flight modal --}}
             <div id="modal-update-flight" class="modal fade" data-bs-backdrop="static"data-bs-keyboard="false" tabindex="-1">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
@@ -442,7 +443,7 @@
                         <h5 class="modal-title text-primary fw-bold">Update Flight</h5>
                     </div>
                     <div class="modal-body">
-                        <form action="/admin-flights" method="POST" id="editFlightForm">
+                        <form action="/admin/admin-flights" method="POST" id="editFlightForm">
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="flightNumber" class="form-label">Flight Number:</label>
@@ -612,7 +613,7 @@
                         <h5 class="modal-title text-primary fw-bold">Create Flight</h5>
                     </div>
                     <div class="modal-body">
-                        <form action="/admin-flights" method="POST" onsubmit="return validateFlight()">
+                        <form action="/admin/admin-flights" method="POST" onsubmit="return validateFlight()">
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="flightNumber" class="form-label">Flight Number:</label>

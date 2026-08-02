@@ -113,7 +113,7 @@ router.post("/admin-cities",isAuthenticated, isAdmin, async function(req, res){
     // checks if city already exists
     let city = await cityModel.findOne({cityName});
         if(city){
-            return res.redirect('/admin-flights');
+            return res.redirect('/admin/admin-flights');
         }
 
         city = new cityModel({
@@ -121,7 +121,7 @@ router.post("/admin-cities",isAuthenticated, isAdmin, async function(req, res){
         });
         await city.save();
 
-        res.redirect('/admin-flights');
+        res.redirect('/admin/admin-flights');
 });
 
 // creates airline
@@ -132,7 +132,7 @@ router.post("/admin-airlines",isAuthenticated, isAdmin, async function(req, res)
     // checks if airline already exists
     let airline = await airlineModel.findOne({airlineName});
         if(airline){
-            return res.redirect('/admin-flights');
+            return res.redirect('/admin/admin-flights');
         }
 
         airline = new airlineModel({
@@ -140,7 +140,7 @@ router.post("/admin-airlines",isAuthenticated, isAdmin, async function(req, res)
         });
         await airline.save();
 
-        res.redirect('/admin-flights');
+        res.redirect('/admin/admin-flights');
 });
 
 // create flight
@@ -164,7 +164,7 @@ router.post("/admin-flights",isAuthenticated, isAdmin, async function(req,res){
     });
     await flight.save();
 
-    res.redirect('/admin-flights');
+    res.redirect('/admin/admin-flights');
 });
 
 
