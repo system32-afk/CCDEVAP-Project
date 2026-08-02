@@ -9,7 +9,7 @@ const sessionString = process.env.secretString;
 const DBuri = process.env.DBuri;
 const DBname = process.env.DBname;
 const app = express('express');
-const bcrypt  = require('bcryptjs')
+
 
 
 const flightModel = require('./models/flight_model.js');
@@ -151,13 +151,16 @@ app.post('/logout',isAuthenticated ,function(req, res) {
 //=========================POST FUNCTIONS=============================================
 app.post("/register",async  function(req,res){
     
+    try{
     const {Fname,Lname,MI,DOB,MobileNum,nationality,sex,password,emailAddress} =  req.body; 
 
     let user = await userModel.findOne({emailAddress});
+
+    //if user already exist don't register
     if(user){
         return res.redirect('/register');
     }
-    var hashedPsw =  await bcrypt.hash(password,12);
+
     user = new userModel({
         Fname,
         Lname,
@@ -166,16 +169,21 @@ app.post("/register",async  function(req,res){
         MobileNum,
         nationality,
         sex,
-        password: hashedPsw,
+        password,
         emailAddress});
 
     await user.save();
 
     res.redirect('/login');
+    }catch(error){
+        console.log("Registeration error:", error);
+        res.redirect('/register');
+    }
 });
 
 
 app.post("/login", async function(req,res){
+    try{
     const{emailAddress, password} = req.body;
 
     const  user = await userModel.findOne({emailAddress});
@@ -184,7 +192,7 @@ app.post("/login", async function(req,res){
         return res.redirect("/login");
     }
 
-    const isMatch = await bcrypt.compare(password,user.password);
+    const isMatch = await user.comparePassword(password);
 
     if(!isMatch){
         console.log("wrong password");
@@ -198,6 +206,7 @@ app.post("/login", async function(req,res){
     req.session.save((err) => {
         if(err){
             console.log("Session save error:", err);
+            return res.status(500).redirect("/login");
         } else{
             if(user.role === "admin"){
                 res.redirect("/admin");
@@ -207,6 +216,9 @@ app.post("/login", async function(req,res){
         }
         }
     })
+    }catch(error){
+        return res.status(500).redirect("/login");
+    }
 });
 
 
@@ -215,7 +227,7 @@ app.listen(port, () =>{
 });
 
 
-
+module.exports = app;
 
 //**
 // =============================================================================================

@@ -1,6 +1,6 @@
 //FILE FOR USER COLLECTION
 const mongoose = require('mongoose');
-
+const bcrypt  = require('bcryptjs')
 
 const paymentMethodSchema = new mongoose.Schema({
     cardHolder:{type: String, required: true, trim: true},
@@ -37,7 +37,16 @@ const userSchema = new mongoose.Schema({
 )
 
 
+userSchema.pre('save', async function () {
+  
+  if (!this.isModified('password')) return;
 
+  const salt = await bcrypt.genSalt(12);
+  this.password = await bcrypt.hash(this.password, salt);
+});
 
+userSchema.methods.comparePassword = async function (inputPassword) {
+  return await bcrypt.compare(inputPassword, this.password);
+};
 
 module.exports  = mongoose.model('users',userSchema);
