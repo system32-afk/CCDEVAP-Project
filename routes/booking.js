@@ -4,8 +4,7 @@ const router = express.Router();
 const {isAuthenticated,isUser} = require('../middleware/auth.js');
 const bookingModel = require('../models/booking_model.js');
 const flightModel = require('../models/flight_model.js');
-
-
+const AuditLog = require('../models/AuditLog.js');
 
 router.get('/', isAuthenticated,isUser, function(req, res) {
         res.render('pages/booking', {
@@ -29,6 +28,20 @@ router.post("/", isAuthenticated, isUser, async function(req, res) {
             return res.status(404).json({ message: "Departure flight not found" });
         }
 
+        // check if any requested seat is already taken by a confirmed passenger
+        const requestedSeats = passengers.map(p => p.seat).filter(Boolean);
+        if (requestedSeats.length) {
+            const seatConflict = await bookingModel.findOne({
+                flight: flightId,
+                cabinType: cabinType,
+                "passengers.status": "Confirmed",
+                "passengers.seat": { $in: requestedSeats }
+            });
+            if (seatConflict) {
+                return res.status(409).json({ message: "This seat is already occupied" });
+            }
+        }
+
         if (flight.cabin[cabinType].seats < passengers.length) {
             return res.status(409).json({ message: "Not enough seats available on departure flight" });
         }
@@ -50,10 +63,30 @@ router.post("/", isAuthenticated, isUser, async function(req, res) {
             $inc: { [`cabin.${cabinType}.seats`]: -passengers.length }
         });
 
+        await AuditLog.create({
+            actor: req.session.email,
+            action: "RESERVATION CREATED",
+            user_role: req.session.role
+        });
+
         if (returnFlightId) {
             const returnFlight = await flightModel.findById(returnFlightId);
             if (!returnFlight) {
                 return res.status(404).json({ message: "Return flight not found" });
+            }
+
+            // check if any requested seat is already taken by a confirmed passenger
+            const returnRequestedSeats = returnPassengers.map(p => p.seat).filter(Boolean);
+            if (returnRequestedSeats.length) {
+                const returnSeatConflict = await bookingModel.findOne({
+                    flight: returnFlightId,
+                    cabinType: cabinType,
+                    "passengers.status": "Confirmed",
+                    "passengers.seat": { $in: returnRequestedSeats }
+                });
+                if (returnSeatConflict) {
+                    return res.status(409).json({ message: "This seat is already occupied" });
+                }
             }
 
             if (returnFlight.cabin[cabinType].seats < returnPassengers.length) {
@@ -75,6 +108,12 @@ router.post("/", isAuthenticated, isUser, async function(req, res) {
 
             await flightModel.findByIdAndUpdate(returnFlightId, {
                 $inc: { [`cabin.${cabinType}.seats`]: -returnPassengers.length }
+            });
+
+            await AuditLog.create({
+                actor: req.session.email,
+                action: "RESERVATION CREATED",
+                user_role: req.session.role
             });
         }
 
