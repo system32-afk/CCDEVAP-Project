@@ -106,5 +106,31 @@ router.get("/occupied-seats", isAuthenticated, async function(req, res) {
     }
 });
 
+// gets occupied seats for a flight's cabin
+router.get("/occupied-seats", isAuthenticated, async function(req, res) {
+        try {
+        const { flightId, cabinType } = req.query;
+
+        const bookings = await bookingModel.find({
+            flight: flightId,
+            cabinType: cabinType,
+            "passengers.status": "Confirmed"
+        }).lean();
+
+        const occupiedSeats = [];
+        bookings.forEach(booking => {
+            booking.passengers.forEach(passenger => {
+                if (passenger.status === "Confirmed" && passenger.seat) {
+                    occupiedSeats.push(passenger.seat);
+                }
+            });
+        });
+
+        return res.status(200).json({ occupiedSeats });
+    } catch (err) {
+        console.error("Error fetching occupied seats:", err);
+        return res.status(500).json({ error: err.message });
+    }
+});
 
 module.exports = router;

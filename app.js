@@ -28,7 +28,7 @@ const bookingRouter = require('./routes/booking.js');
 const reservationRouter = require('./routes/reservations.js');
 const apiRouter = require('./routes/APIs.js');
 
-
+const AuditLog = require('./models/AuditLog');
 
 const {isAuthenticated,isUser} = require('./middleware/auth.js');
 //DATABASE CONNECTION
@@ -136,14 +136,34 @@ app.get('/home', isAuthenticated, isUser, async function(req, res) {
     
 });
 
-app.post('/logout',isAuthenticated ,function(req, res) {
-    req.session.destroy((err) => {
-        if (err) {
-            return res.redirect('/dashboard');
-        }
-        res.clearCookie('connect.sid'); // Clears the browser session cookie
-        res.redirect('/login');
-    });
+app.post('/logout', isAuthenticated, async function(req, res) {
+    try {
+        
+        const actor = req.session.email || 'Unknown';
+        const userRole = req.session.role || 'User';
+
+       
+        await AuditLog.create({
+            actor: actor,
+            action: 'USER LOGGED OUT',
+            user_role: userRole,
+        });
+
+        
+        req.session.destroy((err) => {
+            if (err) {
+                console.error("Session destruction error:", err);
+                return res.redirect('/home');
+            }
+
+            res.clearCookie('connect.sid'); // Clears the browser session cookie
+            return res.redirect('/login');
+        });
+
+    } catch (error) {
+        console.error("Logout error:", error);
+        res.redirect('/home');
+    }
 });
 
 
@@ -161,6 +181,7 @@ app.post("/register",async  function(req,res){
         return res.redirect('/register');
     }
 
+
     user = new userModel({
         Fname,
         Lname,
@@ -171,9 +192,17 @@ app.post("/register",async  function(req,res){
         sex,
         password,
         emailAddress});
-
+    
     await user.save();
+    
+    
+    await AuditLog.create({
+        actor:user.emailAddress,
+        action:"USER REGISTERED",
+        user_role: user.role
+    })
 
+    
     res.redirect('/login');
     }catch(error){
         console.log("Registeration error:", error);
@@ -194,6 +223,11 @@ app.post("/login", async function(req,res){
 
     const isMatch = await user.comparePassword(password);
 
+     await AuditLog.create({
+        actor: user ? user.emailAddress : 'unknown',
+        action: isMatch ? 'LOGIN SUCCESS' : 'LOGIN FAILED',
+        user_role: user ? user.role : 'unknown',
+    })
     if(!isMatch){
         console.log("wrong password");
         return res.redirect("/login");
@@ -202,6 +236,7 @@ app.post("/login", async function(req,res){
     req.session.userID = user._id;
     req.session.isLoggedIn = true;
     req.session.role = user.role;
+    req.session.email = user.emailAddress;
     
     req.session.save((err) => {
         if(err){
