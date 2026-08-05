@@ -93,6 +93,20 @@ router.get('/admin-users',isAuthenticated , isAdmin, function(req,res){
     `
     });
 });
+router.get('/admin-audit-logs',isAuthenticated , isAdmin, async function(req,res){
+    
+    const audits = await AuditLog.find({}).sort({timestamp:-1}).lean();
+    
+    res.render('pages/admin-audit-logs',{
+        title: "Audit Logs",
+        AuditLog: audits,
+        isAdmin: req.session.role === "admin",
+        pageScripts: `
+            <script src="../scripts/reservations.js" defer></script>
+            <script src="../scripts/utilities/load_navbar_script.js" defer></script>
+    `
+    });
+});
 router.get("/admin-reservations-data", isAuthenticated, isAdmin, async function(req, res){
     try{
         var reservations = await bookingModel.find({}).populate('flight').lean();

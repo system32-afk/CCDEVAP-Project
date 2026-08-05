@@ -1,0 +1,75 @@
+
+    
+    <link rel="stylesheet" href="/CSS/reservations.css" media="all">
+    <link rel="stylesheet" href="/CSS/admin.css" media="all">
+
+    <script src="/scripts/reservations.js" defer></script>
+    <script src="/scripts/utilities/load_navbar_script.js" defer></script>
+
+<div id="navbar"></div>
+
+<div class="container-fluid content-section">
+    <div class="row">
+        <aside class="admin-sidebar">
+            <ul class="nav flex-column admin-sidebar-nav gap-1">
+                <li class="nav-item">
+                    <a href="/admin" class="nav-link rounded">
+                        <img src="/images\dashboard-icon.png">
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/admin-flights" class="nav-link rounded">
+                        <img src="/images/flight-management-icon.png">
+                        Flight Management
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/admin-users" class="nav-link rounded">
+                        <img src="/images\user-management-icon.png">
+                        User Management
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/admin-reservations" class="nav-link rounded">
+                        <img src="/images\reservation-management-icon.png">
+                        Reservations Management
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/admin-audit-logs" class="nav-link active rounded">
+                        <img src="/images/audit-logs.png">
+                        Audit Logs
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="admin-content">
+            <h1 class="admin-title"><strong>AUDIT LOGS</strong></h1>
+            
+            <div class="analytics-table-card">
+                <div class="table-responsive">
+                    <table class="table table-hover admin-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Actor</th>
+                                <th scope="col">Action</th>
+                                <th scope="col">Actor Role </th>
+                                <th scope="col">Time Stamp</th>                            
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each AuditLog}}
+                            <tr id="audit-rows{{this._id}}">
+                                <td class="actor table-code-highlight">{{this.actor}}</td>
+                                <td class="actor ">{{this.action}}</td>
+                                <td class="actor ">{{this.user_role}}</td>
+                                <td class="actor table-code-highlight">{{this.timestamp}}</td>
+                            </tr>      
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
