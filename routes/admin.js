@@ -185,7 +185,7 @@ router.post("/admin-flights",isAuthenticated, isAdmin, async function(req,res){
     await flight.save();
 
     await AuditLog.create({
-        actor: req.session.emailAddress,
+        actor: req.session.email,
         action:"FLIGHT CREATED",
         user_role: req.session.role
     });
@@ -211,7 +211,7 @@ router.put("/admin-flights/:id", isAuthenticated, isAdmin,async function(req,res
 
     
     await AuditLog.create({
-        actor: req.session.emailAddress,
+        actor: req.session.email,
         action:"FLIGHT UPDATED",
         user_role: req.session.role
     });
@@ -302,7 +302,7 @@ router.patch("/admin-flights/:id/deactivate", isAuthenticated, isAdmin, async fu
         }
 
         await AuditLog.create({
-            actor: req.session.emailAddress,
+            actor: req.session.email,
             action:"FLIGHT DEACTIVATED",
             user_role: req.session.role
         });
