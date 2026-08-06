@@ -5,6 +5,7 @@ const {isAuthenticated,isUser} = require('../middleware/auth.js');
 const bookingModel = require('../models/booking_model.js');
 const flightModel = require('../models/flight_model.js');
 const cityModel = require('../models/city_model.js');
+const AuditLog = require('../models/AuditLog.js');
 
 router.get('/', isAuthenticated, isUser, async function(req,res){
     const cities = await cityModel.find({}).sort({ cityName: 1 }).lean();
@@ -57,7 +58,11 @@ router.put("/passenger/:passengerId/status", isAuthenticated, async function(req
 
         passenger.status = status;
         await booking.save();
-
+        await AuditLog.create({
+                    actor: req.session.email,
+                    action: "RESERVATION CANCELED",
+                    user_role: req.session.role
+                });
         res.status(200).json({ message: "passenger status updated successfully" });
     } catch (err) {
         res.status(500).json({ error: err.message });

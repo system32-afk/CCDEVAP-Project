@@ -259,7 +259,11 @@ router.put("/admin-reservations/passenger/:passengerId/status",isAuthenticated, 
 
         passenger.status = normalizedStatus;
         await booking.save();
-
+        await AuditLog.create({
+                            actor: req.session.email,
+                            action: "RESERVATION CANCELED",
+                            user_role: req.session.role
+                        });
         res.status(200).json({ message: "passenger status updated successfully" });
     } catch (err) {
         res.status(500).json({ error: err.message });

@@ -35,7 +35,7 @@ function updateReservationStatus(selectElement, passengerId) {
         passengerId,
         previousStatus,
         newStatus,
-        endpoint: `/admin-reservations/passenger/${passengerId}/status`
+        endpoint: `/admin/admin-reservations/passenger/${passengerId}/status`
     };
 
     const message = document.getElementById("modal-cancel-message");
@@ -52,7 +52,7 @@ function requestCancelReservation(passengerId, currentStatus) {
         passengerId,
         previousStatus: currentStatus,
         newStatus: "Cancelled",
-        endpoint: `/reservation/passenger/${passengerId}/status`
+        endpoint: `/reservations/passenger/${passengerId}/status`
     };
 
     const message = document.getElementById("modal-cancel-message");
