@@ -204,6 +204,7 @@ function createEditSeatModal(reservation, passenger) {
     const errId = `edit-seat-err-${passenger._id}`;
     const isAdminPage = window.location.pathname.startsWith("/admin");
     const endpointBase = isAdminPage ? "/admin" : "/reservations";
+    const endpointBase = isAdminPage ? "/admin" : "/reservations";
 
     return `
     <div id="${editModalId}" class="modal-overlay" onclick="whenUserClicksOutside(event, '${editModalId}')">
