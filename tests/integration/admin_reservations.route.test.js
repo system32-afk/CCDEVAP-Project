@@ -10,6 +10,7 @@ jest.mock('../../middleware/auth', () => {
             req.session.userID = new mongoose.Types.ObjectId();
             req.session.role = 'admin';
             req.session.isLoggedIn = true;
+            req.session.email = "test@gmail.com";
             next();
         },
         isAdmin: (req, res, next) => {
