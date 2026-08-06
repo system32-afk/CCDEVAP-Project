@@ -13,9 +13,10 @@
   "license": "ISC",
   "author": "",
   "type": "commonjs",
-  "main": "priceSlider_script.js",
+  "main": "app.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "appjs"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
