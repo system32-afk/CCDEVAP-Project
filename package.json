@@ -16,7 +16,7 @@
   "main": "app.js",
   "scripts": {
     "test": "jest",
-    "start": "appjs"
+    "start": "app.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
