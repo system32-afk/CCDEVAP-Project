@@ -44,7 +44,7 @@ afterAll(async () => {
     await mongoServer.stop();
 });
 
-// ======= sample data =======
+// dummy/sample data to be used for testing
 
 function buildSampleFlight(overrides = {}) {
     return {
@@ -92,7 +92,7 @@ function buildSamplePassenger(overrides = {}) {
     };
 }
 
-// ======= GET /admin-reservations-data =======
+// testing for admin reservations, should see all reservations 
 
 describe("GET /admin-reservations-data Integration Tests", () => {
 
@@ -124,7 +124,7 @@ describe("GET /admin-reservations-data Integration Tests", () => {
     });
 });
 
-// ======= PUT /admin-reservations/passenger/:passengerId/status =======
+// testing cancellation of reservation
 
 describe("PUT /admin-reservations/passenger/:passengerId/status Integration Tests", () => {
 
@@ -177,7 +177,7 @@ describe("PUT /admin-reservations/passenger/:passengerId/status Integration Test
         expect(updatedBooking.passengers[0].status).toBe("Cancelled");
     });
 
-    test("Should return 400 for an invalid status value", async () => {
+    test("Should return an error with a status code of 400 for an invalid status value", async () => {
         const flight = await flightModel.create(buildSampleFlight());
         const booking = await bookingModel.create({
             bookingReference: "BK-INVALID",
@@ -197,7 +197,7 @@ describe("PUT /admin-reservations/passenger/:passengerId/status Integration Test
         expect(response.body.message).toBe("Invalid status value");
     });
 
-    test("Should return 404 if passenger does not exist", async () => {
+    test("Should return an error with a status code of 404 if passenger does not exist", async () => {
         const fakePassengerId = new mongoose.Types.ObjectId();
 
         const response = await request(app)
@@ -209,7 +209,7 @@ describe("PUT /admin-reservations/passenger/:passengerId/status Integration Test
     });
 });
 
-// ======= PUT /passenger/:passengerId/seat (admin) =======
+// testing passenger seat changing
 
 describe("PUT /admin/passenger/:passengerId/seat Integration Tests", () => {
 
@@ -236,7 +236,7 @@ describe("PUT /admin/passenger/:passengerId/seat Integration Tests", () => {
         expect(updatedBooking.passengers[0].seat).toBe("11A");
     });
 
-    test("Should still return 409 if the seat is already taken", async () => {
+    test("Should still return an error with a status code of 409 if the seat is already taken", async () => {
         const flight = await flightModel.create(buildSampleFlight());
         const booking = await bookingModel.create({
             bookingReference: "BK-ADMINCONFLICT",
@@ -259,7 +259,7 @@ describe("PUT /admin/passenger/:passengerId/seat Integration Tests", () => {
         expect(response.body.message).toBe("That seat is already taken.");
     });
 
-    test("Should return 400 when trying to change the seat of a cancelled reservation", async () => {
+    test("Should return an error with a status code of 400 when trying to change the seat of a cancelled reservation", async () => {
         const flight = await flightModel.create(buildSampleFlight());
         const booking = await bookingModel.create({
             bookingReference: "BK-ADMINCANCELLEDSEAT",

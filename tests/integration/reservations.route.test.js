@@ -27,7 +27,7 @@ afterAll(async () => {
     await mongoServer.stop();
 });
 
-// ======= sample data =======
+// dummy/sample data to be used for the tests
 
 function buildSampleUser(overrides = {}) {
     return {
@@ -101,7 +101,7 @@ async function registerAndLogin(userPayload) {
     return { agent, userId: dbUser._id.toString() };
 }
 
-// ======= GET /reservations-data =======
+// testing for getting user reservations
 
 describe("GET /reservations-data Integration Tests", () => {
 
@@ -141,7 +141,7 @@ describe("GET /reservations-data Integration Tests", () => {
     });
 });
 
-// ======= PUT /passenger/:passengerId/status (cancel) =======
+// testing for canellation of passenger reservation
 
 describe("PUT /passenger/:passengerId/status Integration Tests", () => {
 
@@ -233,7 +233,7 @@ describe("PUT /passenger/:passengerId/status Integration Tests", () => {
     });
 });
 
-// ======= PUT /reservations/passenger/:passengerId/seat =======
+// testing for seat change of passenger
 
 describe("PUT /reservations/passenger/:passengerId/seat Integration Tests", () => {
 
@@ -310,7 +310,7 @@ describe("PUT /reservations/passenger/:passengerId/seat Integration Tests", () =
         expect(response.body.totalPrice).toBe(3000);
     });
 
-    test("Should return 409 if the requested seat is already taken", async () => {
+    test("Should return an error with a status code of 409 if the requested seat is already taken", async () => {
         const { agent, userId } = await registerAndLogin(buildSampleUser());
         const flight = await flightModel.create(buildSampleFlight());
 
@@ -335,7 +335,7 @@ describe("PUT /reservations/passenger/:passengerId/seat Integration Tests", () =
         expect(response.body.message).toBe("That seat is already taken.");
     });
 
-    test("Should return 400 when trying to change the seat of a cancelled reservation", async () => {
+    test("Should return an error with a status code of 400 when trying to change the seat of a cancelled reservation", async () => {
         const { agent, userId } = await registerAndLogin(buildSampleUser());
         const flight = await flightModel.create(buildSampleFlight());
 
@@ -357,7 +357,7 @@ describe("PUT /reservations/passenger/:passengerId/seat Integration Tests", () =
         expect(response.body.message).toBe("Cannot change the seat on a cancelled reservation.");
     });
 
-    test("Should return 400 if no seat is provided", async () => {
+    test("Should return an error with a status code of 400 if no seat is provided", async () => {
         const { agent, userId } = await registerAndLogin(buildSampleUser());
         const flight = await flightModel.create(buildSampleFlight());
 
@@ -379,7 +379,7 @@ describe("PUT /reservations/passenger/:passengerId/seat Integration Tests", () =
         expect(response.body.message).toBe("A seat is required.");
     });
 
-    test("Should return 403 if the reservation does not belong to the logged-in user", async () => {
+    test("Should return an error with a status code of 403 if the reservation does not belong to the logged-in user", async () => {
         const { agent } = await registerAndLogin(buildSampleUser());
         const otherDbUser = await new userModel(buildSampleUser({ emailAddress: "other@gmail.com" })).save();
 
