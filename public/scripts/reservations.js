@@ -100,38 +100,23 @@ function filterReservations(list) {
     const flightNumber = document.getElementById("flightNumber").value;
     const bookingReference = document.getElementById("bookingReference").value;
 
-    return list.filter(reservation => {
-        if (departure !== "None" && reservation.flight.origin !== departure) {
-            return false;
-        }
-
-        // Filter for Destination
-        if (destination !== "None" && reservation.flight.destination !== destination) {
-            return false;
-        }
-
-        // Compare only the date part
-        if (departureDate && reservation.flight.departureDate.slice(0, 10) !== departureDate) {
-            return false;
-        }
-
-        // Checks each passenger's status
-        if (status && !reservation.passengers.some(passenger => passenger.status === status)) {
-            return false;
-        }
-
-        // Filter for Flight Number
-        if (flightNumber && reservation.flight.flightNumber !== Number(flightNumber)) {
-            return false;
-        }
-
-        // Filter for Booking Reference
-        if (bookingReference && reservation.bookingReference !== bookingReference) {
-            return false;
-        }
-
-        return true;
-    });
+    return list
+        .filter(reservation => {
+            if (departure !== "None" && reservation.flight.origin !== departure) return false;
+            if (destination !== "None" && reservation.flight.destination !== destination) return false;
+            if (departureDate && reservation.flight.departureDate.slice(0, 10) !== departureDate) return false;
+            if (flightNumber && reservation.flight.flightNumber !== Number(flightNumber)) return false;
+            if (bookingReference && reservation.bookingReference !== bookingReference) return false;
+            return true;
+        })
+        .map(reservation => {
+            if (!status) return reservation;
+            return {
+                ...reservation,
+                passengers: reservation.passengers.filter(p => p.status === status)
+            };
+        })
+        .filter(reservation => reservation.passengers.length > 0);
 }
 
 function sortReservations(list) {
@@ -213,12 +198,12 @@ const EDIT_PREMIUM_ROWS = [1, 2];
 const EDIT_SEAT_COLS = ["A", "B", "C", "D", "E", "F"];
 
 function createEditSeatModal(reservation, passenger) {
-    const editModalId = `modal-edit-${reservation.bookingReference}-${passenger.seat}`;
+    const editModalId = `modal-edit-${reservation.bookingReference}-${passenger._id}`;
     const seatMapId = `edit-seat-map-${passenger._id}`;
     const displayId = `edit-selected-seat-${passenger._id}`;
     const errId = `edit-seat-err-${passenger._id}`;
     const isAdminPage = window.location.pathname.startsWith("/admin");
-    const endpointBase = isAdminPage ? "/admin-reservations" : "/reservations";
+    const endpointBase = isAdminPage ? "/admin" : "/reservations";
 
     return `
     <div id="${editModalId}" class="modal-overlay" onclick="whenUserClicksOutside(event, '${editModalId}')">
@@ -387,11 +372,6 @@ async function saveNewSeat(passengerId) {
     const endpointBase = container.dataset.endpointBase;
     const modalOverlay = container.closest(".modal-overlay");
 
-    //**
-    // TODO: FIX THIS
-    // What on earth is endpointbase? I can't debug; Can't change seats till this gets fixed
-    // 
-    //  */
     try {
         const response = await fetch(`${endpointBase}/passenger/${passengerId}/seat`, {
             method: "PUT",

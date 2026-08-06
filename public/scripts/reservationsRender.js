@@ -17,8 +17,8 @@ function renderReservations(list) {
 
 // Creates the reservation card shown in the list
 function createReservationCard(reservation, passenger) {
-    const modalId = `modal-${reservation.bookingReference}-${passenger.seat}`;
-    const editModalId = `modal-edit-${reservation.bookingReference}-${passenger.seat}`;
+    const modalId = `modal-${reservation.bookingReference}-${passenger._id}`;
+    const editModalId = `modal-edit-${reservation.bookingReference}-${passenger._id}`;
     const isCancelled = passenger.status === "Cancelled";
 
     return `
@@ -52,7 +52,7 @@ function createReservationCard(reservation, passenger) {
 
 // Creates the full reservation details shown in the modal
 function showFullReservationCard(reservation, passenger) {
-    const modalId = `modal-${reservation.bookingReference}-${passenger.seat}`;
+    const modalId = `modal-${reservation.bookingReference}-${passenger._id}`;
 
     return `
     <div id="${modalId}" class="modal-overlay" onclick="whenUserClicksOutside(event, '${modalId}')">

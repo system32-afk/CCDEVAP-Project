@@ -21,8 +21,8 @@ function renderReservations(list) {
 
 // Creates a table row for a reservation
 function createAdminReservationRow(reservation, passenger) {
-    const modalId = `modal-${reservation.bookingReference}-${passenger.seat}`;
-    const editModalId = `modal-edit-${reservation.bookingReference}-${passenger.seat}`;
+    const modalId = `modal-${reservation.bookingReference}-${passenger._id}`;
+    const editModalId = `modal-edit-${reservation.bookingReference}-${passenger._id}`;
     const status = passenger.status.toLowerCase();
     const isCancelled = passenger.status === "Cancelled";
 
@@ -47,7 +47,7 @@ function createAdminReservationRow(reservation, passenger) {
 
 // Creates the full reservation details shown in the admin modal
 function showFullAdminReservationModal(reservation, passenger) {
-    const modalId = `modal-${reservation.bookingReference}-${passenger.seat}`;
+    const modalId = `modal-${reservation.bookingReference}-${passenger._id}`;
 
     return `
     <div id="${modalId}" class="modal-overlay" onclick="whenUserClicksOutside(event, '${modalId}')">
