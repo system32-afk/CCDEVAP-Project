@@ -145,7 +145,7 @@
                                 </td>
 
                                 <td><button class="edit-button table-btn"  data-bs-toggle="modal" data-bs-target="#modal-update-flight" onclick="openUpdateModal('{{this._id}}')">Edit</button></td>
-                                <td><button class="cancel-button table-btn" data-bs-toggle="modal" data-bs-target="#modal-cancel-flight"onclick="openCancelModal({{this._id}})">Cancel</button></td>
+                                <td><button class="cancel-button table-btn" data-bs-toggle="modal" data-bs-target="#modal-cancel-flight"onclick="openCancelModal('{{this._id}}')">Cancel</button></td>
                             </tr>
                             {{/each}}
                         </tbody>
