@@ -2,35 +2,6 @@ const request = require("supertest");
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 
-// Mock connect-mongo BEFORE requiring the app
-jest.mock('connect-mongo', () => {
-    return {
-        create: jest.fn().mockReturnValue({
-                set: jest.fn(),
-                get: jest.fn(),
-                destroy: jest.fn(),
-                all: jest.fn(),
-                clear: jest.fn(),
-                length: jest.fn()
-        })
-    };
-});
-
-// Mock express-session
-jest.mock('express-session', () => {
-    return function() {
-        return (req, res, next) => {
-            req.session = req.session || {
-                userID: new mongoose.Types.ObjectId(),
-                role: 'admin',
-                isLoggedIn: true
-            };
-            next();
-        };
-    };
-});
-
-// Mock authentication middleware
 jest.mock('../../middleware/auth', () => {
     const mongoose = require('mongoose');
     return {
@@ -39,6 +10,7 @@ jest.mock('../../middleware/auth', () => {
             req.session.userID = new mongoose.Types.ObjectId();
             req.session.role = 'admin';
             req.session.isLoggedIn = true;
+            req.session.emailAddress = "Test@gmail.com";
             next();
         },
         isAdmin: (req, res, next) => {
@@ -49,10 +21,7 @@ jest.mock('../../middleware/auth', () => {
     };
 });
 
-// Also mock dotenv to avoid loading env files in test
-jest.mock('dotenv', () => ({
-    config: jest.fn()
-}));
+
 
 let mongoServer;
 

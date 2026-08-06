@@ -185,9 +185,9 @@ router.post("/admin-flights",isAuthenticated, isAdmin, async function(req,res){
     await flight.save();
 
     await AuditLog.create({
-        actor: req.emailAddress,
+        actor: req.session.emailAddress,
         action:"FLIGHT CREATED",
-        user_role: req.role
+        user_role: req.session.role
     });
 
     res.redirect('/admin/admin-flights');
@@ -201,10 +201,7 @@ router.post("/admin-flights",isAuthenticated, isAdmin, async function(req,res){
 
 router.put("/admin-flights/:id", isAuthenticated, isAdmin,async function(req,res){
   
-    const admin = await userModel.findById(req.session.userID);
-        if(!admin){
-            return res.status(401).json({message: "Admin not found"});
-        }
+    
   
     const updatedFlight = await flightModel.findByIdAndUpdate(
         req.params.id,
@@ -214,9 +211,9 @@ router.put("/admin-flights/:id", isAuthenticated, isAdmin,async function(req,res
 
     
     await AuditLog.create({
-        actor: admin.emailAddress,
+        actor: req.session.emailAddress,
         action:"FLIGHT UPDATED",
-        user_role: admin.role
+        user_role: req.session.role
     });
 
     res.json(updatedFlight);
@@ -305,9 +302,9 @@ router.patch("/admin-flights/:id/deactivate", isAuthenticated, isAdmin, async fu
         }
 
         await AuditLog.create({
-            actor: admin.emailAddress,
+            actor: req.session.emailAddress,
             action:"FLIGHT DEACTIVATED",
-            user_role: admin.role
+            user_role: req.session.role
         });
 
         return res.status(200).json({
