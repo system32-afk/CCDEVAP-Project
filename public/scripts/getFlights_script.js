@@ -135,7 +135,6 @@ async function renderFlightsUI(){
         returnInfo.originCity = getBookingInfo().destinationCity;
         returnInfo.destinationCity = getBookingInfo().originCity;
 
-        console.log("return info "+returnInfo.origin);
 
         flightsToRender = await getFlights(filter_options,returnInfo);
         
@@ -167,7 +166,6 @@ async function getFlights(filterOptions, bookingInfo) {
         maxPrice: filterOptions.maxPrice
     })
 
-    console.log("isFlexible before passing: ", bookingInfo.departureDate);
 
     try{
 
@@ -178,7 +176,6 @@ async function getFlights(filterOptions, bookingInfo) {
         }
         searchResults = await response.json();
 
-        console.log("SEARCH RESULTS ",searchResults)
         return searchResults;
 
     }catch(error){
@@ -308,10 +305,7 @@ async function lockInFlight(flightID){
     var bookingInfo = getBookingInfo();
     var totalPassengers = parseInt(bookingInfo.passengers.adults) + parseInt(bookingInfo.passengers.children) + parseInt(bookingInfo.passengers.infants);
     var tripType = getBookingInfo().tripType;
-    console.log("TRIP-TYPE: ",tripType);
-    // var {outboundTrip, returnTrip} = trips
 
-    console.log(totalPassengers)
     
 
     if(totalPassengers > chosenFlight.cabin[selectedCabinType].seats){
@@ -401,7 +395,6 @@ async function sideBarInfo(flightID) {
     }
 
     var flight = await getFlightData(flightID);
-    console.log("FLIGHT INFO: ", flight);
     var layover = flight.numOfLayovers > 0 ? `layover(s): ${flight.numOfLayovers}` : "direct flight";
 
     //Cabin related Info

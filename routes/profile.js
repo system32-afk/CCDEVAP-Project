@@ -10,7 +10,6 @@ const {isAuthenticated,isUser} = require('../middleware/auth.js');
 router.get('/', isAuthenticated ,isUser, async function(req,res){
     var user = await userModel.findById(req.session.userID).lean();
     var savedPassenger = await savedPassengerModel.find({belong_to_user:req.session.userID})
-    console.log("Sending user to template:", user);
     res.render('pages/profile',{
         user: user,
         savedPassenger:savedPassenger,
@@ -31,7 +30,6 @@ router.get('/', isAuthenticated ,isUser, async function(req,res){
 router.get("/saved-passengers",isAuthenticated, isUser, async function(req,res) {
     try{
 
-        console.log("Session User ID:", req.session.userID);
         var passengers = await savedPassengerModel.find({
             belongs_to_user: req.session.userID
         });

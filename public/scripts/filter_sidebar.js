@@ -51,7 +51,7 @@ FILTERRESET.on("click",function(){
 })
 
 APPLYFILTER.on("click",function(){
-    console.log("APPLY FILTER CLICKED");
+
 
     
     applyAllFilters();
@@ -215,7 +215,6 @@ function modifyAirlineFilters() {
             airlineFilters.push($(this).val());
         });
 
-        console.log("SELECTED AIRLINES ",airlineFilters);
        
     }
 
@@ -352,17 +351,11 @@ function applyAllFilters() {
    
     //if there is a sorting preference
     if(currentSortOption){
-        console.log("TEMPORARY LIST",temporaryList)
-        console.log("SEARCH RESULTS111111",searchResults)
-        console.log("sorted and filtered");
-
-        console.log("sorting option: ",currentSortOption);
         const sortedAndFiltered = sortArray(currentSortOption,"ascending",temporaryList);
-         renderFlights(sortedAndFiltered);
-         return;
+        renderFlights(sortedAndFiltered);
+        return;
     }
 
-   console.log("temporaryList");
     renderFlights(temporaryList);
 }
 

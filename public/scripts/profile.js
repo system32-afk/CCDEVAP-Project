@@ -38,7 +38,6 @@ $(document).ready(function() {
     }  
 
     const userSex = sexField.data("current-sex");
-    console.log("Sex pulled from data attribute:", userSex);
     
     if (userSex) {
         sexField.val(userSex);
@@ -63,7 +62,6 @@ hiddenInput.on("change", function(event){
 
     profilePicDisplay.attr("src",imageUrl);
 
-    console.log(imageUrl);
 
 })
 
@@ -209,7 +207,6 @@ confirmDeleteBtn.on("click", () =>{
     }
 
     if(whatToDelete === "PASSENGER"){
-        console.log("DELETING: ", passengerToDelete);
         removePassenger(passengerToDelete);
         passengerToDelete = null;
         whatToDelete = ""
@@ -324,7 +321,6 @@ async function submitPassengerInfo() {
         mobileNum = mobileNum.slice(1);
     }
 
-    console.log("edit id:", editId);
 
     const passengerData = {
         Fname: Fname,
@@ -359,11 +355,7 @@ async function submitPassengerInfo() {
         
         
         
-        if (editId) {
-            console.log("successfully updated passenger");
-        } else {
-            console.log("successfully added passenger");
-        }
+        
 
         // Reload the UI list
         loadSavedPassengers();
@@ -393,7 +385,6 @@ async function editPassengerInfo(ID) {
         let passenger = await response.json();
 
         if (!passenger) {
-            console.log("Passenger details could not be found.");
             return;
         }
 
@@ -406,7 +397,6 @@ async function editPassengerInfo(ID) {
         });
 
     } catch (error) {
-        console.log("Error communicating with the database.");
         console.error(error);
     }
 }
@@ -431,11 +421,9 @@ async function removePassenger(ID) {
             throw new Error(`error status: ${response.status}`);
         }
         
-        console.log("Passenger removed successfully.");
         loadSavedPassengers();
 
     } catch (error) {
-        console.log("failed to remove passenger from database.");
         console.error(error);
     }
 }
@@ -453,7 +441,6 @@ const addPaymentContainer = $("#add-payment-container");
 var cardToDelete = "";
 var savedPayments = null; 
 paymentTab.on("click", ()=>{
-    console.log("to payments method")
     loadCards();
 })
 
@@ -477,7 +464,6 @@ paymentForm.on("submit", (event)=>{
 cardContainer.on("click", ".remove-card-btn", function(){
     var cardID = $(this).data("id");
 
-    console.log(cardID);
     cardToDelete = cardID;
     whatToDelete = "CARD";
 
@@ -545,7 +531,6 @@ async function loadCards() {
             </div>`;
         });
 
-        console.log("Cards loaded!");
         cardContainer.prepend(list);
 
     } catch (error) {
@@ -632,12 +617,10 @@ async function removePaymentMethod(ID) {
 
         
         const data = await response.json();
-        console.log("Card deleted successfully from server:", data);
 
         // Reload the UI
         loadCards();
     } catch (error) {
-        console.log("failed to delete card from server");
         console.error(error);
     }
 }
@@ -655,7 +638,6 @@ function checkAddCardButtonVisibility(cards) {
    
     const activeCards = cards; 
     
-    console.log("Checking visibility for card count:", activeCards.length);
 
     
     if (activeCards.length >= 3) {
@@ -762,7 +744,6 @@ $("#flightStatusSwitch, #marketingSwitch").on("change",function(){
         data: JSON.stringify(updateData),
         contentType: "application/json",
         success: function(response) {
-            console.log("Preferences successfully synced with database!");
         },
         error: function(xhr) {
             console.error("Failed to update user preferences on server:", xhr);

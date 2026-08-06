@@ -190,7 +190,6 @@ async function openUpdateModal(id){
         }
 
         const flight = await response.json();
-        console.log("Flight airline:", flight.airline);
         // retrieves the data of selected flight number
         flightNumberField.val(flight.flightNumber);
         airlineField.val(flight.airline);
@@ -301,7 +300,6 @@ async function updateFlightInformation(){
             alert("Flight updated successfully");
 
             const row = document.getElementById(`flight-rows${currentFlightId}`);
-console.log(row);
             row.querySelector(".airline").textContent = updatedFlightInfo.airline;
             row.querySelector(".origin").textContent = updatedFlightInfo.origin;
             row.querySelector(".destination").textContent = updatedFlightInfo.destination;

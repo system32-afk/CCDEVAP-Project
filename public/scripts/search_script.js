@@ -28,7 +28,6 @@ $(function(){
 //date dropdown
 departDate.on("change", function(){
     var value = $(this).val();
-    console.log("departDate: "+ value);
     booking_info.departureDate = value;
 
 });
@@ -59,7 +58,6 @@ searchFlightButton.on("click", () =>  {
         JSON.stringify(booking_info)
     );
 
-    console.log("clicked here lol.");
     SearchFlight();
     hasSearched = true;
 })
@@ -80,8 +78,7 @@ async function SearchFlight(){
     var tripType = booking_info.tripType;
 
 
-    console.log(booking_info);
-    console.log(filter_options);
+    
 
 
     // check for  empty locations

@@ -205,7 +205,6 @@ app.post("/register",async  function(req,res){
     
     res.redirect('/login');
     }catch(error){
-        console.log("Registeration error:", error);
         res.redirect('/register');
     }
 });

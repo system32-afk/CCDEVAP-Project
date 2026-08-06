@@ -50,7 +50,6 @@ cabinOptions.on("click", function(e) {
     var text = $(this).text();
     cabinField.text(text);
     booking_info.cabinType   = $(this).data("cabin");
-    console.log(booking_info.cabinType)
 
 });
 
@@ -61,7 +60,6 @@ airlineDropdown.on("click", ".airline-row", function() {
     filter_options.airline = selectedAirline;
     airlineField.text(text);
     
-    console.log("Selected Airline Value:", filter_options.airline);
 });
 
 

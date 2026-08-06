@@ -80,7 +80,6 @@ citySearch.on('input', function() {
 
 departDate.on("change", function(){
     var value = $(this).val();
-    console.log("departDate: "+ value);
     booking_info.departureDate = value;
 
 });

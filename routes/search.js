@@ -96,11 +96,8 @@ router.get("/search-flights",isAuthenticated, isUser, async function(req,res){
             }
 
         
-        console.log("Query Params:", req.query);
-        console.log("Mongo Query:", queryCondition);
 
         const flights = await flightModel.find(queryCondition);
-        console.log("Flights:", flights);
         return res.status(200).json(flights);
     }catch(error){
         console.error("BACKEND ERROR: ERROR FETCHING FLIGHTS: ", error);

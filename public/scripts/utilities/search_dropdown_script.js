@@ -60,8 +60,6 @@ function searchDropdown (currentSearchField,dropdown,searchFieldID){
                  booking_info.destinationCity = city;
             }
 
-            console.log("origin:"+ booking_info.originCity);
-            console.log("destination:"+booking_info.destinationCity);
             currentSearchField.val(city);
             dropdown.empty(); //clear the dropdown list
             hideResults(); //hide the dropdown list
