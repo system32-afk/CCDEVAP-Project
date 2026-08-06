@@ -261,7 +261,7 @@ router.put("/admin-reservations/passenger/:passengerId/status",isAuthenticated, 
         await booking.save();
         await AuditLog.create({
                 actor: req.session.email,
-                action: "RESERVATION"+normalizedStatus,
+                action: "RESERVATION " + normalizedStatus.toUpperCase(),
                 user_role: req.session.role
             });
         res.status(200).json({ message: "passenger status updated successfully" });
