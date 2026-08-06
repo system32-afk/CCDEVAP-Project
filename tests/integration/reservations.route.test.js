@@ -132,7 +132,7 @@ describe("GET /reservations-data Integration Tests", () => {
             passengers: [buildSamplePassenger({ email: "someoneelse@gmail.com" })]
         });
 
-        const response = await agent.get("/reservations-data");
+        const response = await agent.get("/reservations/reservations-data");
 
         expect(response.statusCode).toBe(200);
         expect(response.body.length).toBe(1);
@@ -163,7 +163,7 @@ describe("PUT /passenger/:passengerId/status Integration Tests", () => {
         const passengerId = booking.passengers[0]._id.toString();
 
         const response = await agent
-            .put(`/passenger/${passengerId}/status`)
+            .put(`/reservations/passenger/${passengerId}/status`)
             .send({ status: "Cancelled" });
 
         expect(response.statusCode).toBe(200);
@@ -190,7 +190,7 @@ describe("PUT /passenger/:passengerId/status Integration Tests", () => {
         const passengerId = booking.passengers[0]._id.toString();
 
         const response = await agent
-            .put(`/passenger/${passengerId}/status`)
+            .put(`/reservations/passenger/${passengerId}/status`)
             .send({ status: "Confirmed" });
 
         expect(response.statusCode).toBe(400);
@@ -202,7 +202,7 @@ describe("PUT /passenger/:passengerId/status Integration Tests", () => {
         const fakePassengerId = new mongoose.Types.ObjectId();
 
         const response = await agent
-            .put(`/passenger/${fakePassengerId}/status`)
+            .put(`/reservations/passenger/${fakePassengerId}/status`)
             .send({ status: "Cancelled" });
 
         expect(response.statusCode).toBe(404);
@@ -225,7 +225,7 @@ describe("PUT /passenger/:passengerId/status Integration Tests", () => {
         const passengerId = booking.passengers[0]._id.toString();
 
         const response = await agent
-            .put(`/passenger/${passengerId}/status`)
+            .put(`/reservations/passenger/${passengerId}/status`)
             .send({ status: "Cancelled" });
 
         expect(response.statusCode).toBe(403);

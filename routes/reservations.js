@@ -65,7 +65,7 @@ router.put("/passenger/:passengerId/status", isAuthenticated, async function(req
 });
 
 
-router.put("/reservations/passenger/:passengerId/seat", isAuthenticated, (req, res) => {
+router.put("/passenger/:passengerId/seat", isAuthenticated, (req, res) => {
     updateSeatHandler(req, res, { checkOwnership: true });
 });
 

@@ -216,7 +216,6 @@ app.post("/login", async function(req,res){
     const{emailAddress, password} = req.body;
 
     const  user = await userModel.findOne({emailAddress});
-    console.log("User object found in DB:", user);
     if(!user){
         return res.redirect("/login");
     }
