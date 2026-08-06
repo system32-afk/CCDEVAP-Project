@@ -218,7 +218,7 @@ function createEditSeatModal(reservation, passenger) {
     const displayId = `edit-selected-seat-${passenger._id}`;
     const errId = `edit-seat-err-${passenger._id}`;
     const isAdminPage = window.location.pathname.startsWith("/admin");
-    const endpointBase = isAdminPage ? "/admin-reservations" : "/reservations";
+    const endpointBase = isAdminPage ? "/admin" : "/reservations";
 
     return `
     <div id="${editModalId}" class="modal-overlay" onclick="whenUserClicksOutside(event, '${editModalId}')">
@@ -387,11 +387,7 @@ async function saveNewSeat(passengerId) {
     const endpointBase = container.dataset.endpointBase;
     const modalOverlay = container.closest(".modal-overlay");
 
-    //**
-    // TODO: FIX THIS
-    // What on earth is endpointbase? I can't debug; Can't change seats till this gets fixed
-    // 
-    //  */
+
     try {
         const response = await fetch(`${endpointBase}/passenger/${passengerId}/seat`, {
             method: "PUT",
